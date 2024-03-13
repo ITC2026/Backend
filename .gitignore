@@ -1,0 +1,9 @@
+# Node Modules
+node_modules/
+
+# TypeScript
+dist/
+tsconfig.json
+
+#MacOS
+.DS_Storew
