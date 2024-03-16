@@ -17,14 +17,14 @@ interface ProjectAttributes {
   company: string;
 }
 
-interface ProductCreationAttributes extends Optional<ProjectAttributes, "id"> {}
+interface ProjectCreationAttributes extends Optional<ProjectAttributes, "id"> {}
 
 @Table({
   tableName: "Projects",
 })
 export class Project extends Model<
   ProjectAttributes,
-  ProductCreationAttributes
+  ProjectCreationAttributes
 > {
   @Column
   name!: string;
