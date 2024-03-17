@@ -1,4 +1,4 @@
-import { Model, Column, CreatedAt, UpdatedAt, Table, DataType, HasMany, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Model, Column, CreatedAt, UpdatedAt, DataType} from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 
 interface ClientAttributes {
@@ -14,7 +14,7 @@ interface ClientAttributes {
 
 interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
 
-export class Client extends Model<ClientAttributes, ClientAttributes> {
+export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @Column
   contract_pdf_url!: URL;
 
