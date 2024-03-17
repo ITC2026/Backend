@@ -5,7 +5,6 @@ export const createProject: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  // Validate if req.body exists at all
   if (!req.body) {
     return res.status(400).json({
       status: "error",
@@ -14,8 +13,7 @@ export const createProject: RequestHandler = async (
     });
   }
 
-  const { name, description, company } = req.body;
-  Project.create({ name, description, company })
+  Project.create({ ...req.body })
     .then((data: Project) => {
       return res.status(201).json({
         status: "Success",
@@ -79,7 +77,6 @@ export const updateProject: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  // Validate if req.body exists at all
   if (!req.body) {
     return res.status(400).json({
       status: "error",
