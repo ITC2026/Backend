@@ -10,8 +10,6 @@ import {
 import { type Optional } from "sequelize";
 import { Position } from "./positions";
 
-// TODO: Check projects from ER diagram, Add the missing attributes
-
 interface ProjectAttributes {
   id: number;
   name: string;
@@ -28,6 +26,13 @@ export class Project extends Model<
   ProjectAttributes,
   ProjectCreationAttributes
 > {
+  getPositions(): Promise<Position[]> {
+    return Position.findAll({
+      where: {
+        id_project: this.id,
+      },
+    });
+  }
   @Column
   id_project!: number;
 

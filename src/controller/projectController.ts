@@ -1,5 +1,6 @@
 import { type RequestHandler, type Request, type Response } from "express";
 import { Project } from "../models/projects";
+import { Position } from "../models/positions";
 
 export const createProject: RequestHandler = async (
   req: Request,
@@ -46,6 +47,38 @@ export const getProjects: RequestHandler = async (
       return res.status(500).json({
         status: "Error",
         message: "Projects not retrieved",
+        payload: error.message,
+      });
+    });
+};
+
+export const getJobPositionsByProject: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  Project.findByPk(id)
+    .then((data: Project | null) => {
+      if (data) {
+        data.getPositions().then((positions: Position[]) => {
+          return res.status(200).json({
+            status: "Success",
+            message: "Positions retrieved successfully",
+            payload: positions,
+          });
+        });
+      } else {
+        return res.status(404).json({
+          status: "Error",
+          message: "Project not found",
+          payload: null,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Project not retrieved",
         payload: error.message,
       });
     });
