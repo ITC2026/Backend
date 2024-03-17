@@ -88,3 +88,23 @@ export const deleteEmployee = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getEmployeeBench = async (req: Request, res: Response) => {
+    const employee = await Employee.findByPk(req.params.id, { include: Bench });
+    res.json(employee);
+  };
+  
+  export const getEmployeeBilling = async (req: Request, res: Response) => {
+    const employee = await Employee.findByPk(req.params.id, { include: Billing });
+    res.json(employee);
+  };
+  
+  export const getEmployeePipeline = async (req: Request, res: Response) => {
+    const employee = await Employee.findByPk(req.params.id, { include: Pipeline });
+    res.json(employee);
+  };
+  
+  export const getEmployeeHired = async (req: Request, res: Response) => {
+    const employee = await Employee.findByPk(req.params.id, { include: Hired });
+    res.json(employee);
+  };
