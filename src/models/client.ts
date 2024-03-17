@@ -1,10 +1,12 @@
-import { Model, Column, CreatedAt, UpdatedAt, DataType, Table} from 'sequelize-typescript';
+import { Model, Column, CreatedAt, UpdatedAt, DataType, Table, HasMany} from 'sequelize-typescript';
 import { Optional } from 'sequelize';
+import { Project } from '../project/project';
+
 
 interface ClientAttributes {
   id: number;
-  contract_pdf_url: URL;
-  logo_url: URL;
+  contract_pdf_url: string;
+  logo_url: string;
   client_name: string;
   client_desc: string;
   exclusivity: string;
@@ -20,10 +22,10 @@ interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
 
 export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @Column
-  contract_pdf_url!: URL;
+  contract_pdf_url!: string;
 
   @Column
-  logo_url!: URL;
+  logo_url!: string;
 
   @Column
   client_name!: string;
@@ -47,4 +49,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @UpdatedAt
   @Column(DataType.DATE)
   updatedAt!: Date;
+
+  @HasMany(() => Project)
+  projects!: Project[];
 }
