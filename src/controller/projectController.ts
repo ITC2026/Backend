@@ -52,60 +52,6 @@ export const getProjects: RequestHandler = async (
     });
 };
 
-export const getJobPositionsByProject: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  const id = req.params.id;
-  Project.findByPk(id)
-    .then((data: Project | null) => {
-      if (data) {
-        data.getPositions().then((positions: Position[]) => {
-          return res.status(200).json({
-            status: "Success",
-            message: "Positions retrieved successfully",
-            payload: positions,
-          });
-        });
-      } else {
-        return res.status(404).json({
-          status: "Error",
-          message: "Project not found",
-          payload: null,
-        });
-      }
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Project not retrieved",
-        payload: error.message,
-      });
-    });
-};
-
-export const getProjectById: RequestHandler = async (
-  req: Request,
-  res: Response
-) => {
-  const id = req.params.id;
-  Project.findByPk(id)
-    .then((data: Project | null) => {
-      return res.status(200).json({
-        status: "Success",
-        message: "Project retrieved successfully",
-        payload: data,
-      });
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Project not retrieved",
-        payload: error.message,
-      });
-    });
-};
-
 export const updateProject: RequestHandler = async (
   req: Request,
   res: Response
@@ -158,4 +104,106 @@ export const deleteProject: RequestHandler = async (
       error,
     });
   }
+};
+
+export const getProjectById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  Project.findByPk(id)
+    .then((data: Project | null) => {
+      return res.status(200).json({
+        status: "Success",
+        message: "Project retrieved successfully",
+        payload: data,
+      });
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Project not retrieved",
+        payload: error.message,
+      });
+    });
+};
+
+export const getJobPositionsByProject: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  Project.findByPk(id)
+    .then((data: Project | null) => {
+      if (data) {
+        data.getPositions().then((positions: Position[]) => {
+          return res.status(200).json({
+            status: "Success",
+            message: "Positions retrieved successfully",
+            payload: positions,
+          });
+        });
+      } else {
+        return res.status(404).json({
+          status: "Error",
+          message: "Project not found",
+          payload: null,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Project not retrieved",
+        payload: error.message,
+      });
+    });
+};
+
+export const createPositionByProject: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  if (!req.body || !id) {
+    return res.status(400).json({
+      status: "error",
+      message: "Content can not be empty.",
+      payload: null,
+    });
+  }
+
+  Project.findByPk(id)
+    .then((data: Project | null) => {
+      if (data) {
+        Position.create({ ...req.body, id_project: id })
+          .then((data: Position) => {
+            return res.status(201).json({
+              status: "Success",
+              message: "Position created successfully",
+              payload: data,
+            });
+          })
+          .catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Position not created",
+              payload: error.message,
+            });
+          });
+      } else {
+        return res.status(404).json({
+          status: "Error",
+          message: "Project not found",
+          payload: null,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Project not retrieved",
+        payload: error.message,
+      });
+    });
 };

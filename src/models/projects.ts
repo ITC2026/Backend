@@ -5,7 +5,7 @@ import {
   CreatedAt,
   UpdatedAt,
   HasMany,
-  ForeignKey,
+  //  ForeignKey,
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
 import { Position } from "./positions";
