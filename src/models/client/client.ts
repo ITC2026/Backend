@@ -1,4 +1,4 @@
-import { Model, Column, CreatedAt, UpdatedAt, DataType} from 'sequelize-typescript';
+import { Model, Column, CreatedAt, UpdatedAt, DataType, Table} from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 
 interface ClientAttributes {
@@ -13,6 +13,10 @@ interface ClientAttributes {
 }
 
 interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
+
+@Table({
+  tableName: 'Clients'
+})
 
 export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @Column
