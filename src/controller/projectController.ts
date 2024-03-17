@@ -1,7 +1,6 @@
 import { type RequestHandler, type Request, type Response } from "express";
 import { Project } from "../models/projects";
 
-// TODO: Add the rest of the methods
 
 export const createProject: RequestHandler = async (
   req: Request,

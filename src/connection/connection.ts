@@ -10,7 +10,7 @@ const connection = new Sequelize({
   password: 'HDK#$%Ljkwerff.89',
   storage: ':memory:',
   models: [
-      Product, Category
+      Product, Category, Project
   ]
 });
 
