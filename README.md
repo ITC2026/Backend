@@ -35,6 +35,9 @@ Utilizando la estructura de una entidad del reto, implemente una API RESTFull co
 - Eliminar un elemento de una tabla mediante DELETE `http://localhost:3000/`
 - Obtener un elemento de una tabla dado su id GET `http://localhost:3000/[id]`
 
+## Diagramas Entidad - Relación 
+
+[Diagrama Entidad - Relación](./src/resources/img/diagrams.png)
 ## Requisitos técnicos
 
 1. No es necesario implementar programación client-side.

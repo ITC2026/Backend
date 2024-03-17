@@ -1,7 +1,7 @@
 {
-  "name": "practica_back",
+  "name": "actividad_3_7_4",
   "version": "1.0.0",
-  "description": "",
+  "description": "Actividad 3.7.4, Construcción de Software y Toma de Decisiones",
   "main": "index.js",
   "scripts": {
       "build": "npx tsc",

@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript"
 import { Product } from "../models/product"
 import { Category } from "../models/category"
+import { Project } from "../models/projects"
 
 const connection = new Sequelize({
   database: 'sisweb_db',
