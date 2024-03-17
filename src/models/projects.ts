@@ -4,11 +4,13 @@ import {
   Column,
   CreatedAt,
   UpdatedAt,
+  HasMany,
+  ForeignKey,
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
+import { Position } from "./positions";
 
-// TODO: Check projects from ER diagram
-// ??? Maybe dates are necessary
+// TODO: Check projects from ER diagram, Add the missing attributes
 
 interface ProjectAttributes {
   id: number;
@@ -27,17 +29,33 @@ export class Project extends Model<
   ProjectCreationAttributes
 > {
   @Column
-  name!: string;
+  id_project!: number;
 
   @Column
-  description!: string;
+  title_project!: string;
 
   @Column
-  company!: string;
+  description_project!: string;
+
+  @Column
+  tariff_project!: string;
 
   @CreatedAt
-  createdAt!: Date;
+  publicationDate_project!: Date;
 
   @UpdatedAt
-  updatedAt!: Date;
+  deadline_project!: Date;
+
+  //TODO: Add this functionality.
+  /* 
+  @ForeignKey (() => Client)
+  @Column
+  client_id!: number;
+  */
+
+  @HasMany(() => Position)
+  positions!: Position[];
+
+  @Column
+  project_status!: number;
 }

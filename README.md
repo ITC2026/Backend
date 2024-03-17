@@ -37,7 +37,7 @@ Utilizando la estructura de una entidad del reto, implemente una API RESTFull co
 
 ## Diagramas Entidad - Relación 
 
-[Diagrama Entidad - Relación](./src/resources/img/diagrams.png)
+![Diagrama Entidad - Relación](./src/resources/img/diagrams.png)
 ## Requisitos técnicos
 
 1. No es necesario implementar programación client-side.
