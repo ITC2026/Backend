@@ -7,15 +7,18 @@ interface EmployeeAttributes {
   division: string;
   title_job: string;
   grade_job: string;
-  techstack: string;
-  register_date: Date;
-  phone_number: number;
+  techStack: string;
+  registrationDate: Date;
+  phone: string;
   email: string;
 }
 
-interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'>{}
+interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> {}
 
-export abstract class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> {
+export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> {
+  @Column
+  id!: number;
+
   @Column
   region!: string;
 
@@ -29,10 +32,10 @@ export abstract class Employee extends Model<EmployeeAttributes, EmployeeCreatio
   grade_job!: string;
 
   @Column
-  techstack!: string;
+  techStack!: string;
 
   @Column
-  register_date!: Date;
+  registrationDate!: Date;
 
   @Column
   phone_number!: number;

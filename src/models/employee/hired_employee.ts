@@ -10,7 +10,7 @@ interface HiredAttributes {
   work_hours: number;
 }
 
-export abstract class Hired extends Model<Employee, HiredAttributes> {
+export class Hired extends Model<Employee, HiredAttributes> {
   @Column
   salary!: number;
 
