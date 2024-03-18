@@ -23,6 +23,7 @@ interface PositionAttributes {
   demand_curation_position: string;
   is_exclusive_position: boolean;
   vacancy_id_position?: number;
+  project_id_position: number;
   project: Project;
 }
 
@@ -65,12 +66,11 @@ export class Position extends Model<PositionAttributes, PositionCreationAttribut
   @Column
   vacancy_id_position!: number;
 
-  @ForeignKey(() => Project)
-  @Column
+  @ForeignKey(() => Project) 
   project_id_position!: number;
 
   @BelongsTo(() => Project)
-  project!: Project;
+  project: Project = new Project();
 
   @CreatedAt
   createdAt!: Date;
