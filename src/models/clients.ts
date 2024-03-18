@@ -1,4 +1,4 @@
-import { Model, Column, CreatedAt, UpdatedAt, DataType, Table, HasMany} from 'sequelize-typescript';
+import { Model, Column, CreatedAt, UpdatedAt, DataType, Table, HasMany, ForeignKey} from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Project } from './projects';
 
@@ -60,5 +60,6 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   updatedAt!: Date;
 
   @HasMany(() => Project)
+  @ForeignKey(() => Project)
   projects!: Project[];
 }

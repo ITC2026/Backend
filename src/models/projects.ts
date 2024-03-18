@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
 import { Position } from "./positions";
-import { Client } from "./client";
+import { Client } from "./clients";
 
 interface ProjectAttributes {
   id: number;

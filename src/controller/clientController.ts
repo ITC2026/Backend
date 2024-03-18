@@ -1,5 +1,5 @@
 import { RequestHandler, Request, Response } from 'express';
-import { Client } from "../models/client";
+import { Client } from "../models/clients";
 import validator from 'validator';
 
 // Retrieve all Clients from the database.
