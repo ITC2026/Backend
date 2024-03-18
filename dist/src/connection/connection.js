@@ -10,21 +10,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
+const product_1 = require("../models/product");
+const category_1 = require("../models/category");
 const user_1 = require("../models/user");
 const connection = new sequelize_typescript_1.Sequelize({
-    database: "encoring",
+    database: "sisweb_db",
     dialect: "postgres",
-    username: "postgres",
-    password: "Prepa2019.",
+    username: "sisweb_user",
+    password: "HDK#$%Ljkwerff.89",
     storage: ":memory:",
     models: [
-        user_1.User
+        product_1.Product, category_1.Category, user_1.User
     ]
 });
 function connectionDB() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield connection.sync();
+            yield connection.sync({ alter: true }); // Disabled when you're turning into production mode
         }
         catch (e) {
             console.log(e);
