@@ -8,7 +8,7 @@ import { Hired } from '../models/employee/hired_employee';
 const connection = new Sequelize({
   database: 'employeeDB',
   dialect: 'postgres',
-  username: 'sisweb_user',
+  username: 'sisweb_user1',
   password: 'HDK#$%Ljkwerff.89',
   storage: ':memory:',
   schema: 'public',

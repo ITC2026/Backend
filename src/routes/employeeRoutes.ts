@@ -3,14 +3,14 @@ import { getAllEmployees, getEmployeeById, createEmployee, updateEmployee, delet
 
 const router = express.Router();
 
-router.get('/employees', getAllEmployees);
-router.get('/employees/:id', getEmployeeById);
-router.post('/employees', createEmployee);
-router.patch('/employees/:id', updateEmployee);
-router.delete('/employees/:id', deleteEmployee);
-router.get('/employees/pipeline/:id', getEmployeePipelineById);
-router.get('/employees/bench/:id', getEmployeeBenchById);
-router.get('/employees/billing/:id', getEmployeeBillingById);
+router.get('/', getAllEmployees);
+router.get('/:id', getEmployeeById);
+router.post('/', createEmployee);
+router.patch('/:id', updateEmployee);
+router.delete('/:id', deleteEmployee);
+router.get('/pipeline/:id', getEmployeePipelineById);
+router.get('/bench/:id', getEmployeeBenchById);
+router.get('/billing/:id', getEmployeeBillingById);
 
 export default router;
 

@@ -6,25 +6,25 @@ import { Bench } from '../models/employee/bench';
 import { Billing } from '../models/employee/billing';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findAll({include: [{
-    model: Employee,
-    attributes: ['name']
-  }]})
-  .then((data: Employee[]) => {
-    return res.status(200).json({
-      status: "success",
-      message: "Employee successfully retrieved",
-      payload: data,
-    });
+  Employee.findAll({
+    attributes: ['name'] 
   })
-  .catch((err) => {
-    return res.status(500).json({
-      status: "error",
-      message: "Something happened retrieving all employees. " + err.message,
-      payload: null,
+    .then((data: Employee[]) => {
+      return res.status(200).json({
+        status: "success",
+        message: "Employee names successfully retrieved",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "error",
+        message: "Something happened retrieving all employee names. " + err.message,
+        payload: null,
+      });
     });
-  });
 };
+
 
 export const getEmployeeById = async (req: Request, res: Response) => {
   const employee = await Employee.findByPk(req.params.id);
