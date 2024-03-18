@@ -207,3 +207,22 @@ export const createPositionByProject: RequestHandler = async (
       });
     });
 };
+
+export const deletePositionByProject: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.body;
+  const proj_id = req.params.id;
+
+  Position.destroy({ where: { id, id_project: proj_id } })
+    .then(() => {
+      return res.status(200).json({ message: "Position deleted" });
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        message: "Error deleting position.",
+        error,
+      });
+    });
+};

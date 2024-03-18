@@ -1,3 +1,4 @@
+
 import { RequestHandler, Request, Response } from "express";
 import { Position } from "../models/positions"; // Import the Position model
 
@@ -7,7 +8,7 @@ export const createPosition: RequestHandler = async (
 ) => {
   const { title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project } = req.body;
   Position.create({ title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project })
-    .then((data: any) => {
+    .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
         message: "Position created successfully",
@@ -28,7 +29,7 @@ export const getPositions: RequestHandler = async (
   res: Response
 ) => {
   Position.findAll()
-    .then((data: any[] | null) => {
+    .then((data: unknown[] | null) => {
       return res.status(200).json({
         status: "Success",
         message: "Positions retrieved successfully",
@@ -50,7 +51,7 @@ export const getPositionById: RequestHandler = async (
 ) => {
   const id = req.params.id;
   Position.findByPk(id)
-    .then((data: any | null) => {
+    .then((data: unknown | null) => {
       return res.status(200).json({
         status: "Success",
         message: "Position retrieved successfully",

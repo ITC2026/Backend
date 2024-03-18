@@ -12,9 +12,13 @@ import { Position } from "./positions";
 
 interface ProjectAttributes {
   id: number;
-  name: string;
-  description: string;
-  company: string;
+  title_project: string;
+  description_project: string;
+  tariff_project: number;
+  publicationDate_project: Date;
+  deadline_project: Date;
+  positions: Position[];
+  project_status: number;
 }
 
 interface ProjectCreationAttributes extends Optional<ProjectAttributes, "id"> {}
@@ -33,8 +37,6 @@ export class Project extends Model<
       },
     });
   }
-  @Column
-  id_project!: number;
 
   @Column
   title_project!: string;
@@ -43,7 +45,7 @@ export class Project extends Model<
   description_project!: string;
 
   @Column
-  tariff_project!: string;
+  tariff_project!: number;
 
   @CreatedAt
   publicationDate_project!: Date;

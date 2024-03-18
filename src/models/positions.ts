@@ -6,7 +6,7 @@ import {
     UpdatedAt,
     ForeignKey,
     BelongsTo,
-    HasMany,
+//   HasMany,
   } from "sequelize-typescript";
 import { Optional } from "sequelize";  
 import { Project } from "./projects";
