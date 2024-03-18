@@ -1,38 +1,45 @@
-import {Table, Model, Column, CreatedAt, UpdatedAt, DataType} from 'sequelize-typescript';
-import {Optional} from 'sequelize';
-import isEmail from 'validator/lib/isEmail';
-import { validator } from 'sequelize/types/utils/validator-extras';
+import {
+  Table,
+  Model,
+  Column,
+  CreatedAt,
+  UpdatedAt,
+  DataType,
+} from "sequelize-typescript";
+import { Optional } from "sequelize";
+// import isEmail from 'validator/lib/isEmail';
+// import { validator } from 'sequelize/types/utils/validator-extras';
 
 interface UserAttributes {
-    id: number;
-    username: string;
-    password: string;
-    email: string;
-    role: string;
+  id: number;
+  username: string;
+  password: string;
+  email: string;
+  role: string;
 }
-interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
 @Table({
-    tableName: 'Users'
+  tableName: "Users",
 })
 export class User extends Model<UserAttributes, UserCreationAttributes> {
-    @Column
-    username!: string;
+  @Column
+  username!: string;
 
-    @Column
-    password!: string;
+  @Column
+  password!: string;
 
-    @Column
-    email?: string;
+  @Column
+  email?: string;
 
-    @Column(DataType.ENUM('Account Manager', 'Resource Manager', 'Staffer'))
-    role!: string;
+  @Column(DataType.ENUM("Account Manager", "Resource Manager", "Staffer"))
+  role!: string;
 
-    @CreatedAt
-    @Column
-    createdAt!: Date;
+  @CreatedAt
+  @Column
+  createdAt!: Date;
 
-    @UpdatedAt
-    @Column
-    updatedAt!: Date;
+  @UpdatedAt
+  @Column
+  updatedAt!: Date;
 }

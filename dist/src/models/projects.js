@@ -9,39 +9,49 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Project = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = class User extends sequelize_typescript_1.Model {
+const positions_1 = require("./positions");
+let Project = class Project extends sequelize_typescript_1.Model {
+    getPositions() {
+        return positions_1.Position.findAll({
+            where: {
+                id_project: this.id,
+            },
+        });
+    }
 };
-exports.User = User;
+exports.Project = Project;
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
-], User.prototype, "username", void 0);
+], Project.prototype, "title_project", void 0);
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
-], User.prototype, "password", void 0);
+], Project.prototype, "description_project", void 0);
 __decorate([
     sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.ENUM("Account Manager", "Resource Manager", "Staffer")),
-    __metadata("design:type", String)
-], User.prototype, "role", void 0);
+    __metadata("design:type", Number)
+], Project.prototype, "tariff_project", void 0);
 __decorate([
     sequelize_typescript_1.CreatedAt,
-    sequelize_typescript_1.Column,
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
+], Project.prototype, "publicationDate_project", void 0);
 __decorate([
     sequelize_typescript_1.UpdatedAt,
-    sequelize_typescript_1.Column,
     __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-exports.User = User = __decorate([
+], Project.prototype, "deadline_project", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => positions_1.Position),
+    __metadata("design:type", Array)
+], Project.prototype, "positions", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], Project.prototype, "project_status", void 0);
+exports.Project = Project = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: "Users",
+        tableName: "Projects",
     })
-], User);
+], Project);

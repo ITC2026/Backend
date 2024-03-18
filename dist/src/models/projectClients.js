@@ -9,39 +9,34 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.ProjectClient = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-let User = class User extends sequelize_typescript_1.Model {
-};
-exports.User = User;
+const projects_1 = require("./projects");
+class ProjectClient extends sequelize_typescript_1.Model {
+}
+exports.ProjectClient = ProjectClient;
 __decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "username", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.ENUM("Account Manager", "Resource Manager", "Staffer")),
-    __metadata("design:type", String)
-], User.prototype, "role", void 0);
-__decorate([
+    (0, sequelize_typescript_1.Table)({
+        tableName: "ProjectClients",
+    }),
     sequelize_typescript_1.CreatedAt,
-    sequelize_typescript_1.Column,
     __metadata("design:type", Date)
-], User.prototype, "createdAt", void 0);
+], ProjectClient.prototype, "createdAt", void 0);
 __decorate([
     sequelize_typescript_1.UpdatedAt,
-    sequelize_typescript_1.Column,
     __metadata("design:type", Date)
-], User.prototype, "updatedAt", void 0);
-exports.User = User = __decorate([
-    (0, sequelize_typescript_1.Table)({
-        tableName: "Users",
-    })
-], User);
+], ProjectClient.prototype, "updatedAt", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => projects_1.Project) // Add this line
+    ,
+    sequelize_typescript_1.Column // Add this line
+    ,
+    __metadata("design:type", Number)
+], ProjectClient.prototype, "projectId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => Client) // Add this line
+    ,
+    sequelize_typescript_1.Column // Add this line
+    ,
+    __metadata("design:type", Number)
+], ProjectClient.prototype, "clientId", void 0);
