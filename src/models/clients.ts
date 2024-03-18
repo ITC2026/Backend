@@ -52,11 +52,9 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   division!: string; 
 
   @CreatedAt
-  @Column(DataType.DATE)
   createdAt!: Date;
 
   @UpdatedAt
-  @Column(DataType.DATE)
   updatedAt!: Date;
 
   @HasMany(() => Project)

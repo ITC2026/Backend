@@ -52,12 +52,10 @@ __decorate([
 ], Client.prototype, "division", void 0);
 __decorate([
     sequelize_typescript_1.CreatedAt,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
     __metadata("design:type", Date)
 ], Client.prototype, "createdAt", void 0);
 __decorate([
     sequelize_typescript_1.UpdatedAt,
-    (0, sequelize_typescript_1.Column)(sequelize_typescript_1.DataType.DATE),
     __metadata("design:type", Date)
 ], Client.prototype, "updatedAt", void 0);
 __decorate([
