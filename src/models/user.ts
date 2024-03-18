@@ -1,5 +1,7 @@
 import {Table, Model, Column, CreatedAt, UpdatedAt, DataType} from 'sequelize-typescript';
 import {Optional} from 'sequelize';
+import isEmail from 'validator/lib/isEmail';
+import { validator } from 'sequelize/types/utils/validator-extras';
 
 interface UserAttributes {
     id: number;
@@ -23,7 +25,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
     @Column
     email?: string;
 
-    @Column
+    @Column(DataType.ENUM('Account Manager', 'Resource Manager', 'Staffer'))
     role!: string;
 
     @CreatedAt

@@ -10,16 +10,3 @@ apiRouter.get('/', (req: Request, res: Response) => {
 });
 
 export default apiRouter;
-
-
-/*import productRoutes from './productRoutes';
-
-const apiRouter: Router = Router();
-
-apiRouter.use('/product', productRoutes);
-
-apiRouter.get('/', (req:Request, res:Response) => {
-    res.send('Hello TypeScript 4');
-});
-
-export default apiRouter;*/
