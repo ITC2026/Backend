@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { Employee } from '../models/employee/employee'; 
-import { Bench } from '../models/employee/bench';
-import { Billing } from '../models/employee/billing';
-import { Pipeline } from '../models/employee/pipeline';
-import { Hired } from '../models/employee/hired_employee';
+import { Employee } from '../../models/employee/employee'; 
+import { Bench } from '../../models/employee/bench';
+import { Billing } from '../../models/employee/billing';
+import { Pipeline } from '../../models/employee/pipeline';
+import { Hired } from '../../models/employee/hired_employee';
 
 export const getAllEmployees = async (req: Request, res: Response) => {
   const employees = await Employee.findAll();
