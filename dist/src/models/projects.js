@@ -16,11 +16,7 @@ let Project = class Project extends sequelize_typescript_1.Model {
     getPositions() {
         return positions_1.Position.findAll({
             where: {
-<<<<<<< HEAD
                 project: this.id,
-=======
-                id_project: this.id,
->>>>>>> 32d082879f0968f51d34d2cab98d0d4d001b665f
             },
         });
     }
