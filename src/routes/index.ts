@@ -1,12 +1,12 @@
 import { Router, Request, Response } from 'express';
-import productRoutes from './productRoutes';
+import employeeRoutes from './employeeRoutes';
 
 const apiRouter: Router = Router();
 
-apiRouter.use('/product', productRoutes);
+apiRouter.use('/employee', employeeRoutes);
 
 apiRouter.get('/', (req:Request, res:Response) => {
-    res.send('Hello TypeScript 4');
+    res.send('Hello World');
 });
 
 export default apiRouter;
