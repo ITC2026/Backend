@@ -1,16 +1,12 @@
-import { Router } from 'express';
-import { createProduct, deleteProduct, getAllProducts, getProductById, modifyProduct } from '../controllers/productControllers';
+import express from 'express';
+import * as employeesController from './src/controllers/employeesController'; // Importa tus controladores
 
-const productRouter: Router = Router();
+const router = express.Router();
 
-productRouter.get('/', getAllProducts);
+router.get('/employees', employeesController.getAllEmployees);
+router.get('/employees/:id', employeesController.getEmployeeById);
+router.post('/employees', employeesController.createEmployee);
+router.patch('/employees/:id', employeesController.updateEmployee);
+router.delete('/employees/:id', employeesController.deleteEmployee);
 
-productRouter.get('/:id', getProductById);
-
-productRouter.post('/', createProduct);
-
-productRouter.delete('/', deleteProduct);
-
-productRouter.patch('/:id', modifyProduct);
-
-export default productRouter;
+export default router;
