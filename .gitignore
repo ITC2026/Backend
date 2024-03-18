@@ -1,6 +1,6 @@
 # Official TypeScript Build Output
 
-dist/
+
 node_modules/
 .node_modules/
 built/*
