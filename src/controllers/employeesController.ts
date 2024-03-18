@@ -124,7 +124,7 @@ export const getEmployeeBillingById: RequestHandler = async (req: Request, res: 
 
 //TO DO
 
-export const createEmployee = async (req: Request, res: Response) => {
+export const createEmployee: RequestHandler = async (req: Request, res: Response) => {
   if (!req.body) {
     return res.status(400).json({
       status: "error",
@@ -134,18 +134,18 @@ export const createEmployee = async (req: Request, res: Response) => {
   }
 
   Employee.create({ ...req.body })
-    .then((data: Employee) => {
+    .then((data: Employee | null) => {
       return res.status(201).json({
         status: "Success",
         message: "Employee created successfully",
         payload: data,
       });
     })
-    .catch((error: Error) => {
+    .catch((error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Employee not created",
-        payload: error.message,
+        message: "Something happened creating a product. " + error.message,
+        payload: null,
       });
     });
 };
@@ -168,32 +168,31 @@ export const updateEmployee = async (req: Request, res: Response) => {
           message: "Employee updated successfully",
           payload: { ...req.body },
         });
+      } else {
+        return res.status(500).json({
+          status: "Success",
+          message: "Employee not updated",
+          payload: null,
+        });
       }
-
-      return res.status(500).json({
-        status: "Success",
-        message: "Something happened updating the employee",
-        payload: null,
-      });
     })
-    .catch((error: Error) => {
+    .catch((err) => {
       return res.status(500).json({
         status: "Error",
-        message: `Employee not updated: ${error.message}`,
+        message: "Something happened updating the employee " + err.message,
         payload: null,
       });
     });
 };
 
-export const deleteEmployee = async (req: Request, res: Response) => {
+export const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
   const { id } = req.body;
   try {
     await Employee.destroy({ where: { id } });
     return res.status(200).json({ message: "Employee deleted" });
-  } catch (error) {
+  } catch (err) {
     return res.status(500).json({
-      message: "Error deleting employee",
-      error,
+      message: "Error deleting employee. " + err,
     });
   }
 };
