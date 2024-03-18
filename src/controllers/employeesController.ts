@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { Employee } from '../../models/employee/employee'; 
-import { Bench } from '../../models/employee/bench';
-import { Billing } from '../../models/employee/billing';
-import { Pipeline } from '../../models/employee/pipeline';
-import { Hired } from '../../models/employee/hired_employee';
+import { Employee } from '../models/employee/employee';
+import { Pipeline } from '../models/employee/pipeline';
+import { Hired } from '../models/employee/hired_employee';
+import { Bench } from '../models/employee/bench';
+import { Billing } from '../models/employee/billing';
 
 export const getAllEmployees = async (req: Request, res: Response) => {
   const employees = await Employee.findAll();
@@ -88,23 +88,18 @@ export const deleteEmployee = async (req: Request, res: Response) => {
     });
   }
 };
+  
+export const getEmployeePipelineById = async (req: Request, res: Response) => {
+  const employee = await Employee.findByPk(req.params.id, { include: Pipeline });
+  res.json(employee);
+};
 
-export const getEmployeeBench = async (req: Request, res: Response) => {
-    const employee = await Employee.findByPk(req.params.id, { include: Bench });
-    res.json(employee);
-  };
-  
-  export const getEmployeeBilling = async (req: Request, res: Response) => {
-    const employee = await Employee.findByPk(req.params.id, { include: Billing });
-    res.json(employee);
-  };
-  
-  export const getEmployeePipeline = async (req: Request, res: Response) => {
-    const employee = await Employee.findByPk(req.params.id, { include: Pipeline });
-    res.json(employee);
-  };
-  
-  export const getEmployeeHired = async (req: Request, res: Response) => {
-    const employee = await Employee.findByPk(req.params.id, { include: Hired });
-    res.json(employee);
-  };
+export const getEmployeeBenchById = async (req: Request, res: Response) => {
+  const employee = await Employee.findByPk(req.params.id, { include: Bench });
+  res.json(employee);
+};
+
+export const getEmployeeBillingById = async (req: Request, res: Response) => {
+  const employee = await Employee.findByPk(req.params.id, { include: Billing });
+  res.json(employee);
+};

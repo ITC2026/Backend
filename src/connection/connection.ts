@@ -6,7 +6,7 @@ import { Pipeline } from '../models/employee/pipeline';
 import { Hired } from '../models/employee/hired_employee';
 
 const connection = new Sequelize({
-  database: 'sisweb_db',
+  database: 'employeeDB',
   dialect: 'postgres',
   username: 'sisweb_user',
   password: 'HDK#$%Ljkwerff.89',
@@ -17,7 +17,7 @@ const connection = new Sequelize({
 
 async function connectionDB() {
   try {
-    await connection.sync({ alter: true }); // Enable it only when you're turning into development mode
+    await connection.sync(); // Enable it only when you're turning into development mode
   } catch (e) {
     console.log(e);
   }
