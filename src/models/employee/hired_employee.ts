@@ -39,7 +39,7 @@ export class Hired extends Model<HiredAttributes, HiredCreationAttributes> {
   work_hours!: number;
 
   @HasOne(() => Employee)
-  employee: Employee = new Employee();
+  employee: any;
 
   @ForeignKey(() => Bench)
   @Column
@@ -57,9 +57,9 @@ export class Hired extends Model<HiredAttributes, HiredCreationAttributes> {
 
   @CreatedAt
   @Column
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdatedAt
   @Column
-  updatedAt!: Date;
+  updated_at!: Date;
 }

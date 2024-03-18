@@ -10,8 +10,8 @@ interface EmployeeAttributes {
   division: string;
   title_job: string;
   grade_job: string;
-  techStack: string;
-  registrationDate: Date;
+  tech_stack: string;
+  registration_date: Date;
   phone: string;
   email: string;
 }
@@ -20,6 +20,7 @@ interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> 
 
 @Table({
   tableName: "Employee",
+  timestamps: true
 })
 export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> {
   @Column
@@ -38,16 +39,16 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
   grade_job!: string;
 
   @Column
-  techStack!: string;
+  tech_stack!: string;
 
   @Column
-  registrationDate!: Date;
+  registration_date!: Date;
 
   @Column
   phone_number!: number;
 
   @Column
-  email!: number;
+  email!: string;
 
   @ForeignKey(() => Pipeline)
   @Column
@@ -65,9 +66,9 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
 
   @CreatedAt
   @Column
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdatedAt
   @Column
-  updatedAt!: Date;
+  updated_at!: Date;
 }

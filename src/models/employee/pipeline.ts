@@ -25,13 +25,13 @@ export class Pipeline extends Model<PipelineAttributes, PipelineCreationAttribut
   days_in_pipeline!: number;
 
   @HasOne(() => Employee)
-  employee: Employee = new Employee();
+  employee: any;
 
   @CreatedAt
   @Column
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdatedAt
   @Column
-  updatedAt!: Date;
+  updated_at!: Date;
 }

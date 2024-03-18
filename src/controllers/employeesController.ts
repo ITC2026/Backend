@@ -6,30 +6,123 @@ import { Bench } from '../models/employee/bench';
 import { Billing } from '../models/employee/billing';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findAll({
-    attributes: ['name'] 
-  })
+  Employee.findAll({ 
+      include: { 
+        all: true, nested: true 
+      }
+    })
     .then((data: Employee[]) => {
       return res.status(200).json({
         status: "success",
-        message: "Employee names successfully retrieved",
+        message: "Employees successfully retrieved.",
         payload: data,
       });
     })
     .catch((err) => {
       return res.status(500).json({
         status: "error",
-        message: "Something happened retrieving all employee names. " + err.message,
+        message: "Something happened retrieving all employees. " + err.message,
         payload: null,
       });
     });
 };
 
 
-export const getEmployeeById = async (req: Request, res: Response) => {
-  const employee = await Employee.findByPk(req.params.id);
-  res.json(employee);
+export const getEmployeeById: RequestHandler = async (req: Request, res: Response) => {
+  Employee.findByPk(req.params.id, { 
+      include: { 
+        all: true, nested: true 
+      }
+    })
+    .then((data: Employee | null) => {
+      return res.status(200).json({
+        status: "success",
+        message: "Employee successfully retrieved",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "error",
+        message: "Something happened retrieving the product. " + err.message,
+        payload: null,
+      });
+    });
 };
+
+export const getEmployeePipelineById: RequestHandler = async (req: Request, res: Response) => {
+  Employee.findByPk(req.params.id, { 
+      include: [{
+        model: Pipeline
+      }]
+    })
+    .then((data: Employee | null) => {
+      return res.status(200).json({
+        status: "success",
+        message: "Employee successfully retrieved",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "error",
+        message: "Something happened retrieving the product. " + err.message,
+        payload: null,
+      });
+    });
+};
+
+export const getEmployeeBenchById: RequestHandler = async (req: Request, res: Response) => {
+  Employee.findByPk(req.params.id, { 
+      include: [{
+        model: Hired,
+        include: [{
+          model: Bench,
+        }]
+      }]
+    })
+    .then((data: Employee | null) => {
+      return res.status(200).json({
+        status: "success",
+        message: "Employee successfully retrieved",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "error",
+        message: "Something happened retrieving the product. " + err.message,
+        payload: null,
+      });
+    });
+};
+
+export const getEmployeeBillingById: RequestHandler = async (req: Request, res: Response) => {
+  Employee.findByPk(req.params.id, { 
+      include: [{
+        model: Hired,
+        include: [{
+          model: Billing,
+        }]
+      }]
+    })
+    .then((data: Employee | null) => {
+      return res.status(200).json({
+        status: "success",
+        message: "Employee successfully retrieved",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      return res.status(500).json({
+        status: "error",
+        message: "Something happened retrieving the product. " + err.message,
+        payload: null,
+      });
+    });
+};
+
+//TO DO
 
 export const createEmployee = async (req: Request, res: Response) => {
   if (!req.body) {
@@ -103,19 +196,4 @@ export const deleteEmployee = async (req: Request, res: Response) => {
       error,
     });
   }
-};
-  
-export const getEmployeePipelineById = async (req: Request, res: Response) => {
-  const employee = await Employee.findByPk(req.params.id, { include: Pipeline });
-  res.json(employee);
-};
-
-export const getEmployeeBenchById = async (req: Request, res: Response) => {
-  const employee = await Employee.findByPk(req.params.id, { include: Bench });
-  res.json(employee);
-};
-
-export const getEmployeeBillingById = async (req: Request, res: Response) => {
-  const employee = await Employee.findByPk(req.params.id, { include: Billing });
-  res.json(employee);
 };

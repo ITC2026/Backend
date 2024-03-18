@@ -21,13 +21,13 @@ export class Billing extends Model<BillingAttributes, BillingCreationAttributes>
   days_billing!: number;
 
   @HasOne(() => Hired)
-  hired: Hired = new Hired();
+  hired: any;
 
   @CreatedAt
   @Column
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdatedAt
   @Column
-  updatedAt!: Date;
+  updated_at!: Date;
 }

@@ -18,16 +18,16 @@ export class Bench extends Model<BenchAttributes, BenchCreationAttributes> {
   bench_since!: Date;
 
   @Column
-  bench_billing!: number;
+  days_bench!: number;
 
   @HasOne(() => Hired)
-  hired: Hired = new Hired();
+  hired: any;
 
   @CreatedAt
   @Column
-  createdAt!: Date;
+  created_at!: Date;
 
   @UpdatedAt
   @Column
-  updatedAt!: Date;
+  updated_at!: Date;
 }
