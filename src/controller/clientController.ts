@@ -1,6 +1,5 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Client } from "../models/client";
-import { Category } from "../models/category"
 
 // Create and Save a New Client
 export const createClient: RequestHandler = (req: Request, res: Response) => {
@@ -36,8 +35,7 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {
   // Calling the Sequelize findAll method. This is the same that a SELECT * FROM PRODUCT in a SQL query.
   Client.findAll({include: [{
-    model: Category,
-    attributes: ['name']
+    all: true,
   }]})
   .then((data: Client[]) => {
     return res.status(200).json({
