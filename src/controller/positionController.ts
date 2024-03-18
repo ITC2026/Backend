@@ -29,6 +29,14 @@ export const getPositions: RequestHandler = async (
 ) => {
   Position.findAll()
     .then((data: unknown[] | null) => {
+      if (!data || data.length === 0) {
+        return res.status(404).json({
+          status: "Error",
+          message: "No Positions found",
+          payload: null,
+        });
+      }
+
       return res.status(200).json({
         status: "Success",
         message: "Positions retrieved successfully",
