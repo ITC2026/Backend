@@ -186,7 +186,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
 };
 
 export const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     await Employee.destroy({ where: { id } });
     return res.status(200).json({ message: "Employee deleted" });

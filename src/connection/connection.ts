@@ -11,7 +11,7 @@ const connection = new Sequelize({
   username: 'sisweb_user',
   password: 'HDK#$%Ljkwerff.89',
   storage: ':memory:',
-  schema: 'public',
+  host: 'localhost',
   models: [Employee, Bench, Billing, Pipeline, Hired], 
 });
 
