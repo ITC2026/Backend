@@ -199,7 +199,11 @@ exports.createPositionByProject = createPositionByProject;
 const deletePositionByProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     const proj_id = req.params.id;
+<<<<<<< HEAD
     positions_1.Position.destroy({ where: { id, project: proj_id } })
+=======
+    positions_1.Position.destroy({ where: { id, id_project: proj_id } })
+>>>>>>> 32d082879f0968f51d34d2cab98d0d4d001b665f
         .then(() => {
         return res.status(200).json({ message: "Position deleted" });
     })

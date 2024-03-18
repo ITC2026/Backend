@@ -1,26 +1,26 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import {
+  createProject,
+  getProjects,
+  getProjectById,
+  updateProject,
+  deleteProject,
+  getJobPositionsByProject,
+  createPositionByProject,
+  deletePositionByProject,
+} from "../controller/projectController";
 
 const projectRouter: Router = Router();
 
-projectRouter.get("/", (req: Request, res: Response) => {
-  res.send("Get a list of projects");
-});
+projectRouter.get("/", getProjects);
+projectRouter.get("/:id", getProjectById);
+projectRouter.post("/", createProject);
+projectRouter.delete("/", deleteProject);
+projectRouter.patch("/:id", updateProject);
 
-projectRouter.get("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(`Get a list of projects ${id}`);
-});
-
-projectRouter.post("/", (req: Request, res: Response) => {
-  const id = req.body.id;
-  const title = req.body.title;
-  const price = req.body.price;
-  res.send(`Create project ${id} - ${title} - ${price}`);
-});
-
-projectRouter.delete("/", (req: Request, res: Response) => {
-  const id = req.body.id;
-  res.send(`Deleted ${id}`);
-});
+// Positions
+projectRouter.get("/positions/:id", getJobPositionsByProject);
+projectRouter.post("/positions/:id", createPositionByProject);
+projectRouter.delete("/positions/:id", deletePositionByProject);
 
 export default projectRouter;

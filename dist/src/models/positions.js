@@ -18,6 +18,7 @@ exports.Position = Position;
 __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", String)
+<<<<<<< HEAD
 ], Position.prototype, "title_position", void 0);
 __decorate([
     sequelize_typescript_1.Column,
@@ -59,15 +60,66 @@ __decorate([
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], Position.prototype, "vacancy_id_position", void 0);
+=======
+], Position.prototype, "title", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "description", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], Position.prototype, "vacancies", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "publication_type", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Position.prototype, "cross_division", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "division", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "region", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "tech_stack", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", String)
+], Position.prototype, "demand_curation", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Boolean)
+], Position.prototype, "exclusivity", void 0);
+__decorate([
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], Position.prototype, "id_vacancy", void 0);
+>>>>>>> 32d082879f0968f51d34d2cab98d0d4d001b665f
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => projects_1.Project),
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
+<<<<<<< HEAD
 ], Position.prototype, "project_id_position", void 0);
 __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => projects_1.Project),
     __metadata("design:type", projects_1.Project)
 ], Position.prototype, "project_position", void 0);
+=======
+], Position.prototype, "id_project", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => projects_1.Project),
+    __metadata("design:type", projects_1.Project)
+], Position.prototype, "project", void 0);
+>>>>>>> 32d082879f0968f51d34d2cab98d0d4d001b665f
 __decorate([
     sequelize_typescript_1.CreatedAt,
     __metadata("design:type", Date)

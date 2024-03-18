@@ -5,9 +5,9 @@ export const createPosition: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project } = req.body;
-  Position.create({ title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project })
-    .then((data: any) => {
+  const { title_position, description_position, vacancies_position, publication_type_position, cross_division_position, division_position, region_position, tech_stack_position, demand_curation_position, is_exclusive_position, vacancy_id_position, project } = req.body;
+  Position.create(req.body)
+    .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
         message: "Position created successfully",
@@ -28,7 +28,7 @@ export const getPositions: RequestHandler = async (
   res: Response
 ) => {
   Position.findAll()
-    .then((data: any[] | null) => {
+    .then((data: unknown[] | null) => {
       return res.status(200).json({
         status: "Success",
         message: "Positions retrieved successfully",
@@ -50,7 +50,7 @@ export const getPositionById: RequestHandler = async (
 ) => {
   const id = req.params.id;
   Position.findByPk(id)
-    .then((data: any | null) => {
+    .then((data: unknown | null) => {
       return res.status(200).json({
         status: "Success",
         message: "Position retrieved successfully",
@@ -71,8 +71,8 @@ export const updatePosition: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  const { title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project } = req.body;
-  Position.update({ title, description, vacancies, publication_type, cross_division, division, region, tech_stack, demand_curation, exclusivity, id_vacancy, id_project }, { where: { id } })
+  const { title_position, description_position, vacancies_position, publication_type_position, cross_division_position, division_position, region_position, tech_stack_position, demand_curation_position, is_exclusive_position, vacancy_id_position, project } = req.body;
+  Position.update( req.body, { where: { id } })
     .then((isUpdated) => {
       return res.status(200).json({
         status: "Success",
