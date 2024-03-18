@@ -5,6 +5,7 @@ import { Hired } from './hired_employee';
 
 interface EmployeeAttributes {
   id: number;
+  name: string;
   region: string;
   division: string;
   title_job: string;
@@ -21,6 +22,9 @@ interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> 
   tableName: "Employee",
 })
 export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> {
+  @Column
+  name!: string;
+
   @Column
   region!: string;
 

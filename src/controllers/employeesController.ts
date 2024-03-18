@@ -1,13 +1,29 @@
-import { Request, Response } from 'express';
+import { RequestHandler, Request, Response } from 'express';
 import { Employee } from '../models/employee/employee';
 import { Pipeline } from '../models/employee/pipeline';
 import { Hired } from '../models/employee/hired_employee';
 import { Bench } from '../models/employee/bench';
 import { Billing } from '../models/employee/billing';
 
-export const getAllEmployees = async (req: Request, res: Response) => {
-  const employees = await Employee.findAll();
-  res.json(employees);
+export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
+  Employee.findAll({include: [{
+    model: Employee,
+    attributes: ['name']
+  }]})
+  .then((data: Employee[]) => {
+    return res.status(200).json({
+      status: "success",
+      message: "Employee successfully retrieved",
+      payload: data,
+    });
+  })
+  .catch((err) => {
+    return res.status(500).json({
+      status: "error",
+      message: "Something happened retrieving all employees. " + err.message,
+      payload: null,
+    });
+  });
 };
 
 export const getEmployeeById = async (req: Request, res: Response) => {
