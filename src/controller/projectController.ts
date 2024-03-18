@@ -176,7 +176,7 @@ export const createPositionByProject: RequestHandler = async (
   Project.findByPk(id)
     .then((data: Project | null) => {
       if (data) {
-        Position.create({ ...req.body, id_project: id })
+        Position.create({ ...req.body, project: id })
           .then((data: Position) => {
             return res.status(201).json({
               status: "Success",
@@ -215,7 +215,7 @@ export const deletePositionByProject: RequestHandler = async (
   const { id } = req.body;
   const proj_id = req.params.id;
 
-  Position.destroy({ where: { id, id_project: proj_id } })
+  Position.destroy({ where: { id, project: proj_id } })
     .then(() => {
       return res.status(200).json({ message: "Position deleted" });
     })
