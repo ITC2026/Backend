@@ -1,17 +1,20 @@
-import { Table, Model, Column } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne } from 'sequelize-typescript';
+import { Optional } from 'sequelize';
 import { Employee } from './employee';
 
 interface PipelineAttributes {
+  id: number;
   expected_salary: number;
   in_pipeline_since: Date;
   days_in_pipeline: number;
 }
 
+interface PipelineCreationAttributes extends Optional<PipelineAttributes, 'id'>{}
+
 @Table ({
   tableName: "Pipeline"
 })
-
-export class Pipeline extends Model<Employee, PipelineAttributes> {
+export class Pipeline extends Model<PipelineAttributes, PipelineCreationAttributes> {
   @Column
   expected_salary!: number;
 
@@ -20,4 +23,15 @@ export class Pipeline extends Model<Employee, PipelineAttributes> {
 
   @Column
   days_in_pipeline!: number;
+
+  @HasOne(() => Employee)
+  employee: Employee = new Employee();
+
+  @CreatedAt
+  @Column
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column
+  updatedAt!: Date;
 }

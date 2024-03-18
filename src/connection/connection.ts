@@ -1,5 +1,9 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Employee, Bench, Billing, Pipeline, Hired } from '../models/employee'; // Importa tus modelos
+import { Employee } from '../models/employee/employee';
+import { Bench } from '../models/employee/bench';
+import { Billing } from '../models/employee/billing';
+import { Pipeline } from '../models/employee/pipeline';
+import { Hired } from '../models/employee/hired_employee';
 
 const connection = new Sequelize({
   database: 'sisweb_db',
@@ -7,12 +11,13 @@ const connection = new Sequelize({
   username: 'sisweb_user',
   password: 'HDK#$%Ljkwerff.89',
   storage: ':memory:',
-  models: [Employee, Bench, Billing, Pipeline, Hired], // Añade tus modelos aquí
+  schema: 'public',
+  models: [Employee, Bench, Billing, Pipeline, Hired], 
 });
 
 async function connectionDB() {
   try {
-    await connection.sync({ alter: true }); // Disabled when you're turning into production mode
+    await connection.sync({ alter: true }); // Enable it only when you're turning into development mode
   } catch (e) {
     console.log(e);
   }

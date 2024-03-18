@@ -1,7 +1,11 @@
-import { Model, Column } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, ForeignKey, BelongsTo  } from 'sequelize-typescript';
+import { Optional } from 'sequelize';
 import { Employee } from './employee';
+import { Billing } from './billing';
+import { Bench } from './bench';
 
 interface HiredAttributes {
+  id: number;
   salary: number;
   contract_date: Date;
   start_working_date: Date;
@@ -10,7 +14,12 @@ interface HiredAttributes {
   work_hours: number;
 }
 
-export class Hired extends Model<Employee, HiredAttributes> {
+interface HiredCreationAttributes extends Optional<HiredAttributes, 'id'>{}
+
+@Table({
+  tableName: "Hired Employees",
+})
+export class Hired extends Model<HiredAttributes, HiredCreationAttributes> {
   @Column
   salary!: number;
 
@@ -28,4 +37,29 @@ export class Hired extends Model<Employee, HiredAttributes> {
 
   @Column
   work_hours!: number;
+
+  @HasOne(() => Employee)
+  employee: Employee = new Employee();
+
+  @ForeignKey(() => Bench)
+  @Column
+  benchId!: number;
+
+  @BelongsTo(() => Bench)
+  bench: Bench = new Bench();
+
+  @ForeignKey(() => Billing)
+  @Column
+  billingId!: number;
+
+  @BelongsTo(() => Billing)
+  billing: Billing = new Billing();
+
+  @CreatedAt
+  @Column
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column
+  updatedAt!: Date;
 }
