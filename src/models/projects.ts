@@ -5,10 +5,12 @@ import {
   CreatedAt,
   UpdatedAt,
   HasMany,
-  //  ForeignKey,
+  ForeignKey,
+  HasOne,
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
 import { Position } from "./positions";
+import { Client } from "./client";
 
 interface ProjectAttributes {
   id: number;
@@ -19,6 +21,7 @@ interface ProjectAttributes {
   deadline_project: Date;
   positions: Position[];
   project_status: number;
+  id_client: number;
 }
 
 interface ProjectCreationAttributes extends Optional<ProjectAttributes, "id"> {}
@@ -53,16 +56,17 @@ export class Project extends Model<
   @UpdatedAt
   deadline_project!: Date;
 
-  //TODO: Add this functionality.
-  /* 
+  @HasOne(() => Client)
+  client!: Client;
+
   @ForeignKey (() => Client)
   @Column
   client_id!: number;
-  */
 
   @HasMany(() => Position)
   positions!: Position[];
 
   @Column
   project_status!: number;
+
 }

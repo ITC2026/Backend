@@ -191,3 +191,45 @@ export const deleteClient: RequestHandler = async (req: Request, res: Response) 
     }
   });
 };
+
+// Find all projects of specific client
+
+export const getProjectsByClient: RequestHandler = async (req: Request, res: Response) => {
+
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).json({
+      status: "error",
+      message: "Client ID is required",
+      payload: null,
+    });
+  } 
+
+
+  Client.findByPk(req.params.id)
+    .then((data: Client | null) => {
+      if (data) {
+        data.getProjects()
+        .then((projects) => {
+          return res.status(200).json({
+            status: 'success',
+            message: 'Projects retrieved successfully',
+            payload: projects
+          });
+        });
+      } else {
+        return res.status(404).json({
+            status: 'error',
+            message: 'Client not found',
+            payload: null
+        });
+      }
+  })
+  .catch((err) => {
+      return res.status(500).json({
+          status: "error",
+          message: "There was an error finding the Client." + err.message,
+          payload: null,
+      });
+  });
+};
