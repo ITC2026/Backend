@@ -1,6 +1,6 @@
 import { Model, Column, CreatedAt, UpdatedAt, DataType, Table, HasMany} from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { Project } from '../project/project';
+import { Project } from './projects';
 
 
 interface ClientAttributes {
