@@ -122,8 +122,6 @@ export const getEmployeeBillingById: RequestHandler = async (req: Request, res: 
     });
 };
 
-//TO DO
-
 export const createEmployee: RequestHandler = async (req: Request, res: Response) => {
   if (!req.body) {
     return res.status(400).json({
@@ -133,7 +131,7 @@ export const createEmployee: RequestHandler = async (req: Request, res: Response
     });
   }
 
-  Employee.create(req.body, {
+  Employee.create({ ...req.body }, {
       include: [
         Pipeline, 
         {
@@ -167,30 +165,59 @@ export const updateEmployee = async (req: Request, res: Response) => {
     });
   }
 
-  const id = req.params.id;
-  Employee.update({ ...req.body }, { where: { id } })
-    .then((isUpdated) => {
-      if (isUpdated) {
-        return res.status(200).json({
-          status: "Success",
-          message: "Employee updated successfully",
-          payload: { ...req.body },
-        });
-      } else {
-        return res.status(500).json({
-          status: "Success",
-          message: "Employee not updated",
-          payload: null,
-        });
-      }
-    })
-    .catch((err) => {
-      return res.status(500).json({
+  try {
+    const employee = await Employee.findOne({ where: { id: req.params.id } });
+
+    if (!employee) {
+      return res.status(404).json({
         status: "Error",
-        message: "Something happened updating the employee " + err.message,
+        message: "Employee not found",
         payload: null,
       });
+    }
+
+    employee.update(req.body);
+
+    if (req.body.pipeline) {
+      const pipeline = await Pipeline.findOne({ where: { id: employee.pipelineId } });
+      if (pipeline) {
+        pipeline.update(req.body.pipeline);
+      }
+    }
+
+    if (req.body.hired) {
+      const hired = await Hired.findOne({ where: { id: employee.hiredId } });
+      if (hired) {
+        hired.update(req.body.hired);
+
+        if (req.body.hired.bench) {
+          const bench = await Bench.findOne({ where: { id: hired.benchId } });
+          if (bench) {
+            bench.update(req.body.hired.bench);
+          }
+        }
+
+        if (req.body.hired.billing) {
+          const billing = await Billing.findOne({ where: { id: hired.billingId } });
+          if (billing) {
+             billing.update(req.body.hired.billing);
+          }
+        }
+      }
+    }
+
+    return res.status(200).json({
+      status: "Success",
+      message: "Employee updated successfully",
+      payload: employee,
+    }); 
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: "Something happened updating the employee " + err,
+      payload: null,
     });
+  }
 };
 
 export const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
