@@ -162,11 +162,11 @@ export const modifyClient: RequestHandler = async (req: Request, res: Response) 
 
 // Delete a Client with the specified if in the request 
 export const deleteClient: RequestHandler = async (req: Request, res: Response) => {
-  Client.findByPk(req.params.id)
+  Client.findByPk(req.body.id)
   .then((data: Client | null) => {
     if (data) {
       // Delete the client
-      Client.destroy({where: {id: req.params.id} })
+      Client.destroy({where: {id: req.body.id} })
       .then((isDeleted) => {
         if(isDeleted){
           return res.status(200).json({

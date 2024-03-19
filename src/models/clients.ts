@@ -12,6 +12,7 @@ interface ClientAttributes {
   exclusivity: string;
   high_growth: boolean;
   division: string;
+  projects: Project[];
 }
 
 interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
