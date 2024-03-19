@@ -21,7 +21,7 @@ export class Billing extends Model<BillingAttributes, BillingCreationAttributes>
   days_billing!: number;
 
   @HasOne(() => Hired)
-  hired: any;
+  hired!: Hired;
 
   @CreatedAt
   @Column

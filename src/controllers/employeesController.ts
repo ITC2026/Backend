@@ -133,7 +133,15 @@ export const createEmployee: RequestHandler = async (req: Request, res: Response
     });
   }
 
-  Employee.create({ ...req.body })
+  Employee.create(req.body, {
+      include: [
+        Pipeline, 
+        {
+          model: Hired,
+          include: [Bench, Billing]
+        }
+      ]
+    })
     .then((data: Employee | null) => {
       return res.status(201).json({
         status: "Success",

@@ -21,7 +21,7 @@ export class Bench extends Model<BenchAttributes, BenchCreationAttributes> {
   days_bench!: number;
 
   @HasOne(() => Hired)
-  hired: any;
+  hired!: Hired;
 
   @CreatedAt
   @Column

@@ -39,21 +39,21 @@ export class Hired extends Model<HiredAttributes, HiredCreationAttributes> {
   work_hours!: number;
 
   @HasOne(() => Employee)
-  employee: any;
+  employee!: Employee;
 
   @ForeignKey(() => Bench)
   @Column
   benchId!: number;
 
   @BelongsTo(() => Bench)
-  bench: Bench = new Bench();
+  bench!: Bench;
 
   @ForeignKey(() => Billing)
   @Column
   billingId!: number;
 
   @BelongsTo(() => Billing)
-  billing: Billing = new Billing();
+  billing!: Billing;
 
   @CreatedAt
   @Column

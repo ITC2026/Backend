@@ -55,14 +55,14 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
   pipelineId!: number;
 
   @BelongsTo(() => Pipeline)
-  pipeline: Pipeline = new Pipeline();
+  pipeline!: Pipeline;
 
   @ForeignKey(() => Hired)
   @Column
   hiredId!: number;
 
   @BelongsTo(() => Hired)
-  hired: Hired = new Hired();
+  hired!: Hired;
 
   @CreatedAt
   @Column
