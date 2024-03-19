@@ -6,9 +6,11 @@ import {
   UpdatedAt,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";  
 import { Project } from "./projects";
+import { Vacancy } from "./vacancies";
 
 interface PositionAttributes {
   id: number;
@@ -22,7 +24,8 @@ interface PositionAttributes {
   tech_stack_position: string;
   demand_curation_position: string;
   is_exclusive_position: boolean;
-  vacancy_id_position?: number;
+  vacancies: Vacancy[];
+  project_id_position: number;
   project: Project;
 }
 
@@ -32,6 +35,14 @@ interface PositionCreationAttributes extends Optional<PositionAttributes, "id"> 
   tableName: "Positions",
 })
 export class Position extends Model<PositionAttributes, PositionCreationAttributes> {
+  getVacancies(): Promise<Vacancy[]> {
+    return Vacancy.findAll({
+      where: {
+        position_id_vacancy: this.id,
+      }
+    })
+  }
+
   @Column
   title_position!: string;
 
@@ -62,15 +73,14 @@ export class Position extends Model<PositionAttributes, PositionCreationAttribut
   @Column
   is_exclusive_position!: boolean;
   
-  @Column
-  vacancy_id_position!: number;
+  @HasMany(()=> Vacancy)
+  vacancies!: Vacancy[];
 
-  @ForeignKey(() => Project)
-  @Column
+  @ForeignKey(() => Project) 
   project_id_position!: number;
 
   @BelongsTo(() => Project)
-  project!: Project;
+  project: Project = new Project();
 
   @CreatedAt
   createdAt!: Date;
