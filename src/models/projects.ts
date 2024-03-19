@@ -33,7 +33,7 @@ export class Project extends Model<
   getPositions(): Promise<Position[]> {
     return Position.findAll({
       where: {
-        project: this.id,
+        project_id_position: this.id,
       },
     });
   }
@@ -59,7 +59,7 @@ export class Project extends Model<
   @Column
   client_id!: number;
   */
-
+  
   @HasMany(() => Position)
   positions!: Position[];
 

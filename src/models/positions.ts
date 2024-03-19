@@ -35,6 +35,14 @@ interface PositionCreationAttributes extends Optional<PositionAttributes, "id"> 
   tableName: "Positions",
 })
 export class Position extends Model<PositionAttributes, PositionCreationAttributes> {
+  getVacancies(): Promise<Vacancy[]> {
+    return Vacancy.findAll({
+      where: {
+        position_id_vacancy: this.id,
+      }
+    })
+  }
+
   @Column
   title_position!: string;
 

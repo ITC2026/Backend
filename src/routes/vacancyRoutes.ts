@@ -15,5 +15,4 @@ vacancyRouter.post('/', (createVacancy));
 vacancyRouter.patch('/:id', (updateVacancy));
 vacancyRouter.delete('/', (deleteVacancy));
 
-//TODO Vacancy Methods For Positions
 export default vacancyRouter;

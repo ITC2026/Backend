@@ -99,7 +99,7 @@ export const deleteVacancy: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const id = req.params.id;
+  const id = req.body.id;
   Vacancy.destroy({ where: { id } })
     .then((isDeleted) => {
       return res.status(200).json({
@@ -116,3 +116,4 @@ export const deleteVacancy: RequestHandler = async (
       });
     });
 };
+
