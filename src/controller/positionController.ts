@@ -1,14 +1,13 @@
 import { RequestHandler, Request, Response } from "express";
 import { Position } from "../models/positions"; // Import the Position model
 import { Vacancy } from "../models/vacancies";
-import { createVacancy } from "./vacancyController";
+// import { createVacancy } from "./vacancyController";
 
 export const createPosition: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { title_position, description_position, vacancies_position, publication_type_position, cross_division_position, division_position, region_position, tech_stack_position, demand_curation_position, is_exclusive_position, vacancy_id_position, project } = req.body;
-  Position.create(req.body)
+  Position.create({ ...req.body })
     .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
@@ -61,6 +60,13 @@ export const getPositionById: RequestHandler = async (
   const id = req.params.id;
   Position.findByPk(id)
     .then((data: unknown | null) => {
+      if (!data) {
+        return res.status(404).json({
+          status: "Error",
+          message: "Job Position not found",
+          payload: null,
+        });
+      }
       return res.status(200).json({
         status: "Success",
         message: "Job Position retrieved successfully",
@@ -81,13 +87,19 @@ export const updatePosition: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  const { title_position, description_position, vacancies_position, publication_type_position, cross_division_position, division_position, region_position, tech_stack_position, demand_curation_position, is_exclusive_position, vacancy_id_position, project } = req.body;
-  Position.update( req.body, { where: { id } })
+  Position.update({ ...req.body }, { where: { id } })
     .then((isUpdated) => {
-      return res.status(200).json({
-        status: "Success",
-        message: "Job Position updated successfully",
-        payload: isUpdated,
+      if (isUpdated) {
+        return res.status(200).json({
+          status: "Success",
+          message: "Job Position updated successfully",
+          payload: { ...req.body },
+        });
+      }
+      return res.status(500).json({
+        status: "Error",
+        message: "Job Position not updated",
+        payload: null,
       });
     })
     .catch((error: Error) => {
@@ -106,16 +118,23 @@ export const deletePosition: RequestHandler = async (
   const id = req.body.id;
   Position.destroy({ where: { id } })
     .then((isDeleted) => {
-      return res.status(200).json({
-        status: "Success",
-        message: "Job Position deleted successfully",
-        payload: isDeleted,
+      if (isDeleted) {
+        return res.status(200).json({
+          status: "Success",
+          message: "Job Position deleted successfully",
+          payload: { ...req.body },
+        });
+      }
+      return res.status(500).json({
+        status: "Error",
+        message: "Job Position not deleted",
+        payload: null,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Job Position not deleted",
+        message: "Error deleting Job Position",
         payload: error.message,
       });
     });
@@ -152,4 +171,3 @@ export const getVacanciesByPosition: RequestHandler = async (
       });
     });
 };
-

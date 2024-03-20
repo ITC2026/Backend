@@ -15,6 +15,12 @@
 - Andrés Sandoval Ibarra - A01253138
 - Martín Gerardo Tánori Sitten - A01252900
 
+### Cómo correr el proyecto
+
+1. Clonar el repositorio `git clone https://www.github.com/ITC2016/3.7.4`
+2. Correr el comando `npm install` para instalar las dependencias
+3. Correr el comando `npm run dev` para correr el servidor
+
 ### Descripción
 
 Se dividirán en los equipos de reto para realizar cada uno el seminario.

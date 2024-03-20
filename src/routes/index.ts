@@ -3,12 +3,14 @@ import userRoutes from "./userRoutes";
 import projectRouter from "./projectRoutes";
 import positionRouter from "./positionRoutes";
 import vacancyRouter from "./vacancyRoutes";
+import clientRouter from "./clientRoutes";
 
 const apiRouter: Router = Router();
 
 apiRouter.use("/user", userRoutes);
 apiRouter.use("/projects", projectRouter);
 apiRouter.use("/positions", positionRouter);
+apiRouter.use("/clients", clientRouter);
 apiRouter.use("/vacancies", vacancyRouter)
 
 apiRouter.get("/", (req: Request, res: Response) => {
