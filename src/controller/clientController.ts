@@ -116,23 +116,11 @@ export const modifyClient: RequestHandler = async (req: Request, res: Response) 
     });
   }
 
-  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division } = req.body;
-
-  //Validations
-
-  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division) {
-    return res.status(400).json({
-        status: 'error',
-        message: 'All fields are required',
-        payload: null
-    });
-  }
-
-  if (!validator.isURL(contract_pdf_url)) {
+  if (!validator.isURL(req.body.contract_pdf_url)) {
     return res.status(400).json({ message: 'Invalid URL format for contract' });
   }
 
-  if (!validator.isURL(logo_url)) {
+  if (!validator.isURL(req.body.logo_url)) {
     return res.status(400).json({ message: 'Invalid URL format for logo' });
   }
 
