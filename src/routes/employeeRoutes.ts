@@ -7,7 +7,7 @@ router.get('/', getAllEmployees);
 router.get('/:id', getEmployeeById);
 router.post('/', createEmployee);
 router.patch('/:id', updateEmployee);
-router.delete('/:id', deleteEmployee);
+router.delete('/', deleteEmployee);
 router.get('/pipeline/:id', getEmployeePipelineById);
 router.get('/bench/:id', getEmployeeBenchById);
 router.get('/billing/:id', getEmployeeBillingById);

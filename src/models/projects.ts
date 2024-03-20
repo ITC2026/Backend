@@ -21,7 +21,7 @@ interface ProjectAttributes {
   deadline_project: Date;
   positions: Position[];
   project_status: number;
-  id_client: number;
+  client_id: number;
 }
 
 interface ProjectCreationAttributes extends Optional<ProjectAttributes, "id"> {}

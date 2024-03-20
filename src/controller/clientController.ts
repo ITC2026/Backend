@@ -2,19 +2,12 @@ import { RequestHandler, Request, Response } from 'express';
 import { Client } from "../models/clients";
 import validator from 'validator';
 import { Project } from '../models/projects';
-import { Position } from '../models/positions';
-import { Vacancy } from '../models/vacancies';
-import { Employee } from '../models/employee/employee';
-import { Pipeline } from '../models/employee/pipeline';
-import { Hired } from '../models/employee/hired_employee';
-import { Bench } from '../models/employee/bench';
-import { Billing } from '../models/employee/billing';
 
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {
   Client.findAll({ 
     include: { 
-      all: true, nested: true 
+      model: Project,
     }
   })
   .then((data: Client[]) => {
@@ -35,7 +28,11 @@ export const getAllClients: RequestHandler = (req: Request, res: Response) => {
 
 // Find a single Client with an id
 export const getClientById: RequestHandler = (req: Request, res: Response) => {
-  Client.findByPk(req.params.id)
+  Client.findByPk(req.params.id, { 
+    include:{ 
+      model: Project,
+    }
+  })
     .then((data: Client | null) => {
       if (data) {
         return res.status(200).json({
@@ -91,34 +88,10 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
   }
 
   // Save Client in the Database
-  Client.create({ ...req.body }, {
-    include: [
-      {
-        model: Project,
-        include: [
-          {
-            model: Position,
-            include: [
-              {
-                model: Vacancy,
-                include: [
-                  {
-                    model: Employee,
-                    include: [
-                      Pipeline,
-                      {
-                        model: Hired,
-                        include: [Bench, Billing]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
+  Client.create({ ...req.body }, { 
+    include: { 
+      model: Project,
+    }
   })
     .then((data: Client | null) => {
       res.status(200).json({
