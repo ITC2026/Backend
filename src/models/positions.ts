@@ -80,7 +80,8 @@ export class Position extends Model<
   @HasMany(() => Vacancy)
   vacancies!: Vacancy[];
 
-  @ForeignKey(() => Project)
+  @ForeignKey(() => Project) 
+  @Column
   project_id_position!: number;
 
   @BelongsTo(() => Project)
