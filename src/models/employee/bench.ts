@@ -6,6 +6,7 @@ interface BenchAttributes {
   id: number
   bench_since: Date;
   days_bench: number;
+  hired: Hired;
 }
 
 interface BenchCreationAttributes extends Optional<BenchAttributes, 'id'>{}

@@ -3,6 +3,7 @@ import { Optional } from 'sequelize';
 import { Employee } from './employee';
 import { Billing } from './billing';
 import { Bench } from './bench';
+import { LargeNumberLike } from 'crypto';
 
 interface HiredAttributes {
   id: number;
@@ -12,6 +13,11 @@ interface HiredAttributes {
   last_client: string;
   current_client: string;
   work_hours: number;
+  employee: Employee;
+  benchId: number;
+  bench: Bench;
+  billingId: number;
+  billing: Billing;
 }
 
 interface HiredCreationAttributes extends Optional<HiredAttributes, 'id'>{}

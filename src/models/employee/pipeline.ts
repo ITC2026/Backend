@@ -7,6 +7,7 @@ interface PipelineAttributes {
   expected_salary: number;
   in_pipeline_since: Date;
   days_in_pipeline: number;
+  employee: Employee;
 }
 
 interface PipelineCreationAttributes extends Optional<PipelineAttributes, 'id'>{}

@@ -6,6 +6,7 @@ interface BillingAttributes {
   id: number;
   billing_since: Date;
   days_billing: number;
+  hired: Hired;
 }
 
 interface BillingCreationAttributes extends Optional<BillingAttributes, 'id'>{}

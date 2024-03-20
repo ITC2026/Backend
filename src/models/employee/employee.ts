@@ -14,6 +14,10 @@ interface EmployeeAttributes {
   registration_date: Date;
   phone: string;
   email: string;
+  pipelineId: number;
+  pipeline: Pipeline;
+  hiredId: number;
+  hired: Hired;
 }
 
 interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> {}
