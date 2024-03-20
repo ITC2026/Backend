@@ -34,9 +34,9 @@ export class Vacancy extends Model<VacancyAttributes, VacancyCreatedAttributes> 
     position_id_vacancy!: number;
 
     @BelongsTo(() => Position)
-    project: Position = new Position();
+    position!: Position;
 
-    // @HasMany(() => Employee) 1-1!!!!!!!!!!!
+    // @HasMany(() => Employee) 
     // employeees!: Employee[];
     
     @Column

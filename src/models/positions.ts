@@ -73,10 +73,15 @@ export class Position extends Model<PositionAttributes, PositionCreationAttribut
   @Column
   is_exclusive_position!: boolean;
   
+  @ForeignKey(() => Vacancy) 
+  // @Column
+  // vacancy_id_position!: number;
+
   @HasMany(()=> Vacancy)
   vacancies!: Vacancy[];
 
   @ForeignKey(() => Project) 
+  @Column
   project_id_position!: number;
 
   @BelongsTo(() => Project)

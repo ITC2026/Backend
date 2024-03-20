@@ -8,7 +8,10 @@ export const createPosition: RequestHandler = async (
   res: Response
 ) => {
   const { title_position, description_position, vacancies_position, publication_type_position, cross_division_position, division_position, region_position, tech_stack_position, demand_curation_position, is_exclusive_position, vacancy_id_position, project } = req.body;
-  Position.create(req.body)
+  Position.create({...req.body}, {
+    include:[
+    Vacancy,
+  ]})
     .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
