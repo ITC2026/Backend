@@ -6,12 +6,7 @@ export const createPosition: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Position.create({ ...req.body },
-    {
-      include: { 
-        model: Vacancy
-      }
-    })
+  Position.create({ ...req.body })
     .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
