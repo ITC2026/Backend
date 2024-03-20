@@ -11,7 +11,7 @@ import { User } from "../models/user";
 import { Client } from "../models/clients";
 
 const connection = new Sequelize({
-  database: "employeeDB",
+  database: "sisweb_db",
   dialect: "postgres",
   username: "sisweb_user",
   password: "HDK#$%Ljkwerff.89",

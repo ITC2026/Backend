@@ -62,12 +62,10 @@ export class Project extends Model<
   @HasMany(() => Position)
   positions!: Position[];
 
-  @ForeignKey (() => Client)
+  @ForeignKey(() => Client)
   @Column
   client_id!: number;
-  
+
   @BelongsTo(() => Client)
   client!: Client;
-
-
 }

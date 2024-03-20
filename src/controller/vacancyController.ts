@@ -26,7 +26,11 @@ export const getVacancies: RequestHandler = async (
     req: Request,
     res: Response
   ) => {
-    Vacancy.findAll()
+    Vacancy.findAll({ 
+      include: { 
+        all: true, nested: true 
+      }
+    })
       .then((data: unknown[] | null) => {
         if (!data || data.length === 0) {
           return res.status(404).json({
