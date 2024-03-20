@@ -30,7 +30,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   getProjects(): Promise<Project[]> {
     return Project.findAll({
       where: {
-        id_client: this.id,
+        client_id: this.id, // replace 'clientId' with the correct property name
       },
     });
   }

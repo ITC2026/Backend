@@ -7,9 +7,13 @@ import { Billing } from '../models/employee/billing';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
   Employee.findAll({ 
-      include: { 
-        all: true, nested: true 
+    include: [
+      Pipeline, 
+      {
+        model: Hired,
+        include: [Bench, Billing]
       }
+    ]
     })
     .then((data: Employee[]) => {
       return res.status(200).json({
@@ -30,9 +34,13 @@ export const getAllEmployees: RequestHandler = async (req: Request, res: Respons
 
 export const getEmployeeById: RequestHandler = async (req: Request, res: Response) => {
   Employee.findByPk(req.params.id, { 
-      include: { 
-        all: true, nested: true 
+    include: [
+      Pipeline, 
+      {
+        model: Hired,
+        include: [Bench, Billing]
       }
+    ]
     })
     .then((data: Employee | null) => {
       return res.status(200).json({
@@ -221,7 +229,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
 };
 
 export const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { id } = req.body.id;
   try {
     await Employee.destroy({ where: { id } });
     return res.status(200).json({ message: "Employee deleted" });

@@ -14,7 +14,8 @@ export const createProject: RequestHandler = async (
     });
   }
 
-  Project.create({ ...req.body })
+  Project.create(
+    { ...req.body })
     .then((data: Project) => {
       return res.status(201).json({
         status: "Success",
@@ -35,9 +36,9 @@ export const getProjects: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Project.findAll({ 
+  Project.findAll({
     include: { 
-      all: true, nested: true 
+      model: Position,
     }
   })
     .then((data: Project[] | null) => {
@@ -127,7 +128,12 @@ export const getProjectById: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  Project.findByPk(id)
+  Project.findByPk(id,
+    {
+      include: { 
+        model: Position,
+      }
+    })
     .then((data: Project | null) => {
       return res.status(200).json({
         status: "Success",

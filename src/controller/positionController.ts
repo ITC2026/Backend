@@ -1,7 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
-import { Position } from "../models/positions"; // Import the Position model
+import { Position } from "../models/positions";
 import { Vacancy } from "../models/vacancies";
-// import { createVacancy } from "./vacancyController";
 
 export const createPosition: RequestHandler = async (
   req: Request,
@@ -30,7 +29,7 @@ export const getPositions: RequestHandler = async (
 ) => {
   Position.findAll({ 
     include: { 
-      all: true, nested: true 
+      model: Vacancy
     }
   })
     .then((data: unknown[] | null) => {
@@ -62,7 +61,12 @@ export const getPositionById: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  Position.findByPk(id)
+  Position.findByPk(id,
+    {
+      include: { 
+        model: Vacancy
+      }
+    })
     .then((data: unknown | null) => {
       if (!data) {
         return res.status(404).json({

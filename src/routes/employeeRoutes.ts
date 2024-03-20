@@ -1,16 +1,24 @@
-import express from 'express';
-import { getAllEmployees, getEmployeeById, createEmployee, updateEmployee, deleteEmployee, getEmployeePipelineById, getEmployeeBenchById, getEmployeeBillingById } from '../controller/employeesController';
+import express from "express";
+import {
+  getAllEmployees,
+  getEmployeeById,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+  getEmployeePipelineById,
+  getEmployeeBenchById,
+  getEmployeeBillingById,
+} from "../controller/employeesController";
 
-const router = express.Router();
+const employeeRouter = express.Router();
 
-router.get('/', getAllEmployees);
-router.get('/:id', getEmployeeById);
-router.post('/', createEmployee);
-router.patch('/:id', updateEmployee);
-router.delete('/:id', deleteEmployee);
-router.get('/pipeline/:id', getEmployeePipelineById);
-router.get('/bench/:id', getEmployeeBenchById);
-router.get('/billing/:id', getEmployeeBillingById);
+employeeRouter.get("/", getAllEmployees);
+employeeRouter.get("/:id", getEmployeeById);
+employeeRouter.post("/", createEmployee);
+employeeRouter.patch("/:id", updateEmployee);
+employeeRouter.delete("/", deleteEmployee);
+employeeRouter.get("/pipeline/:id", getEmployeePipelineById);
+employeeRouter.get("/bench/:id", getEmployeeBenchById);
+employeeRouter.get("/billing/:id", getEmployeeBillingById);
 
-export default router;
-
+export default employeeRouter;

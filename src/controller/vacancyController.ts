@@ -1,5 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Vacancy } from "../models/vacancies";
+import { Employee } from "../models/employee/employee";
 
 export const createVacancy: RequestHandler = async (
   req: Request,
@@ -28,7 +29,7 @@ export const getVacancies: RequestHandler = async (
   ) => {
     Vacancy.findAll({ 
       include: { 
-        all: true, nested: true 
+        model: Employee,
       }
     })
       .then((data: unknown[] | null) => {
@@ -60,7 +61,12 @@ export const getVacancyById: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  Vacancy.findByPk(id)
+  Vacancy.findByPk(id,
+    {
+      include: { 
+        model: Employee,
+      }
+    })
     .then((data: unknown | null) => {
       return res.status(200).json({
         status: "Success",
