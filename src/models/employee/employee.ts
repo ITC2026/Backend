@@ -2,6 +2,7 @@ import { Table, Model, Column, CreatedAt, UpdatedAt, ForeignKey, BelongsTo } fro
 import { Optional } from 'sequelize';
 import { Pipeline } from './pipeline';
 import { Hired } from './hired_employee';
+import { Vacancy } from '../vacancies';
 
 interface EmployeeAttributes {
   id: number;
@@ -67,6 +68,13 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
 
   @BelongsTo(() => Hired)
   hired!: Hired;
+
+  @ForeignKey(() => Vacancy)
+  @Column
+  vacancyId!: number;
+
+  @BelongsTo(() => Vacancy)
+  vacancy!: Vacancy;
 
   @CreatedAt
   @Column

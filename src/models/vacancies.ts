@@ -6,17 +6,18 @@ import {
     UpdatedAt,
     ForeignKey,
     BelongsTo,
+    HasMany
   } from "sequelize-typescript";
 import { Optional } from "sequelize";  
 import { Position } from "./positions";
-//import { Employee } from "./employees";
+import { Employee } from "./employee/employee";
 
 interface VacancyAttributes {
     id: number;
-    progess_vacancy: string;
+    progress_vacancy: string;
     position_id_vacancy: number;
     position: Position;
-    employees: number;
+    employeeId: number;
 }
 
 interface VacancyCreatedAttributes extends Optional<VacancyAttributes, "id"> {}
@@ -26,6 +27,14 @@ interface VacancyCreatedAttributes extends Optional<VacancyAttributes, "id"> {}
 })
 
 export class Vacancy extends Model<VacancyAttributes, VacancyCreatedAttributes> {
+    getEmployee(): Promise<Vacancy[]> {
+        return Vacancy.findAll({
+          where: {
+            position_id_vacancy: this.id,
+          }
+        })
+      }
+
     @Column
     progress_vacancy!: string;
 
@@ -36,11 +45,8 @@ export class Vacancy extends Model<VacancyAttributes, VacancyCreatedAttributes> 
     @BelongsTo(() => Position)
     project: Position = new Position();
 
-    // @HasMany(() => Employee) 1-1!!!!!!!!!!!
-    // employeees!: Employee[];
-    
-    @Column
-    employees!: number;
+    @HasMany(() => Employee)
+    employees!: Employee[];
 
     @CreatedAt
     createdAt!: Date;

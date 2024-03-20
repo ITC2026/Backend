@@ -1,10 +1,22 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Client } from "../models/clients";
 import validator from 'validator';
+import { Project } from '../models/projects';
+import { Position } from '../models/positions';
+import { Vacancy } from '../models/vacancies';
+import { Employee } from '../models/employee/employee';
+import { Pipeline } from '../models/employee/pipeline';
+import { Hired } from '../models/employee/hired_employee';
+import { Bench } from '../models/employee/bench';
+import { Billing } from '../models/employee/billing';
 
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {
-  Client.findAll()
+  Client.findAll({ 
+    include: { 
+      all: true, nested: true 
+    }
+  })
   .then((data: Client[]) => {
     return res.status(200).json({
       status: "success",
@@ -59,29 +71,55 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     });
   }
 
-  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division } = req.body;
+  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division, projects } = req.body;
 
-    //Validations
-    if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division) {
-      return res.status(400).json({
-          status: 'error',
-          message: 'All fields are required',
-          payload: null
-      });
-    }
+  //Validations
+  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division || !projects) {
+    return res.status(400).json({
+        status: 'error',
+        message: 'All fields are required',
+        payload: null
+    });
+  }
 
-    if (!validator.isURL(contract_pdf_url)) {
-      return res.status(400).json({ message: 'Invalid URL format for contract' });
-    }
+  if (!validator.isURL(contract_pdf_url)) {
+    return res.status(400).json({ message: 'Invalid URL format for contract' });
+  }
 
-    if (!validator.isURL(logo_url)) {
-      return res.status(400).json({ message: 'Invalid URL format for logo' });
-    }
-
+  if (!validator.isURL(logo_url)) {
+    return res.status(400).json({ message: 'Invalid URL format for logo' });
+  }
 
   // Save Client in the Database
-  const client = { ...req.body };
-  Client.create(client)
+  Client.create({ ...req.body }, {
+    include: [
+      {
+        model: Project,
+        include: [
+          {
+            model: Position,
+            include: [
+              {
+                model: Vacancy,
+                include: [
+                  {
+                    model: Employee,
+                    include: [
+                      Pipeline,
+                      {
+                        model: Hired,
+                        include: [Bench, Billing]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  })
     .then((data: Client | null) => {
       res.status(200).json({
         status: "success",

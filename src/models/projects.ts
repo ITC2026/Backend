@@ -68,6 +68,4 @@ export class Project extends Model<
   
   @BelongsTo(() => Client)
   client!: Client;
-
-
 }

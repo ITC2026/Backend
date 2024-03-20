@@ -28,7 +28,11 @@ export const getPositions: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Position.findAll()
+  Position.findAll({ 
+    include: { 
+      all: true, nested: true 
+    }
+  })
     .then((data: unknown[] | null) => {
       if (!data || data.length === 0) {
         return res.status(404).json({

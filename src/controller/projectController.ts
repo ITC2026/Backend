@@ -35,7 +35,11 @@ export const getProjects: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Project.findAll()
+  Project.findAll({ 
+    include: { 
+      all: true, nested: true 
+    }
+  })
     .then((data: Project[] | null) => {
       return res.status(200).json({
         status: "Success",
