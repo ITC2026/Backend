@@ -6,12 +6,7 @@ export const createVacancy: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Vacancy.create(req.body,
-    {
-      include: { 
-        model: Employee,
-      }
-    })
+  Vacancy.create(req.body)
     .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",

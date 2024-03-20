@@ -15,13 +15,7 @@ export const createProject: RequestHandler = async (
   }
 
   Project.create(
-    { ...req.body },
-    {
-      include: { 
-        model: Position,
-      }
-    }
-  )
+    { ...req.body })
     .then((data: Project) => {
       return res.status(201).json({
         status: "Success",

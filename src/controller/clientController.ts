@@ -68,10 +68,10 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     });
   }
 
-  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division, projects } = req.body;
+  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division } = req.body;
 
   //Validations
-  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division || !projects) {
+  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division) {
     return res.status(400).json({
         status: 'error',
         message: 'All fields are required',
@@ -88,11 +88,7 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
   }
 
   // Save Client in the Database
-  Client.create({ ...req.body }, { 
-    include: { 
-      model: Project,
-    }
-  })
+  Client.create({ ...req.body })
     .then((data: Client | null) => {
       res.status(200).json({
         status: "success",
