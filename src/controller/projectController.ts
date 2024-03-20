@@ -74,7 +74,6 @@ export const updateProject: RequestHandler = async (
           payload: { ...req.body },
         });
       }
-
       return res.status(500).json({
         status: "Success",
         message: "Something happened updating the product",
@@ -95,15 +94,28 @@ export const deleteProject: RequestHandler = async (
   res: Response
 ) => {
   const { id } = req.body;
-  try {
-    await Project.destroy({ where: { id } });
-    return res.status(200).json({ message: "Project deleted" });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error deleting projects.",
-      error,
+  Project.destroy({ where: { id } })
+    .then((isDeleted) => {
+      if (isDeleted) {
+        return res.status(200).json({
+          status: "Success",
+          message: "Project deleted successfully",
+          payload: { ...req.body },
+        });
+      }
+      return res.status(500).json({
+        status: "Error",
+        message: "Project not deleted",
+        payload: null,
+      });
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Error deleting Project",
+        payload: error.message,
+      });
     });
-  }
 };
 
 export const getProjectById: RequestHandler = async (
@@ -176,7 +188,7 @@ export const createPositionByProject: RequestHandler = async (
   Project.findByPk(id)
     .then((data: Project | null) => {
       if (data) {
-        Position.create({ ...req.body, id_project: id })
+        Position.create({ ...req.body, project: id })
           .then((data: Position) => {
             return res.status(201).json({
               status: "Success",
@@ -215,14 +227,37 @@ export const deletePositionByProject: RequestHandler = async (
   const { id } = req.body;
   const proj_id = req.params.id;
 
-  Position.destroy({ where: { id, id_project: proj_id } })
-    .then(() => {
-      return res.status(200).json({ message: "Position deleted" });
+  Project.findByPk(proj_id)
+    .then((data: Project | null) => {
+      if (data) {
+        Position.destroy({ where: { id } })
+          .then(() => {
+            return res.status(200).json({
+              status: "Success",
+              message: "Position deleted successfully",
+              payload: null,
+            });
+          })
+          .catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Position not deleted",
+              payload: error.message,
+            });
+          });
+      } else {
+        return res.status(404).json({
+          status: "Error",
+          message: "Project not found",
+          payload: null,
+        });
+      }
     })
     .catch((error: Error) => {
       return res.status(500).json({
-        message: "Error deleting position.",
-        error,
+        status: "Error",
+        message: "Project not retrieved",
+        payload: error.message,
       });
     });
 };

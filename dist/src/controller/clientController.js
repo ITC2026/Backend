@@ -166,11 +166,11 @@ const modifyClient = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.modifyClient = modifyClient;
 // Delete a Client with the specified if in the request 
 const deleteClient = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    clients_1.Client.findByPk(req.params.id)
+    clients_1.Client.findByPk(req.body.id)
         .then((data) => {
         if (data) {
             // Delete the client
-            clients_1.Client.destroy({ where: { id: req.params.id } })
+            clients_1.Client.destroy({ where: { id: req.body.id } })
                 .then((isDeleted) => {
                 if (isDeleted) {
                     return res.status(200).json({

@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { Project } from "../models/projects";
 import { Position } from "../models/positions";
+import { Vacancy } from "../models/vacancies";
 import { User } from "../models/user";
 import { Client } from "../models/clients";
 
@@ -10,7 +11,7 @@ const connection = new Sequelize({
   username: "sisweb_user",
   password: "HDK#$%Ljkwerff.89",
   storage: ":memory:",
-  models: [Client, Project, Position, User],
+  models: [Client, Project, Position, Vacancy, User],
 });
 
 async function connectionDB() {

@@ -17,7 +17,7 @@ let Project = class Project extends sequelize_typescript_1.Model {
     getPositions() {
         return positions_1.Position.findAll({
             where: {
-                id_project: this.id,
+                project_id_position: this.id,
             },
         });
     }
@@ -44,22 +44,22 @@ __decorate([
     __metadata("design:type", Date)
 ], Project.prototype, "deadline_project", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasOne)(() => clients_1.Client),
-    __metadata("design:type", clients_1.Client)
-], Project.prototype, "client", void 0);
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], Project.prototype, "project_status", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => positions_1.Position),
+    __metadata("design:type", Array)
+], Project.prototype, "positions", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => clients_1.Client),
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
 ], Project.prototype, "client_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => positions_1.Position),
-    __metadata("design:type", Array)
-], Project.prototype, "positions", void 0);
-__decorate([
-    sequelize_typescript_1.Column,
-    __metadata("design:type", Number)
-], Project.prototype, "project_status", void 0);
+    (0, sequelize_typescript_1.BelongsTo)(() => clients_1.Client),
+    __metadata("design:type", clients_1.Client)
+], Project.prototype, "client", void 0);
 exports.Project = Project = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "Projects",

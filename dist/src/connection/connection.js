@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const projects_1 = require("../models/projects");
 const positions_1 = require("../models/positions");
+const vacancies_1 = require("../models/vacancies");
 const user_1 = require("../models/user");
 const clients_1 = require("../models/clients");
 const connection = new sequelize_typescript_1.Sequelize({
@@ -20,7 +21,7 @@ const connection = new sequelize_typescript_1.Sequelize({
     username: "sisweb_user",
     password: "HDK#$%Ljkwerff.89",
     storage: ":memory:",
-    models: [clients_1.Client, projects_1.Project, positions_1.Position, user_1.User],
+    models: [clients_1.Client, projects_1.Project, positions_1.Position, vacancies_1.Vacancy, user_1.User],
 });
 function connectionDB() {
     return __awaiter(this, void 0, void 0, function* () {

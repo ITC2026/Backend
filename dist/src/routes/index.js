@@ -7,12 +7,14 @@ const express_1 = require("express");
 const userRoutes_1 = __importDefault(require("./userRoutes"));
 const projectRoutes_1 = __importDefault(require("./projectRoutes"));
 const positionRoutes_1 = __importDefault(require("./positionRoutes"));
+const vacancyRoutes_1 = __importDefault(require("./vacancyRoutes"));
 const clientRoutes_1 = __importDefault(require("./clientRoutes"));
 const apiRouter = (0, express_1.Router)();
 apiRouter.use("/user", userRoutes_1.default);
 apiRouter.use("/projects", projectRoutes_1.default);
 apiRouter.use("/positions", positionRoutes_1.default);
 apiRouter.use("/clients", clientRoutes_1.default);
+apiRouter.use("/vacancies", vacancyRoutes_1.default);
 apiRouter.get("/", (req, res) => {
     res.send("Hello TypeScript 4!");
 });

@@ -1,7 +1,13 @@
-import { Model, Column, CreatedAt, UpdatedAt, DataType, Table, HasMany, ForeignKey} from 'sequelize-typescript';
-import { Optional } from 'sequelize';
-import { Project } from './projects';
-
+import {
+  Model,
+  Column,
+  CreatedAt,
+  UpdatedAt,
+  Table,
+  HasMany,
+} from "sequelize-typescript";
+import { Optional } from "sequelize";
+import { Project } from "./projects";
 
 interface ClientAttributes {
   id: number;
@@ -15,14 +21,12 @@ interface ClientAttributes {
   projects: Project[];
 }
 
-interface ClientCreationAttributes extends Optional<ClientAttributes, 'id'> {}
+interface ClientCreationAttributes extends Optional<ClientAttributes, "id"> {}
 
 @Table({
-  tableName: 'Clients'
+  tableName: "Clients",
 })
-
 export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
-
   getProjects(): Promise<Project[]> {
     return Project.findAll({
       where: {
@@ -50,7 +54,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   high_growth!: boolean;
 
   @Column
-  division!: string; 
+  division!: string;
 
   @CreatedAt
   createdAt!: Date;
@@ -59,6 +63,5 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   updatedAt!: Date;
 
   @HasMany(() => Project)
-  @ForeignKey(() => Project)
   projects!: Project[];
 }

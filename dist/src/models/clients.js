@@ -60,11 +60,10 @@ __decorate([
 ], Client.prototype, "updatedAt", void 0);
 __decorate([
     (0, sequelize_typescript_1.HasMany)(() => projects_1.Project),
-    (0, sequelize_typescript_1.ForeignKey)(() => projects_1.Project),
     __metadata("design:type", Array)
 ], Client.prototype, "projects", void 0);
 exports.Client = Client = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: 'Clients'
+        tableName: "Clients",
     })
 ], Client);

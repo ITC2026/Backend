@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { createClient, deleteClient, getAllClients, getClientById, modifyClient } from '../controller/clientController';
 
 const clientRouter: Router = Router();
