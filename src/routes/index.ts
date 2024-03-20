@@ -4,6 +4,8 @@ import projectRouter from "./projectRoutes";
 import positionRouter from "./positionRoutes";
 import vacancyRouter from "./vacancyRoutes";
 import clientRouter from "./clientRoutes";
+import { Router, Request, Response } from 'express';
+import employeeRoutes from './employeeRoutes';
 
 const apiRouter: Router = Router();
 
@@ -15,6 +17,10 @@ apiRouter.use("/vacancies", vacancyRouter)
 
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello TypeScript 4!");
+apiRouter.use('/employee', employeeRoutes);
+
+apiRouter.get('/', (req:Request, res:Response) => {
+    res.send('Hello World');
 });
 
 export default apiRouter;
