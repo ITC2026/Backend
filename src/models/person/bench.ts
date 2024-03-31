@@ -1,6 +1,6 @@
 import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { Hired } from './hired_employee';
+import { Hired } from './employee/hired_employees';
 
 interface BenchAttributes {
   id: number

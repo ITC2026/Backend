@@ -10,7 +10,7 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Position } from "./positions";
-import { Employee } from "./employee/employee";
+import { Employee } from "../person/employees";
 
 interface VacancyAttributes {
   id: number;
@@ -21,6 +21,14 @@ interface VacancyAttributes {
 }
 
 interface VacancyCreatedAttributes extends Optional<VacancyAttributes, "id"> {}
+
+//
+//
+// Cambiar a openings
+//
+//
+
+
 
 @Table({
   tableName: "Vacancy",

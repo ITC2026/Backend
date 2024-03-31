@@ -1,8 +1,8 @@
 import { Table, Model, Column, CreatedAt, UpdatedAt, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Pipeline } from './pipeline';
-import { Hired } from './hired_employee';
-import { Vacancy } from '../vacancies';
+import { Hired } from './employee/hired_employees';
+import { Vacancy } from '../position/vacancies';
 
 interface EmployeeAttributes {
   id: number;

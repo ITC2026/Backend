@@ -1,6 +1,6 @@
 import { type RequestHandler, type Request, type Response } from "express";
-import { Project } from "../models/projects";
-import { Position } from "../models/positions";
+import { Project } from "../models/project/projects";
+import { Position } from "../models/position/positions";
 
 export const createProject: RequestHandler = async (
   req: Request,
