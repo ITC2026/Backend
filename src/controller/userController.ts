@@ -1,5 +1,5 @@
 import {RequestHandler,Request,Response} from "express";
-import { User } from "../models/user"
+import { User } from "../models/user/user"
 import validator from 'validator';
 
 //Retrieve all Users from the database.

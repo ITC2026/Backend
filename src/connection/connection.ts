@@ -1,14 +1,14 @@
 import { Sequelize } from "sequelize-typescript";
-import { Employee } from "../models/employee/employee";
-import { Bench } from "../models/employee/bench";
-import { Billing } from "../models/employee/billing";
-import { Pipeline } from "../models/employee/pipeline";
-import { Hired } from "../models/employee/hired_employee";
-import { Project } from "../models/projects";
-import { Position } from "../models/positions";
-import { Vacancy } from "../models/vacancies";
-import { User } from "../models/user";
-import { Client } from "../models/clients";
+import { Employee } from "../models/person/employees";
+import { Bench } from "../models/person/bench";
+import { Billing } from "../models/person/billing";
+import { Pipeline } from "../models/person/pipeline";
+import { Hired } from "../models/person/employee/hired_employees";
+import { Project } from "../models/project/projects";
+import { Position } from "../models/position/positions";
+import { Vacancy } from "../models/position/vacancies";
+import { User } from "../models/user/user";
+import { Client } from "../models/client/clients";
 
 const connection = new Sequelize({
   database: "sisweb_db",

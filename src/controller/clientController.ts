@@ -1,7 +1,7 @@
 import { RequestHandler, Request, Response } from 'express';
-import { Client } from "../models/clients";
+import { Client } from "../models/client/clients";
 import validator from 'validator';
-import { Project } from '../models/projects';
+import { Project } from '../models/project/projects';
 
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {

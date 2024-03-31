@@ -1,9 +1,15 @@
 import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, ForeignKey, BelongsTo  } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { Employee } from './employee';
-import { Billing } from './billing';
-import { Bench } from './bench';
+import { Employee } from '../employees';
+import { Billing } from '../billing';
+import { Bench } from '../bench';
 import { LargeNumberLike } from 'crypto';
+
+//
+//
+// HIRED EMPLOYEES NO DEBE EXISTIR!! NOMAS NO LO BORRO PARA TENER ESTO FOR FUTURE REFERENCE
+//
+//
 
 interface HiredAttributes {
   id: number;

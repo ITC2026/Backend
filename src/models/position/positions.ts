@@ -9,7 +9,7 @@ import {
   HasMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
-import { Project } from "./projects";
+import { Project } from "../project/projects";
 import { Vacancy } from "./vacancies";
 
 interface PositionAttributes {

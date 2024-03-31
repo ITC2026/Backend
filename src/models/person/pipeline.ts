@@ -1,6 +1,6 @@
 import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { Employee } from './employee';
+import { Employee } from './employees';
 
 interface PipelineAttributes {
   id: number;
