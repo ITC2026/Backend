@@ -1,6 +1,6 @@
 import {RequestHandler,Request,Response} from "express";
-import { Role } from '../models/role';
-import { User } from "../models/user";
+import { Role } from '../models/user/roles';
+import { User } from "../models/user/user";
 
 //Retrieve all Roles from the database.
 export const getAllRoles: RequestHandler = (req:Request, res:Response) => {

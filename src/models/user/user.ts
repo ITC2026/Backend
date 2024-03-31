@@ -7,8 +7,8 @@ import {
   BelongsToMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
-/*import { Role } from './roles';
-import { RoleUserRelation } from './role_user_relation';*/
+import { Role } from './roles';
+import { RoleUserRelation } from './role_user_relation';
 // import isEmail from 'validator/lib/isEmail';
 // import { validator } from 'sequelize/types/utils/validator-extras';
 
