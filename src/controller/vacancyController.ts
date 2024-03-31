@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
-import { Vacancy } from "../models/vacancies";
-import { Employee } from "../models/employee/employee";
+import { Vacancy } from "../models/position/vacancies";
+import { Employee } from "../models/person/employees";
 
 export const createVacancy: RequestHandler = async (
   req: Request,
