@@ -9,8 +9,8 @@ import { Position } from "../models/position/positions";
 import { Vacancy } from "../models/position/vacancies";
 import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
-import { Role } from "../models/role";
-import { RoleUserRelation } from "../models/roleUserRelation";
+import { Role } from "../models/user/roles";
+import { RoleUserRelation } from "../models/user/role_user_relation";
 
 const connection = new Sequelize({
   database: "sisweb_db",
