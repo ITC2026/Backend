@@ -5,6 +5,7 @@ import positionRouter from "./positionRoutes";
 import vacancyRouter from "./vacancyRoutes";
 import clientRouter from "./clientRoutes";
 import employeeRoutes from "./employeeRoutes";
+import roleRoutes from "./roleRoutes";
 
 const apiRouter: Router = Router();
 
@@ -14,6 +15,7 @@ apiRouter.use("/positions", positionRouter);
 apiRouter.use("/clients", clientRouter);
 apiRouter.use("/vacancies", vacancyRouter);
 apiRouter.use("/employee", employeeRoutes);
+apiRouter.use("/role", roleRoutes);
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });

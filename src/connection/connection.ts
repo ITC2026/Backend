@@ -9,9 +9,11 @@ import { Position } from "../models/positions";
 import { Vacancy } from "../models/vacancies";
 import { User } from "../models/user";
 import { Client } from "../models/clients";
+import { Role } from "../models/role";
+import { RoleUserRelation } from "../models/roleUserRelation";
 
 const connection = new Sequelize({
-  database: "sisweb_db",
+  database: "proyectoFinal",
   dialect: "postgres",
   username: "sisweb_user",
   password: "HDK#$%Ljkwerff.89",
@@ -28,6 +30,8 @@ const connection = new Sequelize({
     Position,
     Vacancy,
     User,
+    Role,
+    RoleUserRelation,
   ],
 });
 

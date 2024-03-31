@@ -1,10 +1,15 @@
 import {RequestHandler,Request,Response} from "express";
 import { User } from "../models/user"
+import { Role } from '../models/role';
 import validator from 'validator';
 
 //Retrieve all Users from the database.
 export const getAllUsers: RequestHandler = (req:Request, res:Response) => {
-    User.findAll()
+    User.findAll({include: [{    
+        model: Role,            
+        attributes: ['role_name'],
+        through: { attributes: [] } // Exclude the join table attributes from the result     
+    }]})
     .then((data: User[]) => {
         return res.status(200).json({
             status: "success",
@@ -23,7 +28,12 @@ export const getAllUsers: RequestHandler = (req:Request, res:Response) => {
 
 //Find a single User with an id.
 export const getUserById: RequestHandler = (req:Request, res:Response) => {
-    User.findByPk(req.params.id)
+    User.findByPk(req.params.id, {
+        include: [{    
+        model: Role,            
+        attributes: ['role_name'],
+        through: { attributes: [] } // Exclude the join table attributes from the result     
+    }]})
     .then((data: User | null) => {
         if (data) {
             return res.status(200).json({
@@ -49,57 +59,73 @@ export const getUserById: RequestHandler = (req:Request, res:Response) => {
 };
     
 //Create and Save a new User
-export const createUser: RequestHandler = (req:Request, res:Response) => {
-    if(!req.body){
-        return res.status(400).json({
-            status: "error",
-            message: "Content can not be empty",
-            payload: null,
+export const createUser: RequestHandler = async (req:Request, res:Response) => {
+    try {
+        if(!req.body){
+            return res.status(400).json({
+                status: "error",
+                message: "Content can not be empty",
+                payload: null,
+            });
+        }
+
+        const { username, password, email, roles } = req.body;
+
+        // Validations
+        if (!username || !password || !email || !roles || !Array.isArray(roles)) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'All fields are required',
+                payload: null
+            });
+        }
+
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({ 
+                status: 'error',
+                message: 'Invalid email format',
+                payload: null 
+            });
+        }
+
+        // Verify role value is valid
+        for (const role of roles) {
+            if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
+                return res.status(400).json({ 
+                    status: 'error',
+                    message: 'Invalid role provided',
+                    payload: null
+                });
+            }
+        }
+
+        // Create the user
+        const newUser = await User.create({
+            username,
+            password,
+            email,
+            roles,
         });
-    }
 
-    const { username, password, email, role } = req.body;
+        // Find roles based on provided role names
+        const userRoles = await Role.findAll({ where: { role_name: roles } });
 
-    //Validations
-    if (!username || !password) {
-        return res.status(400).json({
+        // Add roles to the user
+        await newUser.$add('roles', userRoles);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'User created successfully',
+            payload: newUser,
+        });
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return res.status(500).json({
             status: 'error',
-            message: 'Username and password are required',
-            payload: null
-        });
-    }
-
-    if (!validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-    }
-
-    // Verificar si el valor de role es válido
-    if (!['Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role provided' });
-    }
-
-    const user = {
-        username: username,
-        password: password,
-        email: email,
-        role: role
-    };
-
-    User.create(user)
-    .then((data: User | null) => {
-        res.status(200).json({
-            status: "success",
-            message: "User created successfully",
-            payload: data,
-        });
-    })
-    .catch((err) => {
-        res.status(500).json({
-            status: "error",
-            message: "There was an error creating the user" + err.message,
+            message: 'There was an error creating the user',
             payload: null,
         });
-    });
+    }
 };
 
 //Update a User by the id in the request
@@ -113,12 +139,25 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
     }
 
     //Validations
-    const {role} = req.body;
+    const {roles} = req.body;
     if (req.body.email && !validator.isEmail(req.body.email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Invalid email format',
+            payload: null
+        });
     }
-    if (role && !['Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role provided' });
+
+    if(roles){
+        for (const role of roles) {
+            if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
+                return res.status(400).json({ 
+                    status: 'error',
+                    message: 'Invalid role provided',
+                    payload: null
+                });
+            }
+        }
     }
 
     //Make sure the user exists
@@ -166,7 +205,7 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
     });
 };
 
-//Delete a Product with the specified id in the request
+//Delete a User with the specified id in the request
 export const deleteUser: RequestHandler = async (req:Request, res:Response) => {
     const {id} = req.body;
 
