@@ -139,7 +139,6 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
     }
 
     //Validations
-    const {roles} = req.body;
     if (req.body.email && !validator.isEmail(req.body.email)) {
         return res.status(400).json({ 
             status: 'error',
@@ -148,61 +147,83 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
         });
     }
 
-    if(roles){
-        for (const role of roles) {
-            if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
-                return res.status(400).json({ 
-                    status: 'error',
-                    message: 'Invalid role provided',
-                    payload: null
-                });
-            }
-        }
-    }
+    try{
+        //Make sure the user exists
+        const user = await User.findByPk(req.params.id, {
+            include: [Role]
+        });
 
-    //Make sure the user exists
-    User.findByPk(req.params.id)
-    .then((data: User | null) => {
-        if (data) {
-            //Update the user
-            User.update({...req.body}, {where: {id: req.params.id} })
-            .then((isUpdated) => {
-                if(isUpdated){
-                    return res.status(200).json({
-                        status: "success",
-                        message: "User updated successfully",
-                        payload: {...req.body},
-                    });
-                } else{
-                    return res.status(500).json({
-                        status: "error",
-                        message: "There was an error updating the user",
-                        payload: null,
-                    });
-                }
-            })
-            .catch((err) => {
-                res.status(500).json({
-                    status: "error",
-                    message: "There was an error updating the user" + err.message,
-                    payload: null,
-                });
-            }); 
-        } else {
+        if(!user){
             return res.status(404).json({
                 status: 'error',
                 message: 'User not found',
                 payload: null
             });
         }
-    })
-    .catch((err) => {
+
+        const {roles} = req.body;
+        if(roles){
+            for (const role of roles) {
+                if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
+                    return res.status(400).json({ 
+                        status: 'error',
+                        message: 'Invalid role provided',
+                        payload: null
+                    });
+                }
+            }
+
+            // Determine roles to be added and removed
+            const existingRoleNames = user.roles.map(role => role.role_name);;
+            const rolesToAdd = roles.filter((role: string) => !existingRoleNames.includes(role));
+            const rolesToRemove = existingRoleNames.filter((role: string) => !roles.includes(role));
+
+            // Add new roles to the user
+            if (rolesToAdd.length > 0) {
+                const rolesToAddObjects = await Role.findAll({ where: { role_name: rolesToAdd } });
+                await user.$add('roles', rolesToAddObjects);
+            }
+
+            // Remove roles from the user
+            if (rolesToRemove.length > 0) {
+                const rolesToRemoveObjects = user.roles.filter((role: Role) => rolesToRemove.includes(role.role_name));
+                await user.$remove('roles', rolesToRemoveObjects);
+            }
+        }
+
+
+        // Update other user attributes if provided
+        await user.update({...req.body}, {where: {id: req.params.id} })
+        .then((isUpdated) => {
+            if(isUpdated){
+                return res.status(200).json({
+                    status: "success",
+                    message: "User updated successfully",
+                    payload: {...req.body},
+                });
+            } else{
+                return res.status(500).json({
+                    status: "error",
+                    message: "There was an error updating the user",
+                    payload: null,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "There was an error updating the user" + err.message,
+                payload: null,
+            });
+        });
+        
+    } catch (err: any) {
         return res.status(500).json({
             status: "error",
-            message: "There was an error updating the user." + err.message,
+            message: "There was an error updating the user: " + (err.message || "Unknown error"),
             payload: null,
         });
-    });
+    }
 };
 
 //Delete a User with the specified id in the request
