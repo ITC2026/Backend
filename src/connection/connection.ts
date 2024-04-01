@@ -9,6 +9,7 @@ import { Position } from "../models/position/positions";
 import { Vacancy } from "../models/position/vacancies";
 import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
+import { ClientEmployeeRelation } from "../models/client/client_employee_relations";
 import { Role } from "../models/user/roles";
 import { RoleUserRelation } from "../models/user/role_user_relation";
 
@@ -26,6 +27,7 @@ const connection = new Sequelize({
     Pipeline,
     Hired,
     Client,
+    ClientEmployeeRelation,
     Project,
     Position,
     Vacancy,

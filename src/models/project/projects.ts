@@ -7,20 +7,22 @@ import {
   HasMany,
   ForeignKey,
   BelongsTo,
+  HasOne,
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
 import { Position } from "../position/positions";
 import { Client } from "../client/clients";
+import { ExpirationDateProject } from "./expiration_date_project"
+import { ClosedProject } from "./closed_project"
 
 interface ProjectAttributes {
   id: number;
-  title_project: string;
-  description_project: string;
-  tariff_project: number;
-  publicationDate_project: Date;
-  deadline_project: Date;
+  project_title: string;
+  project_description: string;
+  start_date: Date;
+  has_expiration_date: boolean;
+  general_status: string;
   positions: Position[];
-  project_status: number;
   client_id: number;
 }
 
@@ -42,25 +44,34 @@ export class Project extends Model<
   }
 
   @Column
-  title_project!: string;
+  project_title!: string;
 
   @Column
-  description_project!: string;
+  project_description!: string;
 
   @Column
-  tariff_project!: number;
+  start_date!: Date;
+
+  @Column
+  has_expiration_date!: boolean;
+
+  @Column
+  general_status!: string;
 
   @CreatedAt
-  publicationDate_project!: Date;
+  createdAt!: Date;
 
   @UpdatedAt
-  deadline_project!: Date;
-
-  @Column
-  project_status!: number;
+  updatedAt!: Date;
 
   @HasMany(() => Position)
   positions!: Position[];
+
+  @HasOne(() => ExpirationDateProject)
+  expiration_date?: ExpirationDateProject;
+
+  @HasOne(() => ClosedProject)
+  closed_project?: ClosedProject;
 
   @ForeignKey(() => Client)
   @Column
