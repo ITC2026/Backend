@@ -69,10 +69,10 @@ export const createUser: RequestHandler = async (req:Request, res:Response) => {
             });
         }
 
-        const { username, password, email, roles } = req.body;
+        const { username, password, email, division, roles } = req.body;
 
         // Validations
-        if (!username || !password || !email || !roles || !Array.isArray(roles)) {
+        if (!username || !password || !email || !division || !roles || !Array.isArray(roles)) {
             return res.status(400).json({
                 status: 'error',
                 message: 'All fields are required',
@@ -85,6 +85,14 @@ export const createUser: RequestHandler = async (req:Request, res:Response) => {
                 status: 'error',
                 message: 'Invalid email format',
                 payload: null 
+            });
+        }
+
+        if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+            return res.status(400).json({ 
+                status: 'error',
+                message: 'Invalid division provided',
+                payload: null
             });
         }
 
@@ -104,6 +112,7 @@ export const createUser: RequestHandler = async (req:Request, res:Response) => {
             username,
             password,
             email,
+            division,
             roles,
         });
 
@@ -143,6 +152,14 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
         return res.status(400).json({ 
             status: 'error',
             message: 'Invalid email format',
+            payload: null
+        });
+    }
+
+    if(req.body.division && !["BRAZIL", "MEXICO", "CSA", "US"].includes(req.body.division)) {
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Invalid division provided',
             payload: null
         });
     }

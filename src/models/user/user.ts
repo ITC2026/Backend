@@ -4,6 +4,7 @@ import {
   Column,
   CreatedAt,
   UpdatedAt,
+  DataType,
   BelongsToMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
@@ -17,6 +18,7 @@ interface UserAttributes {
   username: string;
   password: string;
   email: string;
+  division: string;
   roles: Role[];
 }
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -33,6 +35,9 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @Column
   email!: string;
+
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+  division!: string;
 
   @BelongsToMany(() => Role, () => RoleUserRelation)
   roles!: Role[];
