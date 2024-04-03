@@ -26,6 +26,7 @@ interface PositionAttributes {
   posting_type: string;
   is_cross_division: boolean;
   is_exclusive: boolean;
+  working_hours: number;
   openings: Opening[];
   project_id: number;
 }
@@ -72,11 +73,14 @@ export class Position extends Model<
   @Column
   is_exclusive!: boolean;
 
+  @Column
+  working_hours!: number;
+
   @HasMany(() => Opening)
   openings!: Opening[];
 
   @HasMany(() => Application)
-  application!: Application[];
+  applications!: Application[];
 
   @HasOne(() => CommentPosition)
   comment?: CommentPosition;
