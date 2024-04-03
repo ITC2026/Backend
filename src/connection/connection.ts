@@ -9,6 +9,8 @@ import { Position } from "../models/position/positions";
 import { Vacancy } from "../models/position/vacancies";
 import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
+import { TicketLog } from "../models/ticketLog/ticket_log";
+import { Entity } from "../models/ticketLog/entities";
 
 const connection = new Sequelize({
   database: "sisweb_db",
@@ -28,6 +30,8 @@ const connection = new Sequelize({
     Position,
     Vacancy,
     User,
+    TicketLog,
+    Entity,
   ],
 });
 

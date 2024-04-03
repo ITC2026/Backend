@@ -2,6 +2,7 @@ import {RequestHandler,Request,Response} from "express";
 import { User } from "../models/user/user"
 import validator from 'validator';
 
+const validAccounts = ['Account Manager', 'Resource Manager', 'Staffer'];
 //Retrieve all Users from the database.
 export const getAllUsers: RequestHandler = (req:Request, res:Response) => {
     User.findAll()

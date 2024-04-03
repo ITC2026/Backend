@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
-import { TicketLog } from "../models/ticket log/ticket_log";
-import { Entity } from "../models/ticket log/entities"; // Adjust the path if needed
+import { TicketLog } from "../models/ticketLog/ticket_log";
+import { Entity } from "../models/ticketLog/entities"; // Adjust the path if needed
 
 export const createTicketLog: RequestHandler = async (
   req: Request,
@@ -56,7 +56,7 @@ export const getTicketLogs: RequestHandler = async (
     });
 };
 
-export const updateTicketLog: RequestHandler = async (
+export const modifyTicketLog: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
