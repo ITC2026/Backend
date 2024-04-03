@@ -8,6 +8,7 @@ import {
   ForeignKey,
   BelongsTo,
   HasOne,
+  DataType,
 } from "sequelize-typescript";
 import { type Optional } from "sequelize";
 import { Position } from "../position/positions";
@@ -55,7 +56,7 @@ export class Project extends Model<
   @Column
   has_expiration_date!: boolean;
 
-  @Column
+  @Column(DataType.ENUM("In Preparation", "Active", "Closed"))
   general_status!: string;
 
   @CreatedAt
