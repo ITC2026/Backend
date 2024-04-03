@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Position } from "../models/position/positions";
-import { Vacancy } from "../models/position/vacancies";
+import { Opening } from "../models/position/openings";
 
 export const createPosition: RequestHandler = async (
   req: Request,
@@ -29,7 +29,7 @@ export const getPositions: RequestHandler = async (
 ) => {
   Position.findAll({ 
     include: { 
-      model: Vacancy
+      model: Opening
     }
   })
     .then((data: unknown[] | null) => {
@@ -64,7 +64,7 @@ export const getPositionById: RequestHandler = async (
   Position.findByPk(id,
     {
       include: { 
-        model: Vacancy
+        model: Opening
       }
     })
     .then((data: unknown | null) => {
@@ -156,7 +156,7 @@ export const getVacanciesByPosition: RequestHandler = async (
   Position.findByPk(id)
     .then((data: Position | null) => {
       if (data) {
-        data.getVacancies().then((vacancies: Vacancy[]) => {
+        data.getOpenings().then((vacancies: Opening[]) => {
           return res.status(200).json({
             status: "Success",
             message: "Vacancies retrieved successfully",

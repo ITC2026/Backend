@@ -39,7 +39,7 @@ export class Project extends Model<
   getPositions(): Promise<Position[]> {
     return Position.findAll({
       where: {
-        project_id_position: this.id,
+        project_id: this.id,
       },
     });
   }
