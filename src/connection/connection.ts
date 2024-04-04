@@ -11,6 +11,11 @@ import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
 import { TicketLog } from "../models/ticketLog/ticket_log";
 import { Entity } from "../models/ticketLog/entities";
+import { ClientEmployeeRelation } from "../models/client/client_employee_relations";
+import { Role } from "../models/user/roles";
+import { RoleUserRelation } from "../models/user/role_user_relation";
+import { ExpirationDateProject } from "../models/project/expiration_date_project";
+import { ClosedProject } from "../models/project/closed_project";
 
 const connection = new Sequelize({
   database: "sisweb_db",
@@ -26,12 +31,17 @@ const connection = new Sequelize({
     Pipeline,
     Hired,
     Client,
+    ClientEmployeeRelation,
     Project,
+    ExpirationDateProject,
+    ClosedProject,
     Position,
     Vacancy,
     User,
     TicketLog,
     Entity,
+    Role,
+    RoleUserRelation,
   ],
 });
 

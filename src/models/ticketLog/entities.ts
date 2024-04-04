@@ -16,10 +16,10 @@ import {
   import { Project } from "../project/projects";
   import { Position } from "../position/positions";
   import { TicketLog } from "./ticket_log";
-  // import { Opening } from "../position/openings";
+  import { Opening } from "../position/openings";
   // import { Application } from "../position/applications";
   // import { Person } from "../person/people";
-  // import { User } from "../user/users";
+  import { User } from "../user/user";
 
   
   interface EntityAttributes {
@@ -47,26 +47,33 @@ import {
     @HasOne(() => TicketLog)
     ticketLog!: TicketLog;
 
+    @ForeignKey(() => User)
     @HasOne(() => User)
     User!: User;
 
+    @ForeignKey(() => Opening)
     @HasOne(() => Opening)
     Opening!: Opening;
 
+    @ForeignKey(() => Client)
     @HasOne(() => Client)
     Client!: Client;
 
+    // @ForeignKey(() => Project)
     @HasOne(() => Project)
     Project!: Project;
 
+    @ForeignKey(() => Position)
     @HasOne(() => Position)
     Position!: Position;
 
-    @HasOne(() => Application)
-    Application!: Application;
+    // @ForeignKey(() => Application)
+    // @HasOne(() => Application)
+    // Application!: Application;
 
-    @HasOne(() => Person)
-    Person!: Person;
+    // @ForeignKey(() => Person)
+    // @HasOne(() => Person)
+    // Person!: Person;
 
 
   }

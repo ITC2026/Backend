@@ -1,11 +1,16 @@
 import {RequestHandler,Request,Response} from "express";
 import { User } from "../models/user/user"
+import { Role } from '../models/user/roles';
 import validator from 'validator';
 
 const validAccounts = ['Account Manager', 'Resource Manager', 'Staffer'];
 //Retrieve all Users from the database.
 export const getAllUsers: RequestHandler = (req:Request, res:Response) => {
-    User.findAll()
+    User.findAll({include: [{    
+        model: Role,            
+        attributes: ['role_name'],
+        through: { attributes: [] } // Exclude the join table attributes from the result     
+    }]})
     .then((data: User[]) => {
         return res.status(200).json({
             status: "success",
@@ -24,7 +29,12 @@ export const getAllUsers: RequestHandler = (req:Request, res:Response) => {
 
 //Find a single User with an id.
 export const getUserById: RequestHandler = (req:Request, res:Response) => {
-    User.findByPk(req.params.id)
+    User.findByPk(req.params.id, {
+        include: [{    
+        model: Role,            
+        attributes: ['role_name'],
+        through: { attributes: [] } // Exclude the join table attributes from the result     
+    }]})
     .then((data: User | null) => {
         if (data) {
             return res.status(200).json({
@@ -50,57 +60,82 @@ export const getUserById: RequestHandler = (req:Request, res:Response) => {
 };
     
 //Create and Save a new User
-export const createUser: RequestHandler = (req:Request, res:Response) => {
-    if(!req.body){
-        return res.status(400).json({
-            status: "error",
-            message: "Content can not be empty",
-            payload: null,
+export const createUser: RequestHandler = async (req:Request, res:Response) => {
+    try {
+        if(!req.body){
+            return res.status(400).json({
+                status: "error",
+                message: "Content can not be empty",
+                payload: null,
+            });
+        }
+
+        const { username, password, email, division, roles } = req.body;
+
+        // Validations
+        if (!username || !password || !email || !division || !roles || !Array.isArray(roles)) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'All fields are required',
+                payload: null
+            });
+        }
+
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({ 
+                status: 'error',
+                message: 'Invalid email format',
+                payload: null 
+            });
+        }
+
+        if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+            return res.status(400).json({ 
+                status: 'error',
+                message: 'Invalid division provided',
+                payload: null
+            });
+        }
+
+        // Verify role value is valid
+        for (const role of roles) {
+            if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
+                return res.status(400).json({ 
+                    status: 'error',
+                    message: 'Invalid role provided',
+                    payload: null
+                });
+            }
+        }
+
+        // Create the user
+        const newUser = await User.create({
+            username,
+            password,
+            email,
+            division,
+            roles,
         });
-    }
 
-    const { username, password, email, role } = req.body;
+        // Find roles based on provided role names
+        const userRoles = await Role.findAll({ where: { role_name: roles } });
 
-    //Validations
-    if (!username || !password) {
-        return res.status(400).json({
+        // Add roles to the user
+        await newUser.$add('roles', userRoles);
+
+        return res.status(200).json({
+            status: 'success',
+            message: 'User created successfully',
+            payload: newUser,
+        });
+    } catch (error) {
+        console.error('Error creating user:', error);
+        return res.status(500).json({
             status: 'error',
-            message: 'Username and password are required',
-            payload: null
-        });
-    }
-
-    if (!validator.isEmail(email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-    }
-
-    // Verificar si el valor de role es válido
-    if (!['Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role provided' });
-    }
-
-    const user = {
-        username: username,
-        password: password,
-        email: email,
-        role: role
-    };
-
-    User.create(user)
-    .then((data: User | null) => {
-        res.status(200).json({
-            status: "success",
-            message: "User created successfully",
-            payload: data,
-        });
-    })
-    .catch((err) => {
-        res.status(500).json({
-            status: "error",
-            message: "There was an error creating the user" + err.message,
+            message: 'There was an error creating the user',
             payload: null,
         });
-    });
+    }
 };
 
 //Update a User by the id in the request
@@ -114,60 +149,102 @@ export const modifyUser: RequestHandler = async (req:Request, res:Response) => {
     }
 
     //Validations
-    const {role} = req.body;
     if (req.body.email && !validator.isEmail(req.body.email)) {
-        return res.status(400).json({ message: 'Invalid email format' });
-    }
-    if (role && !['Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
-        return res.status(400).json({ message: 'Invalid role provided' });
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Invalid email format',
+            payload: null
+        });
     }
 
-    //Make sure the user exists
-    User.findByPk(req.params.id)
-    .then((data: User | null) => {
-        if (data) {
-            //Update the user
-            User.update({...req.body}, {where: {id: req.params.id} })
-            .then((isUpdated) => {
-                if(isUpdated){
-                    return res.status(200).json({
-                        status: "success",
-                        message: "User updated successfully",
-                        payload: {...req.body},
-                    });
-                } else{
-                    return res.status(500).json({
-                        status: "error",
-                        message: "There was an error updating the user",
-                        payload: null,
-                    });
-                }
-            })
-            .catch((err) => {
-                res.status(500).json({
-                    status: "error",
-                    message: "There was an error updating the user" + err.message,
-                    payload: null,
-                });
-            }); 
-        } else {
+    if(req.body.division && !["BRAZIL", "MEXICO", "CSA", "US"].includes(req.body.division)) {
+        return res.status(400).json({ 
+            status: 'error',
+            message: 'Invalid division provided',
+            payload: null
+        });
+    }
+
+    try{
+        //Make sure the user exists
+        const user = await User.findByPk(req.params.id, {
+            include: [Role]
+        });
+
+        if(!user){
             return res.status(404).json({
                 status: 'error',
                 message: 'User not found',
                 payload: null
             });
         }
-    })
-    .catch((err) => {
+
+        const {roles} = req.body;
+        if(roles){
+            for (const role of roles) {
+                if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role)) {
+                    return res.status(400).json({ 
+                        status: 'error',
+                        message: 'Invalid role provided',
+                        payload: null
+                    });
+                }
+            }
+
+            // Determine roles to be added and removed
+            const existingRoleNames = user.roles.map(role => role.role_name);;
+            const rolesToAdd = roles.filter((role: string) => !existingRoleNames.includes(role));
+            const rolesToRemove = existingRoleNames.filter((role: string) => !roles.includes(role));
+
+            // Add new roles to the user
+            if (rolesToAdd.length > 0) {
+                const rolesToAddObjects = await Role.findAll({ where: { role_name: rolesToAdd } });
+                await user.$add('roles', rolesToAddObjects);
+            }
+
+            // Remove roles from the user
+            if (rolesToRemove.length > 0) {
+                const rolesToRemoveObjects = user.roles.filter((role: Role) => rolesToRemove.includes(role.role_name));
+                await user.$remove('roles', rolesToRemoveObjects);
+            }
+        }
+
+
+        // Update other user attributes if provided
+        await user.update({...req.body}, {where: {id: req.params.id} })
+        .then((isUpdated) => {
+            if(isUpdated){
+                return res.status(200).json({
+                    status: "success",
+                    message: "User updated successfully",
+                    payload: {...req.body},
+                });
+            } else{
+                return res.status(500).json({
+                    status: "error",
+                    message: "There was an error updating the user",
+                    payload: null,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "There was an error updating the user" + err.message,
+                payload: null,
+            });
+        });
+        
+    } catch (err: any) {
         return res.status(500).json({
             status: "error",
-            message: "There was an error updating the user." + err.message,
+            message: "There was an error updating the user: " + (err.message || "Unknown error"),
             payload: null,
         });
-    });
+    }
 };
 
-//Delete a Product with the specified id in the request
+//Delete a User with the specified id in the request
 export const deleteUser: RequestHandler = async (req:Request, res:Response) => {
     const {id} = req.body;
 

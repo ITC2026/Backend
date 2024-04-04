@@ -5,17 +5,24 @@ import {
   CreatedAt,
   UpdatedAt,
   DataType,
+  BelongsToMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
+import { Role } from './roles';
+import { RoleUserRelation } from './role_user_relation';
 // import isEmail from 'validator/lib/isEmail';
 // import { validator } from 'sequelize/types/utils/validator-extras';
+import { Entity } from '../ticketLog/entities';
 
 interface UserAttributes {
   id: number;
   username: string;
   password: string;
   email: string;
-  role: string;
+  division: string;
+  roles: Role[];
 }
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
 
@@ -30,10 +37,19 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   password!: string;
 
   @Column
-  email?: string;
+  email!: string;
 
-  @Column(DataType.ENUM("Account Manager", "Resource Manager", "Staffer"))
-  role!: string;
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+  division!: string;
+
+  @BelongsToMany(() => Role, () => RoleUserRelation)
+  roles!: Role[];
+
+  @ForeignKey(() => Entity)
+  @Column 
+  entity_id!: number;
+  @BelongsTo(() => Entity)
+  entity!: Entity;
 
   @CreatedAt
   @Column

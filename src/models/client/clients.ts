@@ -4,10 +4,14 @@ import {
   CreatedAt,
   UpdatedAt,
   Table,
+  DataType,
   HasMany,
+  BelongsToMany,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Project } from "../project/projects";
+import { Employee } from "../person/employees";
+import { ClientEmployeeRelation } from "./client_employee_relations";
 
 interface ClientAttributes {
   id: number;
@@ -15,10 +19,10 @@ interface ClientAttributes {
   logo_url: string;
   client_name: string;
   client_desc: string;
-  exclusivity: string;
   high_growth: boolean;
   division: string;
   projects: Project[];
+  employees: Employee[];
 }
 
 interface ClientCreationAttributes extends Optional<ClientAttributes, "id"> {}
@@ -48,12 +52,9 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   client_desc!: string;
 
   @Column
-  exclusivity!: string;
-
-  @Column
   high_growth!: boolean;
 
-  @Column
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
   division!: string;
 
   @CreatedAt
@@ -64,4 +65,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
 
   @HasMany(() => Project)
   projects!: Project[];
+
+  @BelongsToMany(() => Employee, () => ClientEmployeeRelation)
+  employees?: Employee[];
 }

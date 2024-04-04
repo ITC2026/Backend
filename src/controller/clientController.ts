@@ -1,7 +1,8 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Client } from "../models/client/clients";
-import validator from 'validator';
 import { Project } from '../models/project/projects';
+import { Employee } from "../models/person/employees";
+import validator from 'validator';
 
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {
@@ -68,10 +69,10 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     });
   }
 
-  const { contract_pdf_url, logo_url, client_name, client_desc, exclusivity, high_growth, division } = req.body;
+  const { contract_pdf_url, logo_url, client_name, client_desc, high_growth, division } = req.body;
 
   //Validations
-  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !exclusivity || !high_growth || !division) {
+  if (!contract_pdf_url || !logo_url || !client_name || !client_desc || !high_growth || !division) {
     return res.status(400).json({
         status: 'error',
         message: 'All fields are required',
@@ -85,6 +86,14 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
 
   if (!validator.isURL(logo_url)) {
     return res.status(400).json({ message: 'Invalid URL format for logo' });
+  }
+
+  if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+    return res.status(400).json({ 
+        status: 'error',
+        message: 'Invalid division provided',
+        payload: null
+    });
   }
 
   // Save Client in the Database
@@ -105,7 +114,7 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     });
 };
 
-// Update a Client bny the id in the request
+// Update a Client by the id in the request
 export const modifyClient: RequestHandler = async (req: Request, res: Response) => {
   // Validate Request
   if (!req.body) {
@@ -122,6 +131,14 @@ export const modifyClient: RequestHandler = async (req: Request, res: Response) 
 
   if (!validator.isURL(req.body.logo_url)) {
     return res.status(400).json({ message: 'Invalid URL format for logo' });
+  }
+
+  if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(req.body.division)) {
+    return res.status(400).json({ 
+        status: 'error',
+        message: 'Invalid division provided',
+        payload: null
+    });
   }
 
   // Save Client in the database
@@ -155,7 +172,7 @@ export const modifyClient: RequestHandler = async (req: Request, res: Response) 
   });
 };
 
-// Delete a Client with the specified if in the request 
+// Delete a Client with the specified id in the request 
 export const deleteClient: RequestHandler = async (req: Request, res: Response) => {
   Client.findByPk(req.body.id)
   .then((data: Client | null) => {

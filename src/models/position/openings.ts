@@ -11,7 +11,8 @@ import {
   import { Optional } from "sequelize";
   import { Position } from "./positions";
   import { Employee } from "../person/employees";
-  
+  import { Entity } from "../ticketLog/entities";
+
   enum OpeningStatus {
     "New", "Filled", "Closed", "In Progress", "On Standby"
   } 
@@ -58,6 +59,12 @@ import {
   
     @HasMany(() => Employee)
     employees!: Employee[];
+
+    @ForeignKey(() => Entity)
+    @Column 
+    entity_id!: number;
+    @BelongsTo(() => Entity)
+    entity!: Entity;
   
     @CreatedAt
     createdAt!: Date;
