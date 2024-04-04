@@ -1,8 +1,7 @@
 import { Table, Model, Column, CreatedAt, UpdatedAt, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Pipeline } from './pipeline';
-import { Hired } from './employee/hired_employees';
-import { Vacancy } from '../position/vacancies';
+import { Opening } from '../position/openings';
 
 interface EmployeeAttributes {
   id: number;
@@ -18,7 +17,6 @@ interface EmployeeAttributes {
   pipelineId: number;
   pipeline: Pipeline;
   hiredId: number;
-  hired: Hired;
 }
 
 interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> {}
@@ -62,19 +60,12 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
   @BelongsTo(() => Pipeline)
   pipeline!: Pipeline;
 
-  @ForeignKey(() => Hired)
-  @Column
-  hiredId!: number;
-
-  @BelongsTo(() => Hired)
-  hired!: Hired;
-
-  @ForeignKey(() => Vacancy)
+  @ForeignKey(() => Opening)
   @Column
   vacancyId!: number;
 
-  @BelongsTo(() => Vacancy)
-  vacancy!: Vacancy;
+  @BelongsTo(() => Opening)
+  vacancy!: Opening;
 
   @CreatedAt
   @Column

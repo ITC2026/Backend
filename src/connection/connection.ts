@@ -1,9 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import { Employee } from "../models/person/employees";
-import { Bench } from "../models/person/bench";
-import { Billing } from "../models/person/billing";
 import { Pipeline } from "../models/person/pipeline";
-import { Hired } from "../models/person/employee/hired_employees";
 import { Project } from "../models/project/projects";
 import { Position } from "../models/position/positions";
 import { Opening } from "../models/position/openings";
@@ -26,10 +23,7 @@ const connection = new Sequelize({
   host: "localhost",
   models: [
     Employee,
-    Bench,
-    Billing,
     Pipeline,
-    Hired,
     Client,
     ClientEmployeeRelation,
     Project,
