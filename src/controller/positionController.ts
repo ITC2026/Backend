@@ -148,7 +148,7 @@ export const deletePosition: RequestHandler = async (
     });
 };
 
-export const getVacanciesByPosition: RequestHandler = async (
+export const getOpeningsByPosition: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
