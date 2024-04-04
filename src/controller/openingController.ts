@@ -1,33 +1,33 @@
 import { RequestHandler, Request, Response } from "express";
-import { Vacancy } from "../models/position/vacancies";
+import { Opening } from "../models/position/openings";
 import { Employee } from "../models/person/employees";
 
-export const createVacancy: RequestHandler = async (
+export const createOpening: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  Vacancy.create(req.body)
+  Opening.create(req.body)
     .then((data: unknown) => {
       return res.status(201).json({
         status: "Success",
-        message: "Vacancy created successfully",
+        message: "Opening created successfully",
         payload: data,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Vacancy not created",
+        message: "Opening not created",
         payload: error.message,
       });
     });
 };
 
-export const getVacancies: RequestHandler = async (
+export const getOpenings: RequestHandler = async (
     req: Request,
     res: Response
   ) => {
-    Vacancy.findAll({ 
+    Opening.findAll({ 
       include: { 
         model: Employee,
       }
@@ -36,32 +36,32 @@ export const getVacancies: RequestHandler = async (
         if (!data || data.length === 0) {
           return res.status(404).json({
             status: "Error",
-            message: "No vacancies found",
+            message: "No opening found",
             payload: null,
           });
         }
   
         return res.status(200).json({
           status: "Success",
-          message: "Vacancies retrieved successfully",
+          message: "Openings retrieved successfully",
           payload: data,
         });
       })
       .catch((error: Error) => {
         return res.status(500).json({
           status: "Error",
-          message: "Vacancies not retrieved",
+          message: "Openings not retrieved",
           payload: error.message,
         });
       });
 };
 
-export const getVacancyById: RequestHandler = async (
+export const getOpeningById: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   const id = req.params.id;
-  Vacancy.findByPk(id,
+  Opening.findByPk(id,
     {
       include: { 
         model: Employee,
@@ -70,58 +70,58 @@ export const getVacancyById: RequestHandler = async (
     .then((data: unknown | null) => {
       return res.status(200).json({
         status: "Success",
-        message: "Vacancy retrieved successfully",
+        message: "Opening retrieved successfully",
         payload: data,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Vacancy not retrieved",
+        message: "Opening not retrieved",
         payload: error.message,
       });
     });
 };
 
-export const updateVacancy: RequestHandler = async (
+export const updateOpening: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   const id = req.params.id;
-  Vacancy.update( req.body, { where: { id } })
+  Opening.update( req.body, { where: { id } })
     .then((isUpdated) => {
       return res.status(200).json({
         status: "Success",
-        message: "Vacancy updated successfully",
+        message: "Opening updated successfully",
         payload: isUpdated,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Vacancy not updated",
+        message: "Opening not updated",
         payload: error.message,
       });
     });
 };
 
-export const deleteVacancy: RequestHandler = async (
+export const deleteOpening: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   const id = req.body.id;
-  Vacancy.destroy({ where: { id } })
+  Opening.destroy({ where: { id } })
     .then((isDeleted) => {
       return res.status(200).json({
         status: "Success",
-        message: "Vacancy deleted successfully",
+        message: "Opening deleted successfully",
         payload: isDeleted,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Vacancy not deleted",
+        message: "Opening not deleted",
         payload: error.message,
       });
     });
