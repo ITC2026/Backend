@@ -11,8 +11,8 @@ import {
   import { Optional } from "sequelize";
   import { Position } from "./positions";
   import { ExpirationDateOpening } from "./expiration_date_openings"
+  import { Person } from "../person/people";
   import { Entity } from "../ticketLog/entities";
-  //import { Person } from "../person/people";
   
   interface OpeningAttributes {
     id: number;
@@ -22,7 +22,7 @@ import {
     has_expiration_date: boolean;
     position_id: number;
     person_id: number;
-    //person: Person;
+    person: Person;
   }
   
   interface OpeningCreatedAttributes extends Optional<OpeningAttributes, "id"> {}
@@ -35,13 +35,13 @@ import {
     OpeningAttributes,
     OpeningCreatedAttributes
   > {
-    /*getPerson(): Promise<Person[]> {
+    getPerson(): Promise<Person[]> {
       return Person.findAll({
         where: {
-          person_id
+          id: this.person_id
         },
       });
-    }*/
+    }
   
     @Column
     opening_status!: string;
@@ -75,6 +75,13 @@ import {
     @BelongsTo(() => Entity)
     entity!: Entity;
 
+    @ForeignKey(() => Person)
+    @Column
+    person_id!: number;
+
+    @BelongsTo(() => Person)
+    person!: Person;
+  
     @CreatedAt
     createdAt!: Date;
   

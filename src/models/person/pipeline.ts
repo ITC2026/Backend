@@ -1,13 +1,11 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
-import { Employee } from './employees';
+import { Person } from './people';
 
 interface PipelineAttributes {
   id: number;
   expected_salary: number;
-  in_pipeline_since: Date;
-  days_in_pipeline: number;
-  employee: Employee;
+  person_id: number;
 }
 
 interface PipelineCreationAttributes extends Optional<PipelineAttributes, 'id'>{}
@@ -19,14 +17,12 @@ export class Pipeline extends Model<PipelineAttributes, PipelineCreationAttribut
   @Column
   expected_salary!: number;
 
+  @ForeignKey(() => Person)
   @Column
-  in_pipeline_since!: Date;
+  person_id!: number;
 
-  @Column
-  days_in_pipeline!: number;
-
-  @HasOne(() => Employee)
-  employee!: Employee;
+  @BelongsTo(() => Person)
+  person!: Person;
 
   @CreatedAt
   @Column

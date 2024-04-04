@@ -18,7 +18,7 @@ import {
   import { TicketLog } from "./ticket_log";
   import { Opening } from "../position/openings";
   import { Application } from "../position/applications";
-  // import { Person } from "../person/people";
+  import { Person } from "../person/people";
   import { User } from "../user/user";
 
   
@@ -45,35 +45,35 @@ import {
     belongs_to_id!: number;
   
     @HasOne(() => TicketLog)
-    ticketLog!: TicketLog;
+    ticketLog?: TicketLog;
 
     @ForeignKey(() => User)
     @HasOne(() => User)
-    User!: User;
+    User?: User;
 
     @ForeignKey(() => Opening)
     @HasOne(() => Opening)
-    Opening!: Opening;
+    Opening?: Opening;
 
     @ForeignKey(() => Client)
     @HasOne(() => Client)
-    Client!: Client;
+    Client?: Client;
 
     // @ForeignKey(() => Project)
     @HasOne(() => Project)
-    Project!: Project;
+    Project?: Project;
 
     @ForeignKey(() => Position)
     @HasOne(() => Position)
-    Position!: Position;
+    Position?: Position;
 
     @ForeignKey(() => Application)
     @HasOne(() => Application)
-    Application!: Application;
+    Application?: Application;
 
-    // @ForeignKey(() => Person)
-    // @HasOne(() => Person)
-    // Person!: Person;
+    @ForeignKey(() => Person)
+    @HasOne(() => Person)
+    Person?: Person;
 
 
   }
