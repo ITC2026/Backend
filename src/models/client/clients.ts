@@ -7,11 +7,14 @@ import {
   DataType,
   HasMany,
   BelongsToMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Project } from "../project/projects";
 import { Employee } from "../person/employees";
 import { ClientEmployeeRelation } from "./client_employee_relations";
+import { Entity } from "../ticketLog/entities";
 
 interface ClientAttributes {
   id: number;
@@ -56,6 +59,12 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
 
   @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
   division!: string;
+
+  @ForeignKey(() => Entity)
+  @Column 
+  entity_id!: number;
+  @BelongsTo(() => Entity)
+  entity!: Entity;
 
   @CreatedAt
   createdAt!: Date;

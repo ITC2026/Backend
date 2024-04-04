@@ -1,7 +1,6 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Employee } from '../models/person/employees';
 import { Pipeline } from '../models/person/pipeline';
-import { Hired } from '../models/person/employee/hired_employees';
 import { Bench } from '../models/person/bench';
 import { Billing } from '../models/person/billing';
 
