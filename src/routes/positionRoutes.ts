@@ -5,7 +5,7 @@ import {
   getPositionById,
   updatePosition,
   deletePosition,
-  getVacanciesByPosition,
+  getOpeningsByPosition,
 } from '../controller/positionController';
 const positionRouter: Router = Router();
 
@@ -16,8 +16,8 @@ positionRouter.post('/', (createPosition));
 positionRouter.patch('/:id', (updatePosition));
 positionRouter.delete('/', (deletePosition));
 
-// Vacancy Methods For Positions
-positionRouter.get('/vacancies/:id', (getVacanciesByPosition));
-// positionRouter.get('/vacancies/:id', (createVacancyForPosition));
+// Opening Methods For Positions
+positionRouter.get('/openings/:id', (getOpeningsByPosition));
+// positionRouter.get('/opening/:id', (createOpeningForPosition));
 
 export default positionRouter;
