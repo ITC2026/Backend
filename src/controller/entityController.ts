@@ -4,7 +4,7 @@ import { Client } from "../models/client/clients";
 import { Project } from "../models/project/projects";
 import { Position } from "../models/position/positions";
 import { Opening } from "../models/position/openings";
-// import { Application } from "../models/position/applications";
+import { Application } from "../models/position/applications";
 // import { Person } from "../models/person/people";
 import { User } from "../models/user/user";
 
@@ -46,7 +46,7 @@ export const createEntity: RequestHandler = async (
   }
 
   // Verify if the belongs_to_id value is valid
-  if (![Client, Project, Position, Opening, User].includes(belongs_to_id)) {
+  if (![Client, Project, Position, Opening, User, Application].includes(belongs_to_id)) {
     return res.status(400).json({
         status: 'error',
         message: 'Invalid ID it belongs to provided',

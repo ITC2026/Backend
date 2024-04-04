@@ -13,6 +13,9 @@ import { Role } from "../models/user/roles";
 import { RoleUserRelation } from "../models/user/role_user_relation";
 import { ExpirationDateProject } from "../models/project/expiration_date_project";
 import { ClosedProject } from "../models/project/closed_project";
+import { Application } from "../models/position/applications";
+import { CommentPosition } from "../models/position/comments_positions";
+import { ExpirationDateOpening } from "../models/position/expiration_date_openings";
 
 const connection = new Sequelize({
   database: "sisweb_db",
@@ -36,6 +39,9 @@ const connection = new Sequelize({
     Entity,
     Role,
     RoleUserRelation,
+    Application,
+    CommentPosition,
+    ExpirationDateOpening,
   ],
 });
 

@@ -10,6 +10,7 @@ import {
   } from "sequelize-typescript";
   import { type Optional } from "sequelize";
   import { Position } from "./positions";
+  import { Entity } from "../ticketLog/entities";
   //import { Person } from "../person/people";
   
   interface ApplicationAttributes {
@@ -43,6 +44,12 @@ ApplicationCreationAttributes
 
     @BelongsTo(() => Position)
     position!: Position;
+
+    @ForeignKey(() => Entity)
+    @Column 
+    entity_id!: number;
+    @BelongsTo(() => Entity)
+    entity!: Entity;
 
     /*@ForeignKey(() => Person)
     @Column

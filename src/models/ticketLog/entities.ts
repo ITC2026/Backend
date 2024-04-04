@@ -17,7 +17,7 @@ import {
   import { Position } from "../position/positions";
   import { TicketLog } from "./ticket_log";
   import { Opening } from "../position/openings";
-  // import { Application } from "../position/applications";
+  import { Application } from "../position/applications";
   // import { Person } from "../person/people";
   import { User } from "../user/user";
 
@@ -67,9 +67,9 @@ import {
     @HasOne(() => Position)
     Position!: Position;
 
-    // @ForeignKey(() => Application)
-    // @HasOne(() => Application)
-    // Application!: Application;
+    @ForeignKey(() => Application)
+    @HasOne(() => Application)
+    Application!: Application;
 
     // @ForeignKey(() => Person)
     // @HasOne(() => Person)
