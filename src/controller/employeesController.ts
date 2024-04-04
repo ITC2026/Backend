@@ -1,20 +1,9 @@
 import { RequestHandler, Request, Response } from 'express';
 import { Employee } from '../models/person/employees';
 import { Pipeline } from '../models/person/pipeline';
-import { Hired } from '../models/person/employee/hired_employees';
-import { Bench } from '../models/person/bench';
-import { Billing } from '../models/person/billing';
 
 export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findAll({ 
-    include: [
-      Pipeline, 
-      {
-        model: Hired,
-        include: [Bench, Billing]
-      }
-    ]
-    })
+  Employee.findAll({ })
     .then((data: Employee[]) => {
       return res.status(200).json({
         status: "success",
@@ -33,15 +22,7 @@ export const getAllEmployees: RequestHandler = async (req: Request, res: Respons
 
 
 export const getEmployeeById: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findByPk(req.params.id, { 
-    include: [
-      Pipeline, 
-      {
-        model: Hired,
-        include: [Bench, Billing]
-      }
-    ]
-    })
+  Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
         status: "success",
@@ -81,14 +62,7 @@ export const getEmployeePipelineById: RequestHandler = async (req: Request, res:
 };
 
 export const getEmployeeBenchById: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findByPk(req.params.id, { 
-      include: [{
-        model: Hired,
-        include: [{
-          model: Bench,
-        }]
-      }]
-    })
+  Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
         status: "success",
@@ -106,14 +80,7 @@ export const getEmployeeBenchById: RequestHandler = async (req: Request, res: Re
 };
 
 export const getEmployeeBillingById: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findByPk(req.params.id, { 
-      include: [{
-        model: Hired,
-        include: [{
-          model: Billing,
-        }]
-      }]
-    })
+  Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
         status: "success",
@@ -139,15 +106,7 @@ export const createEmployee: RequestHandler = async (req: Request, res: Response
     });
   }
 
-  Employee.create({ ...req.body }, {
-      include: [
-        Pipeline, 
-        {
-          model: Hired,
-          include: [Bench, Billing]
-        }
-      ]
-    })
+  Employee.create({ ...req.body })
     .then((data: Employee | null) => {
       return res.status(201).json({
         status: "Success",
@@ -190,27 +149,6 @@ export const updateEmployee = async (req: Request, res: Response) => {
       const pipeline = await Pipeline.findOne({ where: { id: employee.pipelineId } });
       if (pipeline) {
         pipeline.update(req.body.pipeline);
-      }
-    }
-
-    if (req.body.hired) {
-      const hired = await Hired.findOne({ where: { id: employee.hiredId } });
-      if (hired) {
-        hired.update(req.body.hired);
-
-        if (req.body.hired.bench) {
-          const bench = await Bench.findOne({ where: { id: hired.benchId } });
-          if (bench) {
-            bench.update(req.body.hired.bench);
-          }
-        }
-
-        if (req.body.hired.billing) {
-          const billing = await Billing.findOne({ where: { id: hired.billingId } });
-          if (billing) {
-             billing.update(req.body.hired.billing);
-          }
-        }
       }
     }
 
