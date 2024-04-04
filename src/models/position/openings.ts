@@ -6,66 +6,75 @@ import {
     UpdatedAt,
     ForeignKey,
     BelongsTo,
-    HasMany,
+    HasOne,
   } from "sequelize-typescript";
   import { Optional } from "sequelize";
   import { Position } from "./positions";
-  import { Employee } from "../person/employees";
+  import { ExpirationDateOpening } from "./expiration_date_openings"
   import { Entity } from "../ticketLog/entities";
-
-  enum OpeningStatus {
-    "New", "Filled", "Closed", "In Progress", "On Standby"
-  } 
-  enum OpeningReason {
-    "In Progress", "On Standby", "Hired", "Replacement", "Budget Problem", "Filled By Itself", "Filled By Another", "No Replied"
-  }
-
+  //import { Person } from "../person/people";
+  
   interface OpeningAttributes {
     id: number;
-    opening_status: OpeningStatus;
-    opening_reason: OpeningReason;
+    opening_status: string;
+    opening_reason: string;
     start_date: Date;
     has_expiration_date: boolean;
     position_id: number;
-    employee_id: number;
+    person_id: number;
+    //person: Person;
   }
   
   interface OpeningCreatedAttributes extends Optional<OpeningAttributes, "id"> {}
   
+  
   @Table({
-    tableName: "Opening",
+    tableName: "Openings",
   })
   export class Opening extends Model<
     OpeningAttributes,
     OpeningCreatedAttributes
   > {
-    getEmployee(): Promise<Opening[]> {
-      return Opening.findAll({
+    /*getPerson(): Promise<Person[]> {
+      return Person.findAll({
         where: {
-          position_id: this.id,
+          person_id
         },
       });
-    }
+    }*/
   
     @Column
-    progress_vacancy!: string; // what ok
+    opening_status!: string;
+
+    @Column
+    opening_reason!: string;
+
+    @Column
+    start_date!: Date;
+
+    @Column
+    has_expiration_date!: boolean;
   
     @ForeignKey(() => Position)
     @Column
-    position_id_vacancy!: number;
+    position_id!: number;
   
     @BelongsTo(() => Position)
-    project: Position = new Position();
-  
-    @HasMany(() => Employee)
-    employees!: Employee[];
+    project!: Position;
 
+    @HasOne(() => ExpirationDateOpening)
+    expiration_date?: ExpirationDateOpening;
+  
+    //!Im gonna be honest Im not sure about this one
+    /*@HasOne(() => Person)
+    person?: Person;*/
+  
     @ForeignKey(() => Entity)
     @Column 
     entity_id!: number;
     @BelongsTo(() => Entity)
     entity!: Entity;
-  
+
     @CreatedAt
     createdAt!: Date;
   

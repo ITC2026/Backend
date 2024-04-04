@@ -6,7 +6,7 @@ import { Pipeline } from "../models/person/pipeline";
 import { Hired } from "../models/person/employee/hired_employees";
 import { Project } from "../models/project/projects";
 import { Position } from "../models/position/positions";
-import { Vacancy } from "../models/position/vacancies";
+import { Opening } from "../models/position/openings";
 import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
 import { TicketLog } from "../models/ticketLog/ticket_log";
@@ -36,7 +36,7 @@ const connection = new Sequelize({
     ExpirationDateProject,
     ClosedProject,
     Position,
-    Vacancy,
+    Opening,
     User,
     TicketLog,
     Entity,
