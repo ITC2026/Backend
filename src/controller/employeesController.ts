@@ -145,12 +145,12 @@ export const updateEmployee = async (req: Request, res: Response) => {
 
     employee.update(req.body);
 
-    if (req.body.pipeline) {
+    /*if (req.body.pipeline) {
       const pipeline = await Pipeline.findOne({ where: { id: employee.pipelineId } });
       if (pipeline) {
         pipeline.update(req.body.pipeline);
       }
-    }
+    }*/
 
     return res.status(200).json({
       status: "Success",

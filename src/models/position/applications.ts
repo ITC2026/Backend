@@ -10,7 +10,7 @@ import {
   } from "sequelize-typescript";
   import { type Optional } from "sequelize";
   import { Position } from "./positions";
-  //import { Person } from "../person/people";
+  import { Person } from "../person/people";
   
   interface ApplicationAttributes {
     id: number;
@@ -28,7 +28,7 @@ export class Application extends Model<
 ApplicationAttributes,
 ApplicationCreationAttributes
 > {
-    @Column(DataType.ENUM("Accepted", "Rejected", "Scheduled For Interview", "Waiting on Client Response"))
+    @Column(DataType.ENUM("Accepted", "Rejected", "Scheduled For Interview", "Waiting on Client Response", "On Hold"))
     application_status!: string;
 
     @CreatedAt
@@ -44,10 +44,10 @@ ApplicationCreationAttributes
     @BelongsTo(() => Position)
     position!: Position;
 
-    /*@ForeignKey(() => Person)
+    @ForeignKey(() => Person)
     @Column
     person_id!: number;
 
     @BelongsTo(() => Person)
-    person!: Person;*/
+    person!: Person;
 }
