@@ -15,6 +15,7 @@ import { Project } from "../project/projects";
 import { Opening } from "./openings";
 import { CommentPosition } from "./comments_positions"
 import { Application } from "./applications"
+import { Entity } from "../ticketLog/entities";
 
 interface PositionAttributes {
   id: number;
@@ -91,6 +92,12 @@ export class Position extends Model<
 
   @BelongsTo(() => Project)
   project!: Project;
+
+  @ForeignKey(() => Entity)
+  @Column 
+  entity_id!: number;
+  @BelongsTo(() => Entity)
+  entity!: Entity;
 
   @CreatedAt
   createdAt!: Date;

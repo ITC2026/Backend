@@ -15,6 +15,7 @@ import { Position } from "../position/positions";
 import { Client } from "../client/clients";
 import { ExpirationDateProject } from "./expiration_date_project"
 import { ClosedProject } from "./closed_project"
+import { Entity } from "../ticketLog/entities";
 
 interface ProjectAttributes {
   id: number;
@@ -80,4 +81,10 @@ export class Project extends Model<
 
   @BelongsTo(() => Client)
   client!: Client;
+
+  @ForeignKey(() => Entity)
+  @Column 
+  entity_id!: number;
+  @BelongsTo(() => Entity)
+  entity!: Entity;
 }

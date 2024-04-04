@@ -5,6 +5,8 @@ import positionRouter from "./positionRoutes";
 import openingRouter from "./openingRoutes";
 import clientRouter from "./clientRoutes";
 import employeeRoutes from "./employeeRoutes";
+import entityRoutes from "./entityRoutes";
+import ticketLogRoutes from "./ticketLogRoutes";
 import roleRoutes from "./roleRoutes";
 
 const apiRouter: Router = Router();
@@ -15,6 +17,8 @@ apiRouter.use("/positions", positionRouter);
 apiRouter.use("/clients", clientRouter);
 apiRouter.use("/openings", openingRouter);
 apiRouter.use("/employee", employeeRoutes);
+apiRouter.use("/entities", entityRoutes);
+apiRouter.use("/ticketlogs", ticketLogRoutes);
 apiRouter.use("/role", roleRoutes);
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");

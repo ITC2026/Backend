@@ -12,6 +12,8 @@ import { CommentPosition } from "../models/position/comments_positions";
 import { Application } from "../models/position/applications";
 import { User } from "../models/user/user";
 import { Client } from "../models/client/clients";
+import { TicketLog } from "../models/ticketLog/ticket_log";
+import { Entity } from "../models/ticketLog/entities";
 import { ClientEmployeeRelation } from "../models/client/client_employee_relations";
 import { Role } from "../models/user/roles";
 import { RoleUserRelation } from "../models/user/role_user_relation";
@@ -34,12 +36,14 @@ const connection = new Sequelize({
     ClosedProject,
     Position,
     Opening,
-    ExpirationDateOpening,
-    CommentPosition,
-    Application,
     User,
+    TicketLog,
+    Entity,
     Role,
     RoleUserRelation,
+    Application,
+    CommentPosition,
+    ExpirationDateOpening,
   ],
 });
 

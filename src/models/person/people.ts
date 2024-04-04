@@ -1,9 +1,10 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Application } from '../position/applications';
 import { Opening } from '../position/openings';
 import { Employee } from './employees';
 import { Pipeline } from './pipeline';
+import { Entity } from '../ticketLog/entities';
 
 interface PersonAttributes {
   id: number;
@@ -66,6 +67,12 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
 
     @HasOne(() => Employee)
     employee?: Employee;
+
+    @ForeignKey(() => Entity)
+    @Column 
+    entity_id?: number;
+    @BelongsTo(() => Entity)
+    entity?: Entity;
 
     @CreatedAt
     @Column

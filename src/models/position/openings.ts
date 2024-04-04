@@ -12,6 +12,7 @@ import {
   import { Position } from "./positions";
   import { ExpirationDateOpening } from "./expiration_date_openings"
   import { Person } from "../person/people";
+  import { Entity } from "../ticketLog/entities";
   
   interface OpeningAttributes {
     id: number;
@@ -64,6 +65,16 @@ import {
     @HasOne(() => ExpirationDateOpening)
     expiration_date?: ExpirationDateOpening;
   
+    //!Im gonna be honest Im not sure about this one
+    /*@HasOne(() => Person)
+    person?: Person;*/
+  
+    @ForeignKey(() => Entity)
+    @Column 
+    entity_id!: number;
+    @BelongsTo(() => Entity)
+    entity!: Entity;
+
     @ForeignKey(() => Person)
     @Column
     person_id!: number;

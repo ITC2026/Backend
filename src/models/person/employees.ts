@@ -59,6 +59,6 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
   person!: Person;
 
   @BelongsToMany(() => Client, () => ClientEmployeeRelation)
-  clients?: Client[];
+  client?: Client[];
 
 }

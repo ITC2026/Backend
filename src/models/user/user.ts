@@ -6,12 +6,15 @@ import {
   UpdatedAt,
   DataType,
   BelongsToMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Role } from './roles';
 import { RoleUserRelation } from './role_user_relation';
 // import isEmail from 'validator/lib/isEmail';
 // import { validator } from 'sequelize/types/utils/validator-extras';
+import { Entity } from '../ticketLog/entities';
 
 interface UserAttributes {
   id: number;
@@ -41,6 +44,12 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
   @BelongsToMany(() => Role, () => RoleUserRelation)
   roles!: Role[];
+
+  @ForeignKey(() => Entity)
+  @Column 
+  entity_id!: number;
+  @BelongsTo(() => Entity)
+  entity!: Entity;
 
   @CreatedAt
   @Column
