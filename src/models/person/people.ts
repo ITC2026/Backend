@@ -72,7 +72,7 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     opening?: Opening;
 
     @HasOne(() => Pipeline)
-    pipeline?: Pipeline;
+    pipeline!: Pipeline;
 
     @HasOne(() => Employee)
     employee?: Employee;

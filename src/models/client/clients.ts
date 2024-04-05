@@ -61,7 +61,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   division!: string;
 
   @ForeignKey(() => Entity)
-  @Column 
+  @Column
   entity_id!: number;
   @BelongsTo(() => Entity)
   entity!: Entity;

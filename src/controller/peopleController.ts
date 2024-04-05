@@ -36,9 +36,6 @@ const REGION = [
   "DALLAS",
   "PHOENIX",
 ];
-
-const STATUS = ["Pipeline", "Bench", "Billing"];
-
 const GENDER = ["Male", "Female", "Nonbinary", "Did Not Want to Say"];
 
 export const getAllPeople: RequestHandler = async (
@@ -128,9 +125,11 @@ export const createPerson: RequestHandler = async (
     tech_stack,
     division,
     region,
-    status,
     gender,
   } = req.body;
+
+  // Default status to Pipeline
+  req.body.status = "Pipeline"; 
 
   if (
     !first_name ||
@@ -141,7 +140,6 @@ export const createPerson: RequestHandler = async (
     !tech_stack ||
     !division ||
     !region ||
-    !status ||
     !gender
   ) {
     return res.status(400).json({
@@ -171,14 +169,6 @@ export const createPerson: RequestHandler = async (
     return res.status(400).json({
       status: "error",
       message: `Invalid tech stack. ${tech_stack} is not a valid tech stack.`,
-      payload: null,
-    });
-  }
-
-  if (!STATUS.includes(status)) {
-    return res.status(400).json({
-      status: "error",
-      message: `Invalid status. ${status} is not a valid status.`,
       payload: null,
     });
   }
