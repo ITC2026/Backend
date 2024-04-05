@@ -59,7 +59,7 @@ import {
     @HasOne(() => Client)
     Client?: Client;
 
-    // @ForeignKey(() => Project)
+    @ForeignKey(() => Project)
     @HasOne(() => Project)
     Project?: Project;
 

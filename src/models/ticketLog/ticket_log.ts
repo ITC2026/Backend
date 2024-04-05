@@ -19,7 +19,7 @@ enum ActionType {
 
 interface TicketLogAttributes {
     id: number;
-    action: ActionType;
+    action: string;
     user_id: number;
     entity_id: number;
 }
@@ -31,19 +31,17 @@ interface TicketLogCreationAttributes extends Optional<TicketLogAttributes, "id"
 })
 export class TicketLog extends Model<TicketLogAttributes, TicketLogCreationAttributes> {
     @Column
-    action!: ActionType;
+    action!: string;
 
     @ForeignKey(() => User)
     @Column({ field: 'user_id' }) // Specify field name to match attribute name
     userId!: number; // Updated to match attribute name
-
     @BelongsTo(() => User, 'user_id') // Corrected association with foreign key
     user!: User;
 
     @ForeignKey(() => Entity)
     @Column({ field: 'entity_id' }) // Specify field name to match attribute name
     entityId!: number; // Updated to match attribute name
-
     @BelongsTo(() => Entity, 'entity_id') // Corrected association with foreign key
     entity!: Entity;
 

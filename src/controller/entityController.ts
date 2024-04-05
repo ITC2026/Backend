@@ -5,6 +5,7 @@ import { Project } from "../models/project/projects";
 import { Position } from "../models/position/positions";
 import { Opening } from "../models/position/openings";
 import { Application } from "../models/position/applications";
+import { Person } from "../models/person/people";
 import { User } from "../models/user/user";
 
 const entity_type = [
@@ -31,7 +32,7 @@ export const createEntity: RequestHandler = async (
   }
   const { type, isDeleted, belongs_to_id } = req.body;
 
-  if (!type || !isDeleted || !belongs_to_id) {
+  if (!type || !belongs_to_id) {
     return res.status(400).json({
       status: "error",
       message:
@@ -51,24 +52,147 @@ export const createEntity: RequestHandler = async (
   };
 
   // Verify if the isDeleted value is valid
-  if (!["true", "false"].includes(isDeleted)) {
-    return res
-      .status(400)
-      .json({ message: "Invalid isDeleted value provided" });
+  if (![true, false].includes(isDeleted)) {
+    return res.status(400).json({ message: 'Invalid isDeleted value provided' });
   }
 
   // Verify if the belongs_to_id value is valid
-  if (
-    ![Client, Project, Position, Opening, User, Application].includes(
-      belongs_to_id
-    )
-  ) {
-    return res.status(400).json({
-      status: "error",
-      message: "Invalid ID it belongs to provided",
-      payload: null,
-    });
+  if (type === 'Client') {
+    Client.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Client not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Client not found",
+          payload: error.message,
+        });
+      });
   }
+  if (type === 'Project') {
+    Project.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Project not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Project not found",
+          payload: error.message,
+        });
+      });
+  }
+  if (type === 'Position') {
+    Position.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Position not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Position not found",
+          payload: error.message,
+        });
+      });
+  }
+  if (type === 'Opening') {
+    Opening.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Opening not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Opening not found",
+          payload: error.message,
+        });
+      });
+  }
+  if (type === 'User') {
+    User.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'User not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "User not found",
+          payload: error.message,
+        });
+      });
+  }
+  if (type === 'Application') {
+    Application.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Application not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Application not found",
+          payload: error.message,
+        });
+      });
+  }
+  if (type === 'Person') {
+    Person.findByPk(belongs_to_id)
+      .then((data: unknown | null) => {
+        if (!data) {
+          return res.status(400).json({
+            status: 'error',
+            message: 'Person not found',
+            payload: null
+          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Person not found",
+          payload: error.message,
+        });
+      });
+  }
+
+
+
   // if (![type.].includes(belongs_to_id)) {
   //   return res.status(400).json({
   //       status: 'error',
