@@ -8,36 +8,47 @@ import { Application } from "../models/position/applications";
 import { Person } from "../models/person/people";
 import { User } from "../models/user/user";
 
+const entity_type = [
+  "Client",
+  "Project",
+  "Position",
+  "Opening",
+  "Application",
+  "Person",
+  "User",
+];
+
 export const createEntity: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   // Validations
-  if(!req.body){
+  if (!req.body) {
     return res.status(400).json({
-        status: "error",
-        message: "Content can not be empty",
-        payload: null,
+      status: "error",
+      message: "Content can not be empty",
+      payload: null,
     });
   }
   const { type, isDeleted, belongs_to_id } = req.body;
 
   if (!type || !belongs_to_id) {
     return res.status(400).json({
-        status: 'error',
-        message: 'Type, whether it is deleted or not, and ID it belongs to are required',
-        payload: null
+      status: "error",
+      message:
+        "Type, whether it is deleted or not, and ID it belongs to are required",
+      payload: null,
     });
   }
 
   // Verificar si el valor de type es válido
-  if (!['Client', 'Project', 'Position', 'Opening', 'Application', 'Person', 'User'].includes(type)) {
-    return res.status(400).json({ message: 'Invalid type provided' });
+  if (!entity_type.includes(type)) {
+    return res.status(400).json({ message: "Invalid type provided" });
   }
   const entity = {
     type: type,
     isDeleted: isDeleted,
-    belongs_to_id: belongs_to_id
+    belongs_to_id: belongs_to_id,
   };
 
   // Verify if the isDeleted value is valid
@@ -45,6 +56,7 @@ export const createEntity: RequestHandler = async (
     return res.status(400).json({ message: 'Invalid isDeleted value provided' });
   }
 
+  // Verify if the belongs_to_id value is valid
   if (type === 'Client') {
     Client.findByPk(belongs_to_id)
       .then((data: unknown | null) => {
@@ -180,8 +192,8 @@ export const createEntity: RequestHandler = async (
   }
 
 
-  // Verify if the belongs_to_id value is valid
-  // if (![Client, Project, Position, Opening, User, Application, Person].includes(belongs_to_id)) {
+
+  // if (![type.].includes(belongs_to_id)) {
   //   return res.status(400).json({
   //       status: 'error',
   //       message: 'Invalid ID it belongs to provided',
@@ -207,32 +219,32 @@ export const createEntity: RequestHandler = async (
 };
 
 export const getEntities: RequestHandler = async (
-    req: Request,
-    res: Response
-  ) => {
-    Entity.findAll()
-      .then((data: unknown[] | null) => {
-        if (!data || data.length === 0) {
-          return res.status(404).json({
-            status: "Error",
-            message: "No Entities found",
-            payload: null,
-          });
-        }
-  
-        return res.status(200).json({
-          status: "Success",
-          message: "Entities retrieved successfully",
-          payload: data,
-        });
-      })
-      .catch((error: Error) => {
-        return res.status(500).json({
+  req: Request,
+  res: Response
+) => {
+  Entity.findAll()
+    .then((data: unknown[] | null) => {
+      if (!data || data.length === 0) {
+        return res.status(404).json({
           status: "Error",
-          message: "Entities not retrieved",
-          payload: error.message,
+          message: "No Entities found",
+          payload: null,
         });
+      }
+
+      return res.status(200).json({
+        status: "Success",
+        message: "Entities retrieved successfully",
+        payload: data,
       });
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Entities not retrieved",
+        payload: error.message,
+      });
+    });
 };
 
 export const getEntityById: RequestHandler = async (
@@ -262,7 +274,7 @@ export const modifyEntity: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  Entity.update( req.body, { where: { id } })
+  Entity.update(req.body, { where: { id } })
     .then((isUpdated) => {
       return res.status(200).json({
         status: "Success",
@@ -300,4 +312,3 @@ export const deleteEntity: RequestHandler = async (
       });
     });
 };
-

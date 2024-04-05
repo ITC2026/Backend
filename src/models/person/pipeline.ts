@@ -1,6 +1,14 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, BelongsTo, ForeignKey } from 'sequelize-typescript';
-import { Optional } from 'sequelize';
-import { Person } from './people';
+import {
+  Table,
+  Model,
+  Column,
+  CreatedAt,
+  UpdatedAt,
+  BelongsTo,
+  ForeignKey,
+} from "sequelize-typescript";
+import { Optional } from "sequelize";
+import { Person } from "./people";
 
 interface PipelineAttributes {
   id: number;
@@ -8,12 +16,16 @@ interface PipelineAttributes {
   person_id: number;
 }
 
-interface PipelineCreationAttributes extends Optional<PipelineAttributes, 'id'>{}
+interface PipelineCreationAttributes
+  extends Optional<PipelineAttributes, "id"> {}
 
-@Table ({
-  tableName: "Pipeline"
+@Table({
+  tableName: "Pipeline",
 })
-export class Pipeline extends Model<PipelineAttributes, PipelineCreationAttributes> {
+export class Pipeline extends Model<
+  PipelineAttributes,
+  PipelineCreationAttributes
+> {
   @Column
   expected_salary!: number;
 

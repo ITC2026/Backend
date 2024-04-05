@@ -1,7 +1,17 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, ForeignKey, BelongsTo, BelongsToMany, DataType } from 'sequelize-typescript';
-import { Optional } from 'sequelize';
-import { Person } from './people';
-import { Client } from '../client/clients';
+import {
+  Table,
+  Model,
+  Column,
+  CreatedAt,
+  UpdatedAt,
+  ForeignKey,
+  BelongsTo,
+  BelongsToMany,
+  DataType,
+} from "sequelize-typescript";
+import { Optional } from "sequelize";
+import { Person } from "./people";
+import { Client } from "../client/clients";
 import { ClientEmployeeRelation } from "../client/client_employee_relations";
 
 interface EmployeeAttributes {
@@ -17,13 +27,17 @@ interface EmployeeAttributes {
   person_id: number;
 }
 
-interface EmployeeCreationAttributes extends Optional<EmployeeAttributes, 'id'> {}
+interface EmployeeCreationAttributes
+  extends Optional<EmployeeAttributes, "id"> {}
 
 @Table({
   tableName: "Employees",
-  timestamps: true
+  timestamps: true,
 })
-export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttributes> {
+export class Employee extends Model<
+  EmployeeAttributes,
+  EmployeeCreationAttributes
+> {
   @Column
   job_title!: string;
 
@@ -33,14 +47,42 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
   @Column(DataType.ENUM("C3", "C4", "C5", "C6"))
   job_grade!: string;
 
-  @Column(DataType.ENUM("Project Search", "Using in internal project", "UpSkilling CrossTraining", "Backup Shadow other projects", "Resource Pool", "No action required", "Others", "Attrition"))
+  @Column(
+    DataType.ENUM(
+      "Project Search",
+      "Using in internal project",
+      "UpSkilling CrossTraining",
+      "Backup Shadow other projects",
+      "Resource Pool",
+      "No action required",
+      "Others",
+      "Attrition"
+    )
+  )
   proposed_action!: string;
 
   @Column(DataType.ENUM("On Hired", "Layoff", "Resigned"))
   employee_status!: string;
 
-  @Column(DataType.ENUM("In training", "Induction orientation", "Shadow resource", "Awaiting client confirmation joining", "Maternity leave", "Sabbatical other leave", "Previous client attrition", 
-  "Previous client HCReduction", "Transition between projects", "No available projects", "Internal project", "Moved to billing", "Performance issues PIP", "Other", "Intern"))
+  @Column(
+    DataType.ENUM(
+      "In training",
+      "Induction orientation",
+      "Shadow resource",
+      "Awaiting client confirmation joining",
+      "Maternity leave",
+      "Sabbatical other leave",
+      "Previous client attrition",
+      "Previous client HCReduction",
+      "Transition between projects",
+      "No available projects",
+      "Internal project",
+      "Moved to billing",
+      "Performance issues PIP",
+      "Other",
+      "Intern"
+    )
+  )
   employee_reason!: string;
 
   @CreatedAt
@@ -60,5 +102,4 @@ export class Employee extends Model<EmployeeAttributes, EmployeeCreationAttribut
 
   @BelongsToMany(() => Client, () => ClientEmployeeRelation)
   client?: Client[];
-
 }
