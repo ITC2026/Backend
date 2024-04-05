@@ -8,6 +8,8 @@ import { Entity } from '../ticketLog/entities';
 
 interface PersonAttributes {
   id: number;
+  first_name: string;
+  last_name: string;
   profile_picture: string;
   gender: string;
   phone: string;
@@ -18,6 +20,7 @@ interface PersonAttributes {
   region: string;
   status: string;
   movement_reason: string;
+  
 }
 
 interface PersonCreationAttributes extends Optional<PersonAttributes, 'id'>{}
@@ -29,8 +32,14 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     @Column
     profile_picture?: string;
 
+    @Column
+    first_name!: string;
+
+    @Column
+    last_name!: string;
+
     @Column(DataType.ENUM("Male", "Female", "Nonbinary", "Did Not Want to Say"))
-    gender?: string;
+    gender!: string;
 
     @Column
     phone!: string;
@@ -63,7 +72,7 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     opening?: Opening;
 
     @HasOne(() => Pipeline)
-    pipeline?: Pipeline;
+    pipeline!: Pipeline;
 
     @HasOne(() => Employee)
     employee?: Employee;
