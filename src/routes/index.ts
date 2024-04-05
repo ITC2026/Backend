@@ -9,6 +9,7 @@ import entityRoutes from "./entityRoutes";
 import ticketLogRoutes from "./ticketLogRoutes";
 import roleRoutes from "./roleRoutes";
 import applicationRouter from "./applicationRoutes";
+import peopleRouter from "./peopleRoutes";
 
 const apiRouter: Router = Router();
 
@@ -22,6 +23,7 @@ apiRouter.use("/entities", entityRoutes);
 apiRouter.use("/ticketlogs", ticketLogRoutes);
 apiRouter.use("/role", roleRoutes);
 apiRouter.use("/applications", applicationRouter)
+apiRouter.use("/people", peopleRouter);
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });

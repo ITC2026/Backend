@@ -1,9 +1,12 @@
-import { RequestHandler, Request, Response } from 'express';
-import { Employee } from '../models/person/employees';
-import { Pipeline } from '../models/person/pipeline';
+import { RequestHandler, Request, Response } from "express";
+import { Employee } from "../models/person/employees";
+import { Pipeline } from "../models/person/pipeline";
 
-export const getAllEmployees: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findAll({ })
+export const getAllEmployees: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  Employee.findAll({})
     .then((data: Employee[]) => {
       return res.status(200).json({
         status: "success",
@@ -20,8 +23,10 @@ export const getAllEmployees: RequestHandler = async (req: Request, res: Respons
     });
 };
 
-
-export const getEmployeeById: RequestHandler = async (req: Request, res: Response) => {
+export const getEmployeeById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
@@ -39,12 +44,17 @@ export const getEmployeeById: RequestHandler = async (req: Request, res: Respons
     });
 };
 
-export const getEmployeePipelineById: RequestHandler = async (req: Request, res: Response) => {
-  Employee.findByPk(req.params.id, { 
-      include: [{
-        model: Pipeline
-      }]
-    })
+export const getEmployeePipelineById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  Employee.findByPk(req.params.id, {
+    include: [
+      {
+        model: Pipeline,
+      },
+    ],
+  })
     .then((data: Employee | null) => {
       return res.status(200).json({
         status: "success",
@@ -61,7 +71,10 @@ export const getEmployeePipelineById: RequestHandler = async (req: Request, res:
     });
 };
 
-export const getEmployeeBenchById: RequestHandler = async (req: Request, res: Response) => {
+export const getEmployeeBenchById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
@@ -79,7 +92,10 @@ export const getEmployeeBenchById: RequestHandler = async (req: Request, res: Re
     });
 };
 
-export const getEmployeeBillingById: RequestHandler = async (req: Request, res: Response) => {
+export const getEmployeeBillingById: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   Employee.findByPk(req.params.id)
     .then((data: Employee | null) => {
       return res.status(200).json({
@@ -97,7 +113,10 @@ export const getEmployeeBillingById: RequestHandler = async (req: Request, res: 
     });
 };
 
-export const createEmployee: RequestHandler = async (req: Request, res: Response) => {
+export const createEmployee: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   if (!req.body) {
     return res.status(400).json({
       status: "error",
@@ -156,7 +175,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
       status: "Success",
       message: "Employee updated successfully",
       payload: employee,
-    }); 
+    });
   } catch (err) {
     return res.status(500).json({
       status: "Error",
@@ -166,7 +185,10 @@ export const updateEmployee = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteEmployee: RequestHandler = async (req: Request, res: Response) => {
+export const deleteEmployee: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { id } = req.body.id;
   try {
     await Employee.destroy({ where: { id } });
