@@ -126,6 +126,7 @@ export const createPerson: RequestHandler = async (
     division,
     region,
     gender,
+    expected_salary,
   } = req.body;
 
   // Default status to Pipeline
@@ -140,7 +141,8 @@ export const createPerson: RequestHandler = async (
     !tech_stack ||
     !division ||
     !region ||
-    !gender
+    !gender ||
+    !expected_salary
   ) {
     return res.status(400).json({
       status: "error",
@@ -181,8 +183,21 @@ export const createPerson: RequestHandler = async (
     });
   }
 
+
+  if (isNaN(expected_salary)) {
+    return res.status(400).json({
+      status: "error",
+      message: `Invalid salary. ${expected_salary} is not a valid salary.`,
+      payload: null,
+    });
+  }
+
   Person.create(req.body)
     .then((data: Person) => {
+      Pipeline.create({
+        expected_salary,
+        person_id: data.id,
+      });
       return res.status(201).json({
         status: "success",
         message: "Person successfully created.",
