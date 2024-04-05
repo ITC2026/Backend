@@ -19,7 +19,7 @@ import { Role } from "../models/user/roles";
 import { RoleUserRelation } from "../models/user/role_user_relation";
 
 const connection = new Sequelize({
-  database: "proyectoFinal",
+  database: "sisweb_db",
   dialect: "postgres",
   username: "sisweb_user",
   password: "HDK#$%Ljkwerff.89",
