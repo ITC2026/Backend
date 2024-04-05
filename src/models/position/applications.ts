@@ -48,9 +48,9 @@ ApplicationCreationAttributes
 
     @ForeignKey(() => Entity)
     @Column 
-    entity_id!: number;
+    entity_id?: number;
     @BelongsTo(() => Entity)
-    entity!: Entity;
+    entity?: Entity;
 
     @ForeignKey(() => Person)
     @Column
