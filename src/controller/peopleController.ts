@@ -129,7 +129,7 @@ export const createPerson: RequestHandler = async (
   } = req.body;
 
   // Default status to Pipeline
-  req.body.status = "Pipeline"; 
+  req.body.status = "Pipeline";
 
   if (
     !first_name ||
