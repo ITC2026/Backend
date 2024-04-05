@@ -110,7 +110,8 @@ export const getOpenings: RequestHandler = async (
 ) => {
   Opening.findAll({
     include: {
-      model: Employee,
+      model: Person,
+      include: [Employee]
     },
   })
     .then((data: unknown[] | null) => {
@@ -144,7 +145,7 @@ export const getOpeningById: RequestHandler = async (
   const id = req.params.id;
   Opening.findByPk(id, {
     include: {
-      model: Employee,
+      model: Person,
     },
   })
     .then((data: unknown | null) => {
