@@ -72,7 +72,7 @@ export const getPersonById: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  if (!req.body) {
+  if (!req.params.id) {
     return res.status(400).json({
       status: "error",
       message: "Please provide an ID to retrieve a Person.",
@@ -112,7 +112,7 @@ export const createPerson: RequestHandler = async (
   if (!req.body) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide a person to create.",
+      message: "Please provide data to create a Person.",
       payload: null,
     });
   }
@@ -129,7 +129,7 @@ export const createPerson: RequestHandler = async (
   } = req.body;
 
   // Default status to Pipeline
-  req.body.status = "Pipeline"; 
+  req.body.status = "Pipeline";
 
   if (
     !first_name ||
@@ -202,10 +202,10 @@ export const modifyPerson: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  if (!req.body) {
+  if (!req.params.id) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide a person to update.",
+      message: "Please provide an ID of a Person to update.",
       payload: null,
     });
   }
@@ -254,9 +254,9 @@ export const deletePerson: RequestHandler = async (
       payload: null,
     });
   }
-  Person.findByPk(req.params.id).then((data: Person | null) => {
+  Person.findByPk(req.body.id).then((data: Person | null) => {
     if (data) {
-      Person.destroy({ where: { id: req.params.id } })
+      Person.destroy({ where: { id: req.body.id } })
         .then((isDeleted) => {
           if (isDeleted) {
             return res.status(200).json({
