@@ -26,6 +26,13 @@ export const getPipelineById: RequestHandler = (
   req: Request,
   res: Response
 ) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please provide an id to retrieve the pipeline",
+      payload: null,
+    });
+  }
   const id = req.params.id;
   Pipeline.findByPk(id)
     .then((data: Pipeline | null) => {
@@ -45,6 +52,14 @@ export const getPipelineById: RequestHandler = (
 };
 
 export const modifyPipeline: RequestHandler = (req: Request, res: Response) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please provide an id to update the pipeline",
+      payload: null,
+    });
+  }
+
   const id = req.params.id;
   Pipeline.update(req.body, { where: { id } })
     .then((isUpdated) => {
@@ -107,6 +122,22 @@ export const deletePipeline: RequestHandler = (req: Request, res: Response) => {
 };
 
 export const createPipeline: RequestHandler = (req: Request, res: Response) => {
+  if (!req.body) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please provide a pipeline",
+      payload: null,
+    });
+  }
+
+  if (!req.body.expected_salary) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please provide an expected salary",
+      payload: null,
+    });
+  }
+
   Pipeline.create({ ...req.body })
     .then((data: Pipeline) => {
       return res.status(200).json({
