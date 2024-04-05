@@ -254,7 +254,7 @@ export const updateProject: RequestHandler = async (
 
                 if(!isUpdatedExpiration){
                   return res.status(500).json({
-                    status: "Success",
+                    status: "Error",
                     message: "Something happened updating the project (Expiration Date)",
                     payload: null,
                   });
@@ -276,7 +276,7 @@ export const updateProject: RequestHandler = async (
           });
         }
 
-        Project.update({ ...req.body }, { where: { id } })
+        Project.update({ ...req.body, client_id }, { where: { id } })
           .then((isUpdated) => {
             if (isUpdated) {
               return res.status(200).json({
@@ -304,7 +304,7 @@ export const updateProject: RequestHandler = async (
           status: 'error',
           message: 'Project not found',
           payload: null
-      });
+        });
       }
     })
     .catch((error: Error) => {

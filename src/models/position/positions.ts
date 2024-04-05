@@ -88,7 +88,7 @@ export class Position extends Model<
 
   @ForeignKey(() => Project)
   @Column
-  project_id_position!: number;
+  project_id!: number;
 
   @BelongsTo(() => Project)
   project!: Project;
@@ -96,6 +96,7 @@ export class Position extends Model<
   @ForeignKey(() => Entity)
   @Column 
   entity_id!: number;
+  
   @BelongsTo(() => Entity)
   entity!: Entity;
 

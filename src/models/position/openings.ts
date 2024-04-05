@@ -7,6 +7,7 @@ import {
     ForeignKey,
     BelongsTo,
     HasOne,
+    DataType
   } from "sequelize-typescript";
   import { Optional } from "sequelize";
   import { Position } from "./positions";
@@ -43,10 +44,10 @@ import {
       });
     }
   
-    @Column
+    @Column(DataType.ENUM("New", "Filled", "Closed", "In progress", "On standby"))
     opening_status!: string;
 
-    @Column
+    @Column(DataType.ENUM("InProgress", "OnStandby", "Hired", "Replacement", "Budget problem", "Filled by itself", "Filled by another", "No replied"))
     opening_reason!: string;
 
     @Column
@@ -60,27 +61,24 @@ import {
     position_id!: number;
   
     @BelongsTo(() => Position)
-    project!: Position;
+    position!: Position;
 
     @HasOne(() => ExpirationDateOpening)
     expiration_date?: ExpirationDateOpening;
   
-    //!Im gonna be honest Im not sure about this one
-    /*@HasOne(() => Person)
-    person?: Person;*/
-  
     @ForeignKey(() => Entity)
     @Column 
     entity_id!: number;
+
     @BelongsTo(() => Entity)
     entity!: Entity;
 
     @ForeignKey(() => Person)
     @Column
-    person_id!: number;
+    person_id?: number;
 
     @BelongsTo(() => Person)
-    person!: Person;
+    person?: Person;
   
     @CreatedAt
     createdAt!: Date;
