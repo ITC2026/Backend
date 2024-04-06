@@ -35,7 +35,7 @@ export const createPosition: RequestHandler = async (
     if(!data){
       return res.status(404).json({
         status: "Error",
-        message: "Project not found",
+        message: "Job Position not found",
         payload: null,
       });
     }
