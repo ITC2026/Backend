@@ -1,112 +1,112 @@
 import { RequestHandler, Request, Response } from "express";
-import { Pipeline } from "../models/person/pipeline";
+import { Candidate } from "../models/person/candidates";
 
-export const getAllPipelines: RequestHandler = (
+export const getAllCandidates: RequestHandler = (
   req: Request,
   res: Response
 ) => {
-  Pipeline.findAll()
-    .then((data: Pipeline[]) => {
+  Candidate.findAll()
+    .then((data: Candidate[]) => {
       return res.status(200).json({
         status: "Success",
-        message: "Pipelines retrieved successfully",
+        message: "Candidates retrieved successfully",
         payload: data,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Pipelines not retrieved",
+        message: "Candidates not retrieved",
         payload: error.message,
       });
     });
 };
 
-export const getPipelineById: RequestHandler = (
+export const getCandidateById: RequestHandler = (
   req: Request,
   res: Response
 ) => {
   if (!req.params.id) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide an id to retrieve the pipeline",
+      message: "Please provide an id to retrieve the candidate",
       payload: null,
     });
   }
   const id = req.params.id;
-  Pipeline.findByPk(id)
-    .then((data: Pipeline | null) => {
+  Candidate.findByPk(id)
+    .then((data: Candidate | null) => {
       return res.status(200).json({
         status: "Success",
-        message: "Pipeline retrieved successfully",
+        message: "Candidate retrieved successfully",
         payload: data,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Pipeline not retrieved",
+        message: "Candidate not retrieved",
         payload: error.message,
       });
     });
 };
 
-export const modifyPipeline: RequestHandler = (req: Request, res: Response) => {
+export const modifyCandidate: RequestHandler = (req: Request, res: Response) => {
   if (!req.params.id) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide an id to update the pipeline",
+      message: "Please provide an id to update the candidate",
       payload: null,
     });
   }
 
   const id = req.params.id;
-  Pipeline.update(req.body, { where: { id } })
+  Candidate.update(req.body, { where: { id } })
     .then((isUpdated) => {
       if (isUpdated) {
         return res.status(200).json({
           status: "Success",
-          message: "Pipeline updated successfully",
+          message: "Candidate updated successfully",
           payload: req.body,
         });
       }
       return res.status(500).json({
         status: "Error",
-        message: "Pipeline not updated",
+        message: "Candidate not updated",
         payload: null,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Pipeline not updated",
+        message: "Candidate not updated",
         payload: error.message,
       });
     });
 };
 
-export const deletePipeline: RequestHandler = (req: Request, res: Response) => {
+export const deleteCandidate: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide an id to delete the pipeline",
+      message: "Please provide an id to delete the candidate",
       payload: null,
     });
   }
 
-  Pipeline.findByPk(req.body.id).then((data: Pipeline | null) => {
+  Candidate.findByPk(req.body.id).then((data: Candidate | null) => {
     if (data) {
-      Pipeline.destroy({ where: { id: req.body.id } }).then((isDeleted) => {
+      Candidate.destroy({ where: { id: req.body.id } }).then((isDeleted) => {
         if (isDeleted) {
           return res.status(200).json({
             status: "success",
-            message: "Pipeline deleted successfully",
+            message: "Candidate deleted successfully",
             payload: null,
           });
         } else {
           return res.status(500).json({
             status: "error",
-            message: "There was an error deleting the pipeline",
+            message: "There was an error deleting the candidate",
             payload: null,
           });
         }
@@ -114,18 +114,18 @@ export const deletePipeline: RequestHandler = (req: Request, res: Response) => {
     } else {
       return res.status(404).json({
         status: "error",
-        message: "Pipeline not found",
+        message: "Candidate not found",
         payload: null,
       });
     }
   });
 };
 
-export const createPipeline: RequestHandler = (req: Request, res: Response) => {
+export const createCandidate: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide a pipeline",
+      message: "Please provide a candidate",
       payload: null,
     });
   }
@@ -138,18 +138,18 @@ export const createPipeline: RequestHandler = (req: Request, res: Response) => {
     });
   }
 
-  Pipeline.create({ ...req.body })
-    .then((data: Pipeline) => {
+  Candidate.create({ ...req.body })
+    .then((data: Candidate) => {
       return res.status(200).json({
         status: "Success",
-        message: "Pipeline created successfully",
+        message: "Candidate created successfully",
         payload: data,
       });
     })
     .catch((error: Error) => {
       return res.status(500).json({
         status: "Error",
-        message: "Pipeline not created",
+        message: "Candidate not created",
         payload: error.message,
       });
     });

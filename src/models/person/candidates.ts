@@ -10,21 +10,21 @@ import {
 import { Optional } from "sequelize";
 import { Person } from "./people";
 
-interface PipelineAttributes {
+interface CandidateAttributes {
   id: number;
   expected_salary: number;
   person_id: number;
 }
 
-interface PipelineCreationAttributes
-  extends Optional<PipelineAttributes, "id"> {}
+interface CandidateCreationAttributes
+  extends Optional<CandidateAttributes, "id"> {}
 
 @Table({
-  tableName: "Pipeline",
+  tableName: "Candidates",
 })
-export class Pipeline extends Model<
-  PipelineAttributes,
-  PipelineCreationAttributes
+export class Candidate extends Model<
+  CandidateAttributes,
+  CandidateCreationAttributes
 > {
   @Column
   expected_salary!: number;

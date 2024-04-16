@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { Person } from "../models/person/people";
 import { Employee } from "../models/person/employees";
-import { Pipeline } from "../models/person/pipeline";
+import { Candidate } from "../models/person/candidates";
 import { Project } from "../models/project/projects";
 import { ExpirationDateProject } from "../models/project/expiration_date_project";
 import { ClosedProject } from "../models/project/closed_project";
@@ -28,7 +28,7 @@ const connection = new Sequelize({
   models: [
     Person,
     Employee,
-    Pipeline,
+    Candidate,
     Client,
     ClientEmployeeRelation,
     Project,

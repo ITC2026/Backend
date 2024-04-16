@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Employee } from "../models/person/employees";
-import { Pipeline } from "../models/person/pipeline";
+import { Candidate } from "../models/person/candidates";
 
 export const getAllEmployees: RequestHandler = async (
   req: Request,
@@ -44,14 +44,14 @@ export const getEmployeeById: RequestHandler = async (
     });
 };
 
-export const getEmployeePipelineById: RequestHandler = async (
+export const getEmployeeCandidateById: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
   Employee.findByPk(req.params.id, {
     include: [
       {
-        model: Pipeline,
+        model: Candidate,
       },
     ],
   })
@@ -165,9 +165,9 @@ export const updateEmployee = async (req: Request, res: Response) => {
     employee.update(req.body);
 
     /*if (req.body.pipeline) {
-      const pipeline = await Pipeline.findOne({ where: { id: employee.pipelineId } });
-      if (pipeline) {
-        pipeline.update(req.body.pipeline);
+      const candidate = await Candidate.findOne({ where: { id: employee.candidateId } });
+      if (candidate) {
+        candidate.update(req.body.pipeline);
       }
     }*/
 

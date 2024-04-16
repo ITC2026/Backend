@@ -3,7 +3,7 @@ import { Application } from "../models/position/applications";
 import { Position } from "../models/position/positions";
 import { Person } from "../models/person/people";
 import { Employee } from "../models/person/employees";
-import { Pipeline } from "../models/person/pipeline";
+import { Candidate } from "../models/person/candidates";
 
 export const createApplication: RequestHandler = async (
   req: Request,
@@ -97,7 +97,7 @@ export const getAllApplications: RequestHandler = async (
   Application.findAll({
     include: { 
         model: Person,
-        include: [Employee, Pipeline]
+        include: [Employee, Candidate]
     }
   })
     .then((data: Application[] | null) => {
@@ -231,7 +231,7 @@ export const getApplicationById: RequestHandler = async (
   Application.findByPk(id, {
     include: { 
         model: Person,
-        include: [Employee, Pipeline]
+        include: [Employee, Candidate]
     }
 })
     .then((data: Application | null) => {

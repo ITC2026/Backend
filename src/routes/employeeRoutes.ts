@@ -5,7 +5,7 @@ import {
   createEmployee,
   updateEmployee,
   deleteEmployee,
-  getEmployeePipelineById,
+  getEmployeeCandidateById,
   getEmployeeBenchById,
   getEmployeeBillingById,
 } from "../controller/employeesController";
@@ -17,7 +17,7 @@ employeeRouter.get("/:id", getEmployeeById);
 employeeRouter.post("/", createEmployee);
 employeeRouter.patch("/:id", updateEmployee);
 employeeRouter.delete("/", deleteEmployee);
-employeeRouter.get("/pipeline/:id", getEmployeePipelineById);
+employeeRouter.get("/candidates/:id", getEmployeeCandidateById);
 employeeRouter.get("/bench/:id", getEmployeeBenchById);
 employeeRouter.get("/billing/:id", getEmployeeBillingById);
 

@@ -3,7 +3,7 @@ import { Optional } from 'sequelize';
 import { Application } from '../position/applications';
 import { Opening } from '../position/openings';
 import { Employee } from './employees';
-import { Pipeline } from './pipeline';
+import { Candidate } from './candidates';
 import { Entity } from '../ticketLog/entities';
 
 interface PersonAttributes {
@@ -71,8 +71,8 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     @HasOne(() => Opening)
     opening?: Opening;
 
-    @HasOne(() => Pipeline)
-    pipeline!: Pipeline;
+    @HasOne(() => Candidate)
+    candidate!: Candidate;
 
     @HasOne(() => Employee)
     employee?: Employee;

@@ -10,7 +10,7 @@ import ticketLogRoutes from "./ticketLogRoutes";
 import roleRoutes from "./roleRoutes";
 import applicationRouter from "./applicationRoutes";
 import peopleRouter from "./peopleRoutes";
-import pipelineRouter from "./pipelineRoutes";
+import candidateRouter from "./candidateRoutes";
 
 const apiRouter: Router = Router();
 
@@ -25,7 +25,7 @@ apiRouter.use("/ticketlogs", ticketLogRoutes);
 apiRouter.use("/role", roleRoutes);
 apiRouter.use("/applications", applicationRouter);
 apiRouter.use("/people", peopleRouter);
-apiRouter.use("/pipeline", pipelineRouter);
+apiRouter.use("/candidates", candidateRouter);
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });

@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Person } from "../models/person/people";
-import { Pipeline } from "../models/person/pipeline";
+import { Candidate } from "../models/person/candidates";
 import { Employee } from "../models/person/employees";
 
 const TECH_STACK = [
@@ -45,7 +45,7 @@ export const getAllPeople: RequestHandler = async (
   Person.findAll({
     include: [
       {
-        model: Pipeline,
+        model: Candidate,
       },
       {
         model: Employee,
@@ -82,7 +82,7 @@ export const getPersonById: RequestHandler = async (
   Person.findByPk(req.params.id, {
     include: [
       {
-        model: Pipeline,
+        model: Candidate,
       },
       {
         model: Employee,
@@ -194,7 +194,7 @@ export const createPerson: RequestHandler = async (
 
   Person.create(req.body)
     .then((data: Person) => {
-      Pipeline.create({
+      Candidate.create({
         expected_salary,
         person_id: data.id,
       });
