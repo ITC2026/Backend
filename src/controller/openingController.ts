@@ -217,6 +217,16 @@ export const deleteOpening: RequestHandler = async (
     if(data){
       Opening.destroy({ where: { id } })
       .then((isDeleted) => {
+        Entity.findOne( {
+          where: {
+              belongs_to_id: id,
+              type: "Opening"
+          }} )
+          .then((entity: Entity | null) =>{
+              if(entity){
+                  entity.update({isDeleted: true})
+              }
+          })
         return res.status(200).json({
           status: "Success",
           message: "Opening deleted successfully",

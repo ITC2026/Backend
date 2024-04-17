@@ -2,6 +2,7 @@ import { RequestHandler, Request, Response } from "express";
 import { Person } from "../models/person/people";
 import { Candidate } from "../models/person/candidates";
 import { Employee } from "../models/person/employees";
+import { Entity } from "../models/ticketLog/entities";
 
 const TECH_STACK = [
   "Java",
@@ -193,6 +194,16 @@ export const createPerson: RequestHandler = async (
   }
 
   Person.create(req.body)
+  .then(async (data: Person) => {
+    const entityData = await Entity.create({
+      type: "Person",
+      isDeleted: false,
+      belongs_to_id: data.id,
+    });
+    entityData.person_id = data.id;
+    await entityData.save();
+    return data;
+  })
     .then((data: Person) => {
       Candidate.create({
         expected_salary,
@@ -275,6 +286,18 @@ export const deletePerson: RequestHandler = async (
       Person.destroy({ where: { id: req.body.id } })
         .then((isDeleted) => {
           if (isDeleted) {
+
+            Entity.findOne( {
+              where: {
+                  belongs_to_id: req.body.id,
+                  type: "Person"
+              }} )
+              .then((entity: Entity | null) =>{
+                  if(entity){
+                      entity.update({isDeleted: true})
+                  }
+              })
+
             return res.status(200).json({
               status: "success",
               message: "Person deleted successfully.",

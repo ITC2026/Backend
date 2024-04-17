@@ -4,6 +4,8 @@ import { Position } from "../models/position/positions";
 import { ExpirationDateProject } from "../models/project/expiration_date_project";
 import { ClosedProject } from "../models/project/closed_project";
 import { Client } from "../models/client/clients";
+import { Entity } from "../models/ticketLog/entities";
+
 
 const GENERAL_STATUS = ["In Preparation", "Active", "Closed"];
 
@@ -99,7 +101,19 @@ export const createProject: RequestHandler = async (
   }
 
   try {
-    const project = await Project.create({ ...req.body });
+    const project = await Project.create({ ...req.body })
+
+    .then(async (data: Project) => {
+      const entityData = await Entity.create({
+        type: "Project",
+        isDeleted: false,
+        belongs_to_id: data.id,
+      });
+      entityData.project_id = data.id;
+      await entityData.save();
+      return data;
+    })
+
 
     if (has_expiration_date) {
       await ExpirationDateProject.create({
@@ -360,6 +374,17 @@ export const deleteProject: RequestHandler = async (
       if (data) {
         Project.destroy({ where: { id } }).then((isDeleted) => {
           if (isDeleted) {
+            Entity.findOne( {
+              where: {
+                  belongs_to_id: id,
+                  type: "Project"
+              }} )
+              .then((entity: Entity | null) =>{
+                  if(entity){
+                      entity.update({isDeleted: true})
+                  }
+              })
+
             return res.status(200).json({
               status: "Success",
               message: "Project deleted successfully",

@@ -4,6 +4,8 @@ import { Position } from "../models/position/positions";
 import { Person } from "../models/person/people";
 import { Employee } from "../models/person/employees";
 import { Candidate } from "../models/person/candidates";
+import { Entity } from "../models/ticketLog/entities";
+
 
 export const createApplication: RequestHandler = async (
   req: Request,
@@ -48,6 +50,7 @@ export const createApplication: RequestHandler = async (
 
   //Make sure person exists
   Person.findByPk(person_id)
+  
   .then((data: Person | null) => {
     if(!data){
       return res.status(404).json({
@@ -57,6 +60,8 @@ export const createApplication: RequestHandler = async (
       });
     }
   })
+  
+  
   .catch((error: Error) => {
     return res.status(500).json({
       status: "Error",
@@ -74,6 +79,16 @@ export const createApplication: RequestHandler = async (
   }
 
   Application.create({ ...req.body })
+  .then(async (data: Application) => {
+    const entityData = await Entity.create({
+      type: "Application",
+      isDeleted: false,
+      belongs_to_id: data.id,
+    });
+    entityData.application_id = data.id;
+    await entityData.save();
+    return data;
+  })
     .then((data: Application) => {
       return res.status(201).json({
         status: "Success",
@@ -192,6 +207,17 @@ export const deleteApplication: RequestHandler = async (
             Application.destroy({ where: { id } })
                 .then((isDeleted) => {
                     if (isDeleted) {
+                        Entity.findOne( {
+                          where: {
+                              belongs_to_id: id,
+                              type: "Application"
+                          }} )
+                          .then((entity: Entity | null) =>{
+                              if(entity){
+                                  entity.update({isDeleted: true})
+                              }
+                          })
+
                         return res.status(200).json({
                         status: "Success",
                         message: "Application deleted successfully",

@@ -308,6 +308,16 @@ export const deleteUser: RequestHandler = async (
                 User.destroy({ where: { id } })
                     .then((isDeleted) => {
                         if(isDeleted){
+                            Entity.findOne( {
+                                where: {
+                                    belongs_to_id: id,
+                                    type: "User"
+                            }} )
+                            .then((entity: Entity | null) =>{
+                                if(entity){
+                                    entity.update({isDeleted: true})
+                                }
+                            })
                             return res.status(200).json({
                                 status: "success",
                                 message: "User deleted successfully",

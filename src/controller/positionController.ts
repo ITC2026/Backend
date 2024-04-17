@@ -4,6 +4,8 @@ import { Opening } from "../models/position/openings";
 import { Project } from "../models/project/projects";
 import { Application } from "../models/position/applications";
 import { CommentPosition } from "../models/position/comments_positions";
+import { Entity } from "../models/ticketLog/entities";
+
 
 export const createPosition: RequestHandler = async (
   req: Request,
@@ -76,6 +78,16 @@ export const createPosition: RequestHandler = async (
     else{
       //Create position
       Position.create({ ...req.body })
+      .then(async (data: Position) => {
+        const entityData = await Entity.create({
+          type: "Position",
+          isDeleted: false,
+          belongs_to_id: data.id,
+        });
+        entityData.position_id = data.id;
+        await entityData.save();
+        return data;
+      })
       .then((data: Position) => {
 
         //Create comment if there is one
@@ -394,6 +406,17 @@ export const deletePosition: RequestHandler = async (
         Position.destroy({ where: { id } })
           .then((isDeleted) => {
             if (isDeleted) {
+              Entity.findOne( {
+                where: {
+                    belongs_to_id: id,
+                    type: "Position"
+                }} )
+                .then((entity: Entity | null) =>{
+                    if(entity){
+                        entity.update({isDeleted: true})
+                    }
+                })
+
               return res.status(200).json({
                 status: "Success",
                 message: "Job Position deleted successfully",
