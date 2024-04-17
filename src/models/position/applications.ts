@@ -7,6 +7,7 @@ import {
     ForeignKey,
     BelongsTo,
     DataType,
+    DeletedAt
   } from "sequelize-typescript";
   import { type Optional } from "sequelize";
   import { Position } from "./positions";
@@ -37,6 +38,9 @@ ApplicationCreationAttributes
 
     @UpdatedAt
     updatedAt!: Date;
+
+    @DeletedAt
+    deletedAt!: Date;
 
     @ForeignKey(() => Position)
     @Column

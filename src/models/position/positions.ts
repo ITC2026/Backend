@@ -9,6 +9,7 @@ import {
   HasMany,
   HasOne,
   DataType,
+  DeletedAt
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Project } from "../project/projects";
@@ -105,4 +106,8 @@ export class Position extends Model<
 
   @UpdatedAt
   updatedAt!: Date;
+
+  @DeletedAt
+  deletedAt!: Date;
+  
 }

@@ -9,6 +9,7 @@ import {
   BelongsToMany,
   ForeignKey,
   BelongsTo,
+  DeletedAt
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Project } from "../project/projects";
@@ -71,6 +72,9 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  @DeletedAt
+  deletedAt!: Date;
 
   @HasMany(() => Project)
   projects!: Project[];

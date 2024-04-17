@@ -8,12 +8,11 @@ import {
   BelongsToMany,
   ForeignKey,
   BelongsTo,
+  DeletedAt
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Role } from './roles';
 import { RoleUserRelation } from './role_user_relation';
-// import isEmail from 'validator/lib/isEmail';
-// import { validator } from 'sequelize/types/utils/validator-extras';
 import { Entity } from '../ticketLog/entities';
 
 interface UserAttributes {
@@ -58,4 +57,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   @UpdatedAt
   @Column
   updatedAt!: Date;
+
+  @DeletedAt
+  deletedAt!: Date;
 }

@@ -29,25 +29,6 @@ export const createPosition: RequestHandler = async (
     });
   }
 
-  //Make sure the project exists
-  Project.findByPk(project_id)
-  .then((data: Project | null) => {
-    if(!data){
-      return res.status(404).json({
-        status: "Error",
-        message: "Job Position not found",
-        payload: null,
-      });
-    }
-  })
-  .catch((error: Error) => {
-    return res.status(500).json({
-      status: "Error",
-      message: "Job Position not created",
-      payload: error.message,
-    });
-  });
-
   //Validations for fields with options
   if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
     return res.status(400).json({ 
@@ -81,39 +62,60 @@ export const createPosition: RequestHandler = async (
     });
   }
 
-
-  //Create position
-  Position.create({ ...req.body })
-    .then((data: Position) => {
-
-      //Create comment if there is one
-      if(comment){
-        CommentPosition.create({
-          comment: comment,
-          position_id: data.id
-        })
-        .catch((error: Error) => {
-          return res.status(500).json({
-            status: "Error",
-            message: "Job Position not created",
-            payload: error.message,
-          });
-        });
-      }
-
-      return res.status(201).json({
-        status: "Success",
-        message: "Job Position created successfully",
-        payload: data,
-      });
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
+  //Make sure the project exists
+  Project.findByPk(project_id)
+  .then((data: Project | null) => {
+    if(!data){
+      return res.status(404).json({
         status: "Error",
-        message: "Job Position not created",
-        payload: error.message,
+        message: "Project not found",
+        payload: null,
       });
+    }
+
+    else{
+      //Create position
+      Position.create({ ...req.body })
+      .then((data: Position) => {
+
+        //Create comment if there is one
+        if(comment){
+          CommentPosition.create({
+            comment: comment,
+            position_id: data.id
+          })
+          .catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Job Position not created",
+              payload: error.message,
+            });
+          });
+        }
+
+        return res.status(201).json({
+          status: "Success",
+          message: "Job Position created successfully",
+          payload: data,
+        });
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Job Position not created",
+          payload: error.message,
+        });
+      });
+    }
+  })
+  .catch((error: Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Job Position not created",
+      payload: error.message,
     });
+  });
+
 };
 
 export const getPositions: RequestHandler = async (
@@ -398,12 +400,13 @@ export const deletePosition: RequestHandler = async (
                 payload: { ...req.body },
               });
 
+            } else{
+              return res.status(500).json({
+                status: "Error",
+                message: "Job Position not deleted",
+                payload: null,
+              });
             }
-            return res.status(500).json({
-              status: "Error",
-              message: "Job Position not deleted",
-              payload: null,
-            });
           })
           .catch((error: Error) => {
             return res.status(500).json({

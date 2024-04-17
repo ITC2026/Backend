@@ -191,7 +191,7 @@ export const updateProject: RequestHandler = async (
     general_status,
     closed_status,
     closed_reason,
-    client_name,
+    client_id,
   } = req.body;
 
   if (
@@ -199,7 +199,7 @@ export const updateProject: RequestHandler = async (
     !project_description ||
     !start_date ||
     !general_status ||
-    !client_name ||
+    !client_id ||
     typeof has_expiration_date !== "boolean"
   ) {
     return res.status(400).json({
@@ -209,19 +209,23 @@ export const updateProject: RequestHandler = async (
     });
   }
 
-  const client = await Client.findOne({
-    where: {
-      client_name,
-    },
-  });
-
-  if (!client) {
-    return res.status(404).json({
-      status: "error",
-      message: "Client not found",
-      payload: null,
+  Client.findByPk(client_id)
+  .then((data: Client | null) => {
+    if(!data){
+      return res.status(404).json({
+        status: "Error",
+        message: "Client not found",
+        payload: null,
+      });
+    }
+  })
+  .catch((error: Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Project not created",
+      payload: error.message,
     });
-  }
+  });
 
   if (!GENERAL_STATUS.includes(general_status)) {
     return res.status(400).json({

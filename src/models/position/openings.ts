@@ -7,7 +7,8 @@ import {
     ForeignKey,
     BelongsTo,
     HasOne,
-    DataType
+    DataType,
+    DeletedAt
   } from "sequelize-typescript";
   import { Optional } from "sequelize";
   import { Position } from "./positions";
@@ -85,5 +86,8 @@ import {
   
     @UpdatedAt
     updatedAt!: Date;
+
+    @DeletedAt
+    deletedAt!: Date;
   }
   

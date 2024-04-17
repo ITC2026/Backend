@@ -280,46 +280,54 @@ export const modifyUser: RequestHandler = async (
     }
 }
 
-    //Delete a User with the specified id in the request
-    export const deleteUser: RequestHandler = async (
-        req: Request,
-        res: Response
-    ) => {
-        const { id } = req.body;
+//Delete a User with the specified id in the request
+export const deleteUser: RequestHandler = async (
+    req: Request,
+    res: Response
+) => {
+    const { id } = req.body;
 
-        //Make sure the user exists
-        User.findByPk(id)
-            .then((data: User | null) => {
-                if (data) {
-                    //Delete the user
-                    User.destroy({ where: { id } })
-                        .then(() => {
+    //Make sure the user exists
+    User.findByPk(id)
+        .then((data: User | null) => {
+            if (data) {
+                //Delete the user
+                User.destroy({ where: { id } })
+                    .then((isDeleted) => {
+                        if(isDeleted){
                             return res.status(200).json({
                                 status: "success",
                                 message: "User deleted successfully",
                                 payload: null,
                             });
-                        })
-                        .catch((err) => {
+                        } else{
                             return res.status(500).json({
-                                status: "success",
-                                message: "There was an error deleting the user" + err.message,
-                                payload: null,
+                              status: "error",
+                              message: "There was an error deleting the Person.",
+                              payload: null,
                             });
+                          }
+                    })
+                    .catch((err: Error) => {
+                        return res.status(500).json({
+                            status: "success",
+                            message: "There was an error deleting the user" + err.message,
+                            payload: null,
                         });
-                } else {
-                    return res.status(404).json({
-                        status: "error",
-                        message: "User not found",
-                        payload: null,
                     });
-                }
-            })
-            .catch((err) => {
-                return res.status(500).json({
+            } else {
+                return res.status(404).json({
                     status: "error",
-                    message: "There was an error deleting the user." + err.message,
+                    message: "User not found",
                     payload: null,
                 });
+            }
+        })
+        .catch((err: Error) => {
+            return res.status(500).json({
+                status: "error",
+                message: "There was an error deleting the user." + err.message,
+                payload: null,
             });
-    }
+        });
+}

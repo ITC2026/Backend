@@ -269,7 +269,8 @@ export const deletePerson: RequestHandler = async (
       payload: null,
     });
   }
-  Person.findByPk(req.body.id).then((data: Person | null) => {
+  Person.findByPk(req.body.id)
+  .then((data: Person | null) => {
     if (data) {
       Person.destroy({ where: { id: req.body.id } })
         .then((isDeleted) => {
@@ -279,12 +280,13 @@ export const deletePerson: RequestHandler = async (
               message: "Person deleted successfully.",
               payload: null,
             });
+          } else{
+            return res.status(500).json({
+              status: "error",
+              message: "There was an error deleting the Person.",
+              payload: null,
+            });
           }
-          return res.status(500).json({
-            status: "error",
-            message: "There was an error deleting the Person.",
-            payload: null,
-          });
         })
         .catch((err) => {
           return res.status(500).json({
@@ -293,11 +295,19 @@ export const deletePerson: RequestHandler = async (
             payload: null,
           });
         });
+    } else{
+      return res.status(404).json({
+        status: "error",
+        message: "Person not found.",
+        payload: null,
+      });
     }
-    return res.status(404).json({
-      status: "error",
-      message: "Person not found.",
-      payload: null,
+  })
+  .catch((error: Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Error deleting Person",
+      payload: error.message,
     });
   });
 };

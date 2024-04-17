@@ -1,4 +1,4 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType, ForeignKey, BelongsTo, DeletedAt } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Application } from '../position/applications';
 import { Opening } from '../position/openings';
@@ -90,4 +90,8 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     @UpdatedAt
     @Column
     updated_at!: Date;
+
+    @DeletedAt
+    @Column
+    deletedAt!: Date;
 }
