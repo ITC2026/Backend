@@ -45,11 +45,7 @@ export const createEntity: RequestHandler = async (
   if (!entity_type.includes(type)) {
     return res.status(400).json({ message: "Invalid type provided" });
   }
-  const entity = {
-    type: type,
-    isDeleted: isDeleted,
-    belongs_to_id: belongs_to_id,
-  };
+  
 
   // Verify if the isDeleted value is valid
   if (![true, false].includes(isDeleted)) {
@@ -201,6 +197,12 @@ export const createEntity: RequestHandler = async (
   //   });
   // }
 
+  const entity = {
+    type: type,
+    isDeleted: isDeleted,
+    belongs_to_id: belongs_to_id,
+  };
+  
   Entity.create(entity)
     .then((data: unknown) => {
       return res.status(201).json({

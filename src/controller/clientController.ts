@@ -1,6 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
 import { Client } from "../models/client/clients";
 import { Project } from "../models/project/projects";
+import { Entity } from "../models/ticketLog/entities";
 import validator from "validator";
 
 const DIVISION = ["MEXICO", "BRAZIL", "CSA", "US"];
@@ -113,6 +114,16 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
 
   // Save Client in the Database
   Client.create({ ...req.body })
+    .then(async (data: Client) => {
+      const entityData = await Entity.create({
+        type: "Client",
+        isDeleted: false,
+        belongs_to_id: data.id,
+      });
+      entityData.client_id = data.id;
+      await entityData.save();
+      return data;
+    })
     .then((data: Client | null) => {
       res.status(200).json({
         status: "success",

@@ -8,7 +8,8 @@ import {
   BelongsToMany,
   ForeignKey,
   BelongsTo,
-  DeletedAt
+  HasOne,
+  DeletedAt,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Role } from './roles';
@@ -44,10 +45,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   @BelongsToMany(() => Role, () => RoleUserRelation)
   roles!: Role[];
 
-  @ForeignKey(() => Entity)
-  @Column 
-  entity_id!: number;
-  @BelongsTo(() => Entity)
+  @HasOne(() => Entity)
   entity!: Entity;
 
   @CreatedAt

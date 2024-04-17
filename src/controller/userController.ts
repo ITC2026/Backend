@@ -1,6 +1,7 @@
 import { RequestHandler, Request, Response } from "express";
 import { User } from "../models/user/user";
 import { Role } from "../models/user/roles";
+import { Entity } from "../models/ticketLog/entities";
 import validator from "validator";
 
 const validAccounts = [
@@ -138,7 +139,18 @@ export const createUser: RequestHandler = async (
             email,
             division,
             roles,
-        });
+        })
+        .then(async (data: User) => {
+            const entityData = await Entity.create({
+              type: "User",
+              isDeleted: false,
+              belongs_to_id: data.id,
+            });
+            entityData.user_id = data.id;
+            await entityData.save();
+            return data;
+          })
+
 
         // Find roles based on provided role names
         const userRoles = await Role.findAll({ where: { role_name: roles } });
@@ -146,6 +158,7 @@ export const createUser: RequestHandler = async (
         // Add roles to the user
         await newUser.$add("roles", userRoles);
 
+        
         return res.status(200).json({
             status: "success",
             message: "User created successfully",

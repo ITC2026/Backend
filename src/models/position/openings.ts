@@ -67,11 +67,7 @@ import {
     @HasOne(() => ExpirationDateOpening)
     expiration_date?: ExpirationDateOpening;
   
-    @ForeignKey(() => Entity)
-    @Column 
-    entity_id!: number;
-
-    @BelongsTo(() => Entity)
+    @HasOne(() => Entity)
     entity!: Entity;
 
     @ForeignKey(() => Person)
