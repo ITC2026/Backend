@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   createProject,
-  getProjects,
+  getAllProjects,
   getProjectById,
   updateProject,
   deleteProject,
@@ -12,7 +12,7 @@ import {
 
 const projectRouter: Router = Router();
 
-projectRouter.get("/", getProjects);
+projectRouter.get("/", getAllProjects);
 projectRouter.get("/:id", getProjectById);
 projectRouter.post("/", createProject);
 projectRouter.delete("/", deleteProject);

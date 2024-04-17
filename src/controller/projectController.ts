@@ -1,10 +1,9 @@
 import { type RequestHandler, type Request, type Response } from "express";
 import { Project } from "../models/project/projects";
 import { Position } from "../models/position/positions";
-import { ExpirationDateProject } from "../models/project/expiration_date_project";
 import { ClosedProject } from "../models/project/closed_project";
 import { Client } from "../models/client/clients";
-
+import { ExpirationDateProject } from "../models/project/expiration_date_project";
 const GENERAL_STATUS = ["In Preparation", "Active", "Closed"];
 
 export const createProject: RequestHandler = async (
@@ -28,7 +27,7 @@ export const createProject: RequestHandler = async (
     general_status,
     closed_status,
     closed_reason,
-    client_name,
+    client_id,
   } = req.body;
 
   if (
@@ -36,7 +35,7 @@ export const createProject: RequestHandler = async (
     !project_description ||
     !start_date ||
     !general_status ||
-    !client_name ||
+    !client_id ||
     typeof has_expiration_date !== "boolean"
   ) {
     return res.status(400).json({
@@ -45,22 +44,6 @@ export const createProject: RequestHandler = async (
       payload: null,
     });
   }
-
-  const client = await Client.findOne({
-    where: {
-      client_name,
-    },
-  });
-
-  if (!client) {
-    return res.status(404).json({
-      status: "error",
-      message: "Client not found",
-      payload: null,
-    });
-  }
-
-  const client_id = client.id;
 
   if (!["In Preparation", "Active", "Closed"].includes(general_status)) {
     return res.status(400).json({
@@ -140,7 +123,7 @@ export const createProject: RequestHandler = async (
   }
 };
 
-export const getProjects: RequestHandler = async (
+export const getAllProjects: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
@@ -149,7 +132,36 @@ export const getProjects: RequestHandler = async (
       model: Position,
     },
   })
-    .then((data: Project[] | null) => {
+    .then(async (data: Project[] | null) => {
+      if (data == null) {
+        return res.status(404).json({
+          status: "error",
+          message: "Projects not found",
+          payload: null,
+        });
+      }
+
+      await Promise.all(
+        data.map(async (project: Project) => {
+          if (project.has_expiration_date) {
+            const expiration = await ExpirationDateProject.findOne({
+              where: {
+                project_id: project.id,
+              },
+            });
+            if (expiration) {
+              project.expiration = expiration.expiration_date as Date;
+            }
+          }
+          if (project.client_id) {
+            const client = await Client.findByPk(project.client_id);
+            if (client) {
+              project.client_name = client.client_name;
+            }
+          }
+        })
+      );
+
       return res.status(200).json({
         status: "Success",
         message: "Projects retrieved successfully",
@@ -189,7 +201,7 @@ export const updateProject: RequestHandler = async (
     general_status,
     closed_status,
     closed_reason,
-    client_name,
+    client_id,
   } = req.body;
 
   if (
@@ -197,7 +209,7 @@ export const updateProject: RequestHandler = async (
     !project_description ||
     !start_date ||
     !general_status ||
-    !client_name ||
+    !client_id ||
     typeof has_expiration_date !== "boolean"
   ) {
     return res.status(400).json({
@@ -209,7 +221,7 @@ export const updateProject: RequestHandler = async (
 
   const client = await Client.findOne({
     where: {
-      client_name,
+      id: client_id,
     },
   });
 

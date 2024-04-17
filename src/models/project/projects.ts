@@ -87,4 +87,10 @@ export class Project extends Model<
   entity_id!: number;
   @BelongsTo(() => Entity)
   entity!: Entity;
+
+  @Column
+  client_name?: string; 
+
+  @Column
+  expiration?: Date; 
 }
