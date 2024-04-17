@@ -4,6 +4,7 @@ import { Person } from "../models/person/people";
 import { Employee } from "../models/person/employees";
 import { ExpirationDateOpening } from "../models/position/expiration_date_openings";
 import { Position } from "../models/position/positions";
+import { Entity } from "../models/ticketLog/entities";
 
 export const createOpening: RequestHandler = async (
   req: Request,
@@ -73,13 +74,24 @@ export const createOpening: RequestHandler = async (
   }
 
   Opening.create(req.body)
-    .then((data: Opening) => {
+  .then(async (data: Opening) => {
+    const entityData = await Entity.create({
+      type: "Opening",
+      isDeleted: false,
+      belongs_to_id: data.id,
+    });
+    entityData.opening_id = data.id;
+    await entityData.save();
+    return data;
+  })
+      .then((data: Opening) => {
 
       if (has_expiration_date) {
           ExpirationDateOpening.create({
           opening_id: data.id,
           expiration_date,
         })
+        
         .catch((error: Error) => {
           return res.status(500).json({
             status: "Error",
@@ -88,7 +100,7 @@ export const createOpening: RequestHandler = async (
           });
         });
       }
-
+      
       return res.status(201).json({
         status: "Success",
         message: "Opening created successfully",

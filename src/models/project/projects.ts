@@ -82,9 +82,6 @@ export class Project extends Model<
   @BelongsTo(() => Client)
   client!: Client;
 
-  @ForeignKey(() => Entity)
-  @Column 
-  entity_id!: number;
-  @BelongsTo(() => Entity)
+  @HasOne(() => Entity)
   entity!: Entity;
 }

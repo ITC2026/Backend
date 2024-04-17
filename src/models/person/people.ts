@@ -77,10 +77,7 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     @HasOne(() => Employee)
     employee?: Employee;
 
-    @ForeignKey(() => Entity)
-    @Column 
-    entity_id?: number;
-    @BelongsTo(() => Entity)
+    @HasOne(() => Entity)
     entity?: Entity;
 
     @CreatedAt

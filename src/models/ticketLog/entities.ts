@@ -48,31 +48,38 @@ import {
     ticketLog?: TicketLog;
 
     @ForeignKey(() => User)
-    @HasOne(() => User)
+    user_id?: number;
+    @BelongsTo(() => User)
     User?: User;
 
     @ForeignKey(() => Opening)
-    @HasOne(() => Opening)
+    opening_id?: number;
+    @BelongsTo(() => Opening)
     Opening?: Opening;
 
     @ForeignKey(() => Client)
-    @HasOne(() => Client)
+    client_id?: number;
+    @BelongsTo(() => Client)
     Client?: Client;
 
     @ForeignKey(() => Project)
-    @HasOne(() => Project)
+    project_id?: number;
+    @BelongsTo(() => Project)
     Project?: Project;
 
     @ForeignKey(() => Position)
-    @HasOne(() => Position)
+    position_id?: number;
+    @BelongsTo(() => Position)
     Position?: Position;
 
     @ForeignKey(() => Application)
-    @HasOne(() => Application)
+    application_id?: number;
+    @BelongsTo(() => Application)
     Application?: Application;
 
     @ForeignKey(() => Person)
-    @HasOne(() => Person)
+    person_id?: number;
+    @BelongsTo(() => Person)
     Person?: Person;
 
 

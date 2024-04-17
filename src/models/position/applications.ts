@@ -7,6 +7,7 @@ import {
     ForeignKey,
     BelongsTo,
     DataType,
+    HasOne,
   } from "sequelize-typescript";
   import { type Optional } from "sequelize";
   import { Position } from "./positions";
@@ -45,10 +46,7 @@ ApplicationCreationAttributes
     @BelongsTo(() => Position)
     position!: Position;
 
-    @ForeignKey(() => Entity)
-    @Column 
-    entity_id?: number;
-    @BelongsTo(() => Entity)
+    @HasOne(() => Entity)
     entity?: Entity;
 
     @ForeignKey(() => Person)

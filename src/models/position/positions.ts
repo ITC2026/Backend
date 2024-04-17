@@ -93,11 +93,7 @@ export class Position extends Model<
   @BelongsTo(() => Project)
   project!: Project;
 
-  @ForeignKey(() => Entity)
-  @Column 
-  entity_id!: number;
-  
-  @BelongsTo(() => Entity)
+  @HasOne(() => Entity)
   entity!: Entity;
 
   @CreatedAt
