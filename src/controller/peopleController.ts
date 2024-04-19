@@ -21,6 +21,7 @@ const TECH_STACK = [
   "iOS",
 ];
 const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
+const STATUS = ["Pipeline", "Bench", "Billing"];
 const REGION = [
   "CDMX",
   "CUU",
@@ -128,10 +129,9 @@ export const createPerson: RequestHandler = async (
     region,
     gender,
     expected_salary,
+    status
   } = req.body;
 
-  // Default status to Pipeline
-  req.body.status = "Pipeline";
 
   if (
     !first_name ||
@@ -143,11 +143,20 @@ export const createPerson: RequestHandler = async (
     !division ||
     !region ||
     !gender ||
-    !expected_salary
+    !expected_salary ||
+    !status
   ) {
     return res.status(400).json({
       status: "error",
       message: "Please provide all required fields.",
+      payload: null,
+    });
+  }
+
+  if (!STATUS.includes(status)) {
+    return res.status(400).json({
+      status: "error",
+      message: `Invalid status. ${status} is not a valid option.`,
       payload: null,
     });
   }
