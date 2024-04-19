@@ -66,7 +66,7 @@ export const createProject: RequestHandler = async (
     });
   });
 
-  if (!["In Preparation", "Active", "Closed"].includes(general_status)) {
+  if (!GENERAL_STATUS.includes(general_status)) {
     return res.status(400).json({
       status: "error",
       message: "Invalid general status provided",

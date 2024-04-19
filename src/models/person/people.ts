@@ -50,10 +50,10 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     @Column
     title!: string;
 
-    @Column(DataType.ENUM("Java", "React", "Python", "Automation", "Golang", "Javascript", "NET", "Angular", "Appian", "PowerApps", "ManualTester", "Kotlin", "UX", "iOS"))
+    @Column(DataType.ENUM("Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"))
     tech_stack!: string;
 
-    @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+    @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "USA"))
     division!: string;
 
     @Column(DataType.ENUM("CDMX", "CUU", "HMO", "MID", "SLP", "CAMPINA", "SAO PAULO", "COLOMBIA", "PERU", "COSTA RICA", "ARGENTINA", "DOMINICANA", "DALLAS", "PHOENIX"))

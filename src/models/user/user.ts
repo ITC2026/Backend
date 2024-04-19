@@ -39,7 +39,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   @Column
   email!: string;
 
-  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "USA"))
   division!: string;
 
   @BelongsToMany(() => Role, () => RoleUserRelation)

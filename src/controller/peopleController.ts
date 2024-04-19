@@ -11,16 +11,16 @@ const TECH_STACK = [
   "Automation",
   "Golang",
   "Javascript",
-  "NET",
+  ".NET",
   "Angular",
   "Appian",
   "PowerApps",
-  "ManualTester",
+  "Manual Tester",
   "Kotlin",
   "UX",
   "iOS",
 ];
-const DIVISION = ["MEXICO", "BRAZIL", "CSA", "US"];
+const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
 const REGION = [
   "CDMX",
   "CUU",

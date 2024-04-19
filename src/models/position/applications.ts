@@ -31,7 +31,7 @@ export class Application extends Model<
 ApplicationAttributes,
 ApplicationCreationAttributes
 > {
-    @Column(DataType.ENUM("Accepted", "Rejected", "Scheduled For Interview", "Waiting on Client Response", "On Hold"))
+    @Column(DataType.ENUM("Accepted", "Rejected", "Schedule For Interview", "Waiting on Client Response", "On Hold"))
     application_status!: string;
 
     @CreatedAt

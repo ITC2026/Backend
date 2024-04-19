@@ -5,8 +5,8 @@ import { Entity } from "../models/ticketLog/entities";
 import validator from "validator";
 
 const validAccounts = [
-    "Account Manager",
-    "Resource Manager",
+    "Account",
+    "Resource",
     "Staffer",
     "Admin",
 ];
@@ -113,7 +113,7 @@ export const createUser: RequestHandler = async (
             });
         }
 
-        if (!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+        if (!["BRAZIL", "MEXICO", "CSA", "USA"].includes(division)) {
             return res.status(400).json({
                 status: "error",
                 message: "Invalid division provided",
@@ -198,7 +198,7 @@ export const modifyUser: RequestHandler = async (
 
     if (
         req.body.division &&
-        !["BRAZIL", "MEXICO", "CSA", "US"].includes(req.body.division)
+        !["BRAZIL", "MEXICO", "CSA", "USA"].includes(req.body.division)
     ) {
         return res.status(400).json({
             status: "error",

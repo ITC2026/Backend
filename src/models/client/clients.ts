@@ -58,7 +58,7 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @Column
   high_growth!: boolean;
 
-  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "USA"))
   division!: string;
 
   @ForeignKey(() => Entity)

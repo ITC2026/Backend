@@ -69,7 +69,7 @@ export const createRole: RequestHandler = (req:Request, res:Response) => {
     }
 
     // Verify role_name value is valid
-    if (!['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role_name)) {
+    if (!['Admin', 'Account', 'Resource', 'Staffer'].includes(role_name)) {
         return res.status(400).json({ 
             status: 'error',
             message: 'Invalid role name provided',
@@ -115,7 +115,7 @@ export const modifyRole: RequestHandler = async (req:Request, res:Response) => {
     //Validations
     const {role_name, users} = req.body;
 
-    if (role_name && !['Admin', 'Account Manager', 'Resource Manager', 'Staffer'].includes(role_name)) {
+    if (role_name && !['Admin', 'Account', 'Resource', 'Staffer'].includes(role_name)) {
         return res.status(400).json({ 
             status: 'error',
             message: 'Invalid role provided',

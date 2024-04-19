@@ -57,7 +57,7 @@ export const createOpening: RequestHandler = async (
     });
   }
 
-  if(!["New", "Filled", "Closed", "In progress", "On standby"].includes(opening_status)) {
+  if(!["New", "Filled", "Closed", "In Progress", "On Standby"].includes(opening_status)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid status provided',
@@ -65,7 +65,7 @@ export const createOpening: RequestHandler = async (
     });
   }
 
-  if(!["InProgress", "OnStandby", "Hired", "Replacement", "Budget problem", "Filled by itself", "Filled by another", "No replied"].includes(opening_reason)) {
+  if(!["In Progress", "On Standby", "Hired", "Replacement", "Budget Problem", "Filled By Itself", "Filled By Another", "No replied"].includes(opening_reason)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid reason provided',
@@ -189,21 +189,40 @@ export const updateOpening: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
-  Opening.update(req.body, { where: { id } })
-    .then((isUpdated) => {
-      return res.status(200).json({
-        status: "Success",
-        message: "Opening updated successfully",
-        payload: isUpdated,
+
+  Opening.findByPk(id)
+  .then((data: unknown | null) => {
+    if(data){
+      Opening.update(req.body, { where: { id } })
+        .then((isUpdated) => {
+          return res.status(200).json({
+            status: "Success",
+            message: "Opening updated successfully",
+            payload: isUpdated,
+          });
+        })
+        .catch((error: Error) => {
+          return res.status(500).json({
+            status: "Error",
+            message: "Opening not updated",
+            payload: error.message,
+          });
+        });
+    } else {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Opening not found',
+        payload: null
       });
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Opening not updated",
-        payload: error.message,
-      });
+    }
+  })
+  .catch((error:Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Opening not updated",
+      payload: error.message,
     });
+  });
 };
 
 export const deleteOpening: RequestHandler = async (

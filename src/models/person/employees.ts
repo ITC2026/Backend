@@ -47,11 +47,11 @@ export class Employee extends Model<
   @Column(
     DataType.ENUM(
       "Project Search",
-      "Using in internal project",
-      "UpSkilling CrossTraining",
-      "Backup Shadow other projects",
+      "Using In Internal Project",
+      "Upskilling Crosstraining",
+      "Backup / Shadow other projects",
       "Resource Pool",
-      "No action required",
+      "No Action Required",
       "Others",
       "Attrition"
     )
@@ -63,19 +63,19 @@ export class Employee extends Model<
 
   @Column(
     DataType.ENUM(
-      "In training",
-      "Induction orientation",
-      "Shadow resource",
-      "Awaiting client confirmation joining",
-      "Maternity leave",
-      "Sabbatical other leave",
-      "Previous client attrition",
-      "Previous client HCReduction",
-      "Transition between projects",
-      "No available projects",
-      "Internal project",
-      "Moved to billing",
-      "Performance issues PIP",
+      "In Training",
+      "Induction / Orientation",
+      "Shadow Resources",
+      "Awaiting Client Confirmation Joining",
+      "Maternity Leave",
+      "Sabbatical / Other Leave",
+      "Previous Client Attrition",
+      "Previous Client HC Reduction",
+      "Transition Between Projects",
+      "No Available Projects",
+      "Internal Project",
+      "Moved to Billing",
+      "Performance Issues / PIP",
       "Other",
       "Intern"
     )

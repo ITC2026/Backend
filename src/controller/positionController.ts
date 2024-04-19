@@ -32,7 +32,7 @@ export const createPosition: RequestHandler = async (
   }
 
   //Validations for fields with options
-  if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+  if(!["BRAZIL", "MEXICO", "CSA", "USA"].includes(division)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',
@@ -48,7 +48,7 @@ export const createPosition: RequestHandler = async (
     });
   }
 
-  if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", "NET", "Angular", "Appian", "PowerApps", "ManualTester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
+  if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',
@@ -56,7 +56,7 @@ export const createPosition: RequestHandler = async (
     });
   }
 
-  if(!["New Headcount", "Backfill Replacement"].includes(posting_type)) {
+  if(!["New Head Count", "Back-fill Replacement"].includes(posting_type)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',
@@ -258,7 +258,7 @@ export const updatePosition: RequestHandler = async (
   });
 
   //Validations for fields with options
-  if(!["BRAZIL", "MEXICO", "CSA", "US"].includes(division)) {
+  if(!["BRAZIL", "MEXICO", "CSA", "USa"].includes(division)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',
@@ -274,7 +274,7 @@ export const updatePosition: RequestHandler = async (
     });
   }
 
-  if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", "NET", "Angular", "Appian", "PowerApps", "ManualTester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
+  if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',
@@ -282,7 +282,7 @@ export const updatePosition: RequestHandler = async (
     });
   }
 
-  if(!["New Headcount", "Backfill Replacement"].includes(posting_type)) {
+  if(!["New Head Count", "Back-fill Replacement"].includes(posting_type)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid division provided',

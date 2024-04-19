@@ -54,19 +54,19 @@ export class Position extends Model<
   @Column
   position_title!: string;
 
-  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
+  @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "USA"))
   division!: string;
 
   @Column(DataType.ENUM("CDMX", "CUU", "HMO", "MID", "SLP", "CAMPINA", "SAO PAULO", "COLOMBIA", "PERU", "COSTA RICA", "ARGENTINA", "DOMINICANA", "DALLAS", "PHOENIX"))
   region!: string;
 
-  @Column(DataType.ENUM("Java", "React", "Python", "Automation", "Golang", "Javascript", "NET", "Angular", "Appian", "PowerApps", "ManualTester", "Kotlin", "UX", "iOS"))
+  @Column(DataType.ENUM("Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"))
   tech_stack!: string;
 
   @Column
   bill_rate!: number;
 
-  @Column(DataType.ENUM("New Headcount", "Backfill Replacement"))
+  @Column(DataType.ENUM("New Head Count", "Back-fill Replacement"))
   posting_type!: string;
 
   @Column

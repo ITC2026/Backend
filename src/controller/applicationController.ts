@@ -70,7 +70,7 @@ export const createApplication: RequestHandler = async (
     });
   });
 
-  if(!["Accepted", "Rejected", "Scheduled For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
+  if(!["Accepted", "Rejected", "Schedule For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
     return res.status(400).json({ 
         status: 'error',
         message: 'Invalid status provided',
@@ -163,10 +163,10 @@ export const modifyApplication: RequestHandler = async (
     });
   }
 
-  if(!["Accepted", "Rejected", "Scheduled For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
+  if(!["Accepted", "Rejected", "Schedule For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
     return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid division provided',
+        message: 'Invalid status provided',
         payload: null
     });
   }

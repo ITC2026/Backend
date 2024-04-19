@@ -22,7 +22,7 @@ import {
     tableName: "Roles",
   })
   export class Role extends Model<RoleAttributes, RoleCreationAttributes> {
-    @Column(DataType.ENUM("Admin", "Account Manager", "Resource Manager", "Staffer"))
+    @Column(DataType.ENUM("Admin", "Account", "Resource", "Staffer"))
     role_name!: string;
 
     @BelongsToMany(() => User, () => RoleUserRelation)

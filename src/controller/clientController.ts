@@ -4,7 +4,7 @@ import { Project } from "../models/project/projects";
 import { Entity } from "../models/ticketLog/entities";
 import validator from "validator";
 
-const DIVISION = ["MEXICO", "BRAZIL", "CSA", "US"];
+const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
 
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {

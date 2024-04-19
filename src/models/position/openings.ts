@@ -45,10 +45,10 @@ import {
       });
     }
   
-    @Column(DataType.ENUM("New", "Filled", "Closed", "In progress", "On standby"))
+    @Column(DataType.ENUM("New", "Filled", "Closed", "In Progress", "On Standby"))
     opening_status!: string;
 
-    @Column(DataType.ENUM("InProgress", "OnStandby", "Hired", "Replacement", "Budget problem", "Filled by itself", "Filled by another", "No replied"))
+    @Column(DataType.ENUM("In Progress", "On Standby", "Hired", "Replacement", "Budget Problem", "Filled By Itself", "Filled By Another", "No replied"))
     opening_reason!: string;
 
     @Column
