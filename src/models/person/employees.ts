@@ -16,7 +16,6 @@ import { ClientEmployeeRelation } from "../client/client_employee_relations";
 
 interface EmployeeAttributes {
   id: number;
-  job_title: string;
   salary: number;
   job_grade: string;
   proposed_action: string;
@@ -38,8 +37,6 @@ export class Employee extends Model<
   EmployeeAttributes,
   EmployeeCreationAttributes
 > {
-  @Column
-  job_title!: string;
 
   @Column
   salary!: number;
@@ -85,13 +82,19 @@ export class Employee extends Model<
   )
   employee_reason!: string;
 
-  @CreatedAt
   @Column
   contract_start_date!: Date;
 
-  @UpdatedAt
   @Column
   last_movement_at!: Date;
+
+  @CreatedAt
+  @Column
+  createdAt!: Date;
+
+  @UpdatedAt
+  @Column
+  updatedAt!: Date;
 
   @ForeignKey(() => Person)
   @Column

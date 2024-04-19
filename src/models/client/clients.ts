@@ -6,7 +6,6 @@ import {
   Table,
   DataType,
   HasMany,
-  HasOne,
   BelongsToMany,
   ForeignKey,
   BelongsTo,
@@ -62,7 +61,10 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @Column(DataType.ENUM("BRAZIL", "MEXICO", "CSA", "US"))
   division!: string;
 
-  @HasOne(() => Entity)
+  @ForeignKey(() => Entity)
+  @Column
+  entity_id!: number;
+  @BelongsTo(() => Entity)
   entity!: Entity;
 
   @CreatedAt

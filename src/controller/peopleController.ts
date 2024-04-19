@@ -184,7 +184,6 @@ export const createPerson: RequestHandler = async (
     });
   }
 
-
   if (isNaN(expected_salary)) {
     return res.status(400).json({
       status: "error",
@@ -236,22 +235,57 @@ export const modifyPerson: RequestHandler = async (
     });
   }
 
-  Person.findByPk(req.params.id).then((data: Person | null) => {
+  const {status, movement_reason} = req.body;
+
+  Person.findByPk(req.params.id)
+  .then((data: Person | null) => {
     if (data) {
+
+      //If there was a status change
+      if(status !== data.status){
+
+        //If an associated employee already exists
+        Employee.findOne({where: {person_id: data.id}})
+        .then((emp: Employee | null) => {
+          if(emp){
+            var dt = new Date()
+            dt.setSeconds(0,0); 
+            emp.update({last_movement_at: dt})   //Change last movement date
+          }
+        })
+        .catch((err:Error) => {
+          return res.status(500).json({
+            status: "error",
+            message: "Something happened modifying the person. " + err.message,
+            payload: null,
+          });
+        })
+        
+        //Make sure a reason is provided
+        if(!movement_reason){
+          return res.status(400).json({
+            status: "error",
+            message: "Movement reason was not provided",
+            payload: null,
+          });
+        }
+      }
+
       Person.update({ ...req.body }, { where: { id: req.params.id } })
-        .then((data) => {
-          if (data) {
+        .then((isUpdated) => {
+          if (isUpdated) {
             return res.status(200).json({
               status: "success",
               message: "Person successfully updated.",
               payload: data,
             });
+          } else{
+            return res.status(500).json({
+              status: "error",
+              message: "There was an error updating the Person.",
+              payload: null,
+            });
           }
-          return res.status(500).json({
-            status: "error",
-            message: "There was an error updating the Person.",
-            payload: null,
-          });
         })
         .catch((err) => {
           return res.status(500).json({
@@ -260,12 +294,13 @@ export const modifyPerson: RequestHandler = async (
             payload: null,
           });
         });
+    } else{
+      return res.status(404).json({
+        status: "error",
+        message: "Person not found.",
+        payload: null,
+      });
     }
-    return res.status(404).json({
-      status: "error",
-      message: "Person not found.",
-      payload: null,
-    });
   });
 };
 

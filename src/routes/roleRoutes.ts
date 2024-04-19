@@ -10,13 +10,9 @@ import {
 const roleRouter = Router();
 
 roleRouter.get("/", getAllRoles);
-
 roleRouter.get("/:id", getRoleById);
-
 roleRouter.post("/", createRole);
-
 roleRouter.patch("/:id", modifyRole);
-
 roleRouter.delete("/", deleteRole);
 
 export default roleRouter;
