@@ -7,12 +7,12 @@ import {
   modifyEntity,
 } from "../controller/entityController";
 
-const userRouter = Router();
+const entityRouter = Router();
 
-userRouter.get("/", getEntities);
-userRouter.get("/:id", getEntityById);
-userRouter.post("/", createEntity);
-userRouter.patch("/:id", modifyEntity);
-userRouter.delete("/", deleteEntity);
+entityRouter.get("/", getEntities);
+entityRouter.get("/:id", getEntityById);
+entityRouter.post("/", createEntity);
+entityRouter.patch("/:id", modifyEntity);
+entityRouter.delete("/", deleteEntity);
 
-export default userRouter;
+export default entityRouter;

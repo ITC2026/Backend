@@ -126,15 +126,7 @@ export const getOpenings: RequestHandler = async (
       include: [Employee]
     },
   })
-    .then((data: unknown[] | null) => {
-      if (!data || data.length === 0) {
-        return res.status(404).json({
-          status: "Error",
-          message: "No opening found",
-          payload: null,
-        });
-      }
-
+    .then((data: Opening[] | null) => {
       return res.status(200).json({
         status: "Success",
         message: "Openings retrieved successfully",

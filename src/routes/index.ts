@@ -11,21 +11,25 @@ import roleRouter from "./roleRoutes";
 import applicationRouter from "./applicationRoutes";
 import peopleRouter from "./peopleRoutes";
 import candidateRouter from "./candidateRoutes";
+import expirationDateProjectRouter from "./expirationDateProjectRoutes";
+import expirationDateOpeningRouter from "./expirationDateOpeningRoutes";
 
 const apiRouter: Router = Router();
 
-apiRouter.use("/user", userRouter);
+apiRouter.use("/users", userRouter);
 apiRouter.use("/projects", projectRouter);
 apiRouter.use("/positions", positionRouter);
 apiRouter.use("/clients", clientRouter);
 apiRouter.use("/openings", openingRouter);
-apiRouter.use("/employee", employeeRouter);
+apiRouter.use("/employees", employeeRouter);
 apiRouter.use("/entities", entityRouter);
 apiRouter.use("/ticketlogs", ticketLogRouter);
-apiRouter.use("/role", roleRouter);
+apiRouter.use("/roles", roleRouter);
 apiRouter.use("/applications", applicationRouter);
 apiRouter.use("/people", peopleRouter);
 apiRouter.use("/candidates", candidateRouter);
+apiRouter.use("/expirationdateprojects", expirationDateProjectRouter)
+apiRouter.use("/expirationdateopenings", expirationDateOpeningRouter)
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });
