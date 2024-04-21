@@ -3,6 +3,8 @@ import { Person } from "../models/person/people";
 import { Candidate } from "../models/person/candidates";
 import { Employee } from "../models/person/employees";
 import { Entity } from "../models/ticketLog/entities";
+import { Opening } from "../models/position/openings";
+import { Position } from "../models/position/positions";
 
 const TECH_STACK = [
   "Java",
@@ -378,3 +380,73 @@ export const deletePerson: RequestHandler = async (
     });
   });
 };
+
+//Additional functions
+export const getPositionByPerson: RequestHandler = (req:Request, res:Response) => {
+  const id_person = req.params.id;
+
+  Person.findByPk(id_person)
+  .then((person:Person | null) => {
+    if(person){
+
+      Opening.findOne({ where: {person_id: id_person}})
+      .then((opening:Opening |null) => {
+        if(opening){
+
+          Position.findOne({where: {id:opening.position_id}})
+          .then((position:Position | null) =>{
+            if(position){
+              return res.status(200).json({
+                status: "Success",
+                message: "Position retrieved successfully",
+                payload: position,
+              });
+            }
+            else{
+              return res.status(404).json({
+                status: "Error",
+                message: "Position not found",
+                payload: null,
+              });
+            }
+          })
+          .catch((err: Error) => {
+            return res.status(500).json({
+              status: "error",
+              message: "Something happened finding the position. " + err.message,
+              payload: null,
+            });
+          });
+
+        } else{
+          return res.status(404).json({
+            status: "Error",
+            message: "An opening filled by this person was not found",
+            payload: null,
+          });
+        }
+      })
+      .catch((err:Error) => {
+        return res.status(500).json({
+          status: "error",
+          message: "Something happened finding the opening. " + err.message,
+          payload: null,
+        });
+      });
+
+    } else{
+      return res.status(404).json({
+        status: "Error",
+        message: "Person not found",
+        payload: null,
+      });
+    }
+  })
+  .catch((err:Error) => {
+    return res.status(500).json({
+      status: "error",
+      message: "Something happened finding the person. " + err.message,
+      payload: null,
+    });
+  })
+}
