@@ -1,5 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Candidate } from "../models/person/candidates";
+import { Person } from "../models/person/people";
 
 export const getAllCandidates: RequestHandler = (
   req: Request,
@@ -69,12 +70,13 @@ export const modifyCandidate: RequestHandler = (req: Request, res: Response) => 
           message: "Candidate updated successfully",
           payload: req.body,
         });
+      } else{
+        return res.status(500).json({
+          status: "Error",
+          message: "Candidate not updated",
+          payload: null,
+        });
       }
-      return res.status(500).json({
-        status: "Error",
-        message: "Candidate not updated",
-        payload: null,
-      });
     })
     .catch((error: Error) => {
       return res.status(500).json({
@@ -130,27 +132,45 @@ export const createCandidate: RequestHandler = (req: Request, res: Response) => 
     });
   }
 
-  if (!req.body.expected_salary) {
+  if (!req.body.expected_salary || !req.body.person_id) {
     return res.status(400).json({
       status: "error",
-      message: "Please provide an expected salary",
+      message: "Please provide an expected salary and a person id",
       payload: null,
     });
   }
 
-  Candidate.create({ ...req.body })
-    .then((data: Candidate) => {
-      return res.status(200).json({
-        status: "Success",
-        message: "Candidate created successfully",
-        payload: data,
+  Person.findByPk(req.body.person_id)
+  .then((person:Person | null) =>{
+    if(person){
+      Candidate.create({ ...req.body })
+        .then((data: Candidate) => {
+          return res.status(200).json({
+            status: "Success",
+            message: "Candidate created successfully",
+            payload: data,
+          });
+        })
+        .catch((error: Error) => {
+          return res.status(500).json({
+            status: "Error",
+            message: "Candidate not created",
+            payload: error.message,
+          });
+        });
+    } else{
+      return res.status(404).json({
+        status: "error",
+        message: "Person not found",
+        payload: null,
       });
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Candidate not created",
-        payload: error.message,
-      });
+    }
+  })
+  .catch((error:Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Something happened creating a candidate. " + error.message,
+      payload: null,
     });
+  });
 };

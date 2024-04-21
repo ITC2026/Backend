@@ -238,25 +238,6 @@ export const updatePosition: RequestHandler = async (
     });
   }
 
-  //Make sure the project exists
-  Project.findByPk(project_id)
-  .then((data: Project | null) => {
-    if(!data){
-      return res.status(404).json({
-        status: "Error",
-        message: "Project not found",
-        payload: null,
-      });
-    }
-  })
-  .catch((error: Error) => {
-    return res.status(500).json({
-      status: "Error",
-      message: "Job Position not created",
-      payload: error.message,
-    });
-  });
-
   //Validations for fields with options
   if(!["BRAZIL", "MEXICO", "CSA", "USa"].includes(division)) {
     return res.status(400).json({ 
@@ -277,7 +258,7 @@ export const updatePosition: RequestHandler = async (
   if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
     return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid division provided',
+        message: 'Invalid tech stack provided',
         payload: null
     });
   }
@@ -285,45 +266,78 @@ export const updatePosition: RequestHandler = async (
   if(!["New Head Count", "Back-fill Replacement"].includes(posting_type)) {
     return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid division provided',
+        message: 'Invalid posting type provided',
         payload: null
     });
   }
   
-  //Make sure position exists
-  Position.findByPk(id)
-  .then((data: Position | null) => {
-    if (data) {
+  //Make sure the associated project exists
+  Project.findByPk(project_id)
+  .then((data: Project | null) => {
+    if(!data){
+      return res.status(404).json({
+        status: "Error",
+        message: "Project not found",
+        payload: null,
+      });
+    } else{   //If it does exist
 
-      Position.update({ ...req.body }, { where: { id } })
-        .then((isUpdated) => {
-          if (isUpdated) {
-            
-            //Update comment
-            if(comment){
-              CommentPosition.findOne({
-                where: {
-                  position_id: id
-                }
-              })
-              .then((prevComment: CommentPosition | null) =>{
+      //Make sure position exists
+      Position.findByPk(id)
+      .then((data: Position | null) => {
+        if (data) {
+
+          Position.update({ ...req.body }, { where: { id } })   //If it exists update it
+            .then((isUpdated) => {
+              if (isUpdated) {
                 
-                if(prevComment){
-                  prevComment.update({comment})     //if there is a previous comment update it
-                  .then((isUpdatedComment) => {
+                //Update comment
+                if(comment){
+                  CommentPosition.findOne({
+                    where: {
+                      position_id: id
+                    }
+                  })
+                  .then((prevComment: CommentPosition | null) =>{
+                    
+                    if(prevComment){
+                      prevComment.update({comment})     //if there is a previous comment update it
+                      .then((isUpdatedComment) => {
 
-                    if(!isUpdatedComment){
-                      return res.status(500).json({
-                        status: "Error",
-                        message: "Something happened updating the project (Expiration Date)",
-                        payload: null,
+                        if(!isUpdatedComment){
+                          return res.status(500).json({
+                            status: "Error",
+                            message: "Something happened updating the project (Expiration Date)",
+                            payload: null,
+                          });
+                        }
+                      });
+                    } else{
+                      CommentPosition.create({    //if there isn't one create it
+                        comment: comment,
+                        position_id: data.id
+                      })
+                      .catch((error: Error) => {
+                        return res.status(500).json({
+                          status: "Error",
+                          message: "Job Position not updated",
+                          payload: error.message,
+                        });
                       });
                     }
+                  })
+                  .catch((error: Error) => {
+                    return res.status(500).json({
+                      status: "Error",
+                      message: "Job Position not updated",
+                      payload: error.message,
+                    });
                   });
                 } else{
-                  CommentPosition.create({    //if there isn't one create it
-                    comment: comment,
-                    position_id: data.id
+                  CommentPosition.destroy({    //if there is no commment destroy associated comment if any
+                    where: {
+                      position_id: id
+                    }
                   })
                   .catch((error: Error) => {
                     return res.status(500).json({
@@ -333,61 +347,48 @@ export const updatePosition: RequestHandler = async (
                     });
                   });
                 }
-              })
-              .catch((error: Error) => {
-                return res.status(500).json({
-                  status: "Error",
-                  message: "Job Position not updated",
-                  payload: error.message,
-                });
-              });
-            } else{
-              CommentPosition.destroy({    //if there is no commment destroy associated comment if any
-                where: {
-                  position_id: id
-                }
-              })
-              .catch((error: Error) => {
-                return res.status(500).json({
-                  status: "Error",
-                  message: "Job Position not updated",
-                  payload: error.message,
-                });
-              });
-            }
 
 
-            return res.status(200).json({
-              status: "Success",
-              message: "Job Position updated successfully",
-              payload: { ...req.body },
+                return res.status(200).json({
+                  status: "Success",
+                  message: "Job Position updated successfully",
+                  payload: { ...req.body },
+                });
+              }
+              return res.status(500).json({
+                status: "Error",
+                message: "Job Position not updated",
+                payload: null,
+              });
+            })
+            .catch((error: Error) => {
+              return res.status(500).json({
+                status: "Error",
+                message: "Job Position not updated",
+                payload: error.message,
+              });
             });
-          }
-          return res.status(500).json({
-            status: "Error",
-            message: "Job Position not updated",
-            payload: null,
+        } else{
+          return res.status(404).json({
+            status: 'error',
+            message: 'Job Position not found',
+            payload: null
           });
-        })
-        .catch((error: Error) => {
-          return res.status(500).json({
-            status: "Error",
-            message: "Job Position not updated",
-            payload: error.message,
-          });
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Error updating Job Position",
+          payload: error.message,
         });
-    } else{
-      return res.status(404).json({
-        status: 'error',
-        message: 'Job Position not found',
-        payload: null
       });
     }
   })
   .catch((error: Error) => {
     return res.status(500).json({
       status: "Error",
-      message: "Error updating Job Position",
+      message: "There was an error finding the project",
       payload: error.message,
     });
   });

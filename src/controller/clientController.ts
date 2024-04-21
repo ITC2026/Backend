@@ -170,7 +170,7 @@ export const modifyClient: RequestHandler = async (
     });
   }
 
-  // Save Client in the database
+  // Maake sure Client exists in the database
   Client.findByPk(req.params.id).then((data: Client | null) => {
     if (data) {
       // Update the client
@@ -204,6 +204,13 @@ export const modifyClient: RequestHandler = async (
         payload: null,
       });
     }
+  })
+  .catch((error:Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Something happened creating the client. " + error.message,
+      payload: null,
+   });
   });
 };
 

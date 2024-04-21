@@ -1,5 +1,6 @@
 import { RequestHandler, Request, Response } from "express";
 import { Employee } from "../models/person/employees";
+import { Person } from "../models/person/people";
 import validator from "validator";
 
 const JOBGRADE = ["C3", "C4", "C5", "C6"];
@@ -152,21 +153,39 @@ export const createEmployee: RequestHandler = async (
     });
   }
 
-  Employee.create({ ...req.body })
-    .then((data: Employee | null) => {
-      return res.status(201).json({
-        status: "Success",
-        message: "Employee created successfully",
-        payload: data,
+  Person.findByPk(person_id)
+  .then((person:Person | null) =>{
+    if(person){
+      Employee.create({ ...req.body })
+      .then((data: Employee | null) => {
+        return res.status(201).json({
+          status: "Success",
+          message: "Employee created successfully",
+          payload: data,
+        });
+      })
+      .catch((error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Something happened creating an employee. " + error.message,
+          payload: null,
+        });
       });
-    })
-    .catch((error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Something happened creating an employee. " + error.message,
+    } else{
+      return res.status(404).json({
+        status: "error",
+        message: "Person not found",
         payload: null,
       });
+    }
+  })
+  .catch((error:Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Something happened creating an employee. " + error.message,
+      payload: null,
     });
+  });
 };
 
 export const updateEmployee = async (req: Request, res: Response) => {
@@ -235,40 +254,59 @@ export const updateEmployee = async (req: Request, res: Response) => {
     });
   }
 
-  try {
-    const employee = await Employee.findOne({ where: { id: req.params.id } });
 
-    if (!employee) {
+  Person.findByPk(person_id)
+  .then(async (person:Person | null) =>{
+    if(person){
+      try {
+        const employee = await Employee.findOne({ where: { id: req.params.id } });
+
+        if (!employee) {
+          return res.status(404).json({
+            status: "Error",
+            message: "Employee not found",
+            payload: null,
+          });
+        }
+
+        employee.update(req.body)
+        .then(() =>{
+          return res.status(200).json({
+            status: "Success",
+            message: "Employee updated successfully",
+            payload: employee,
+          });
+        })
+        .catch ((err:Error) => {
+          return res.status(500).json({
+            status: "Error",
+            message: "Something happened updating the employee " + err,
+            payload: null,
+          });
+        });
+      }
+      catch (err) {
+        return res.status(500).json({
+          status: "Error",
+          message: "Something happened updating the employee " + err,
+          payload: null,
+        });
+      }
+    } else {
       return res.status(404).json({
-        status: "Error",
-        message: "Employee not found",
+        status: "error",
+        message: "Person not found",
         payload: null,
       });
     }
-
-    employee.update(req.body)
-    .then(() =>{
-      return res.status(200).json({
-        status: "Success",
-        message: "Employee updated successfully",
-        payload: employee,
-      });
-    })
-    .catch ((err:Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Something happened updating the employee " + err,
-        payload: null,
-      });
-    });
-  }
-  catch (err) {
+  })
+  .catch((error:Error) => {
     return res.status(500).json({
       status: "Error",
-      message: "Something happened updating the employee " + err,
+      message: "Something happened creating an employee. " + error.message,
       payload: null,
     });
-  }
+  });
 };
 
 export const deleteEmployee: RequestHandler = async (
