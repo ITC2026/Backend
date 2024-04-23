@@ -22,7 +22,7 @@ interface PersonAttributes {
   region: string;
   status: string;
   movement_reason: string;
-  
+  clients: Client[];
 }
 
 interface PersonCreationAttributes extends Optional<PersonAttributes, 'id'>{}

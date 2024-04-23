@@ -6,6 +6,7 @@ import { Entity } from "../models/ticketLog/entities";
 import { Opening } from "../models/position/openings";
 import { Position } from "../models/position/positions";
 import { Project } from "../models/project/projects";
+import { Client } from "../models/client/clients";
 
 const TECH_STACK = [
   "Java",
@@ -55,6 +56,11 @@ export const getAllPeople: RequestHandler = async (
       {
         model: Employee,
       },
+      {
+        model: Client,
+        attributes: ["id", "client_name"],
+        through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
     ],
   })
     .then((data: Person[]) => {
@@ -92,6 +98,10 @@ export const getPersonById: RequestHandler = async (
       {
         model: Employee,
       },
+      {
+        model: Client,
+        through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
     ],
   })
     .then((data: Person | null) => {
