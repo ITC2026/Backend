@@ -221,7 +221,11 @@ export const updateOpening: RequestHandler = async (
                       }
                     })
                     .catch((error:Error) => {
-
+                      return res.status(500).json({
+                        status: "Error",
+                        message: "Opening not updated",
+                        payload: error.message,
+                      });
                     })
 
                   } else{
@@ -233,7 +237,11 @@ export const updateOpening: RequestHandler = async (
                   }
                 })
                 .catch((error:Error) => {
-              
+                  return res.status(500).json({
+                    status: "Error",
+                    message: "Opening not updated",
+                    payload: error.message,
+                  });
                 })
 
               } else{
@@ -245,7 +253,11 @@ export const updateOpening: RequestHandler = async (
               }
             })
             .catch((error:Error) => {
-
+              return res.status(500).json({
+                status: "Error",
+                message: "Opening not updated",
+                payload: error.message,
+              });
             })
 
           } else{
@@ -257,7 +269,11 @@ export const updateOpening: RequestHandler = async (
           }
         })
         .catch((error:Error) => {
-
+          return res.status(500).json({
+            status: "Error",
+            message: "Opening not updated",
+            payload: error.message,
+          });
         });
       }
 
