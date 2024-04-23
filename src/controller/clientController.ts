@@ -86,7 +86,7 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     !logo_url ||
     !client_name ||
     !client_desc ||
-    !high_growth ||
+    typeof high_growth !== "boolean" ||
     !division
   ) {
     return res.status(400).json({
