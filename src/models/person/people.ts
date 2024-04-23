@@ -1,10 +1,12 @@
-import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType, ForeignKey, BelongsTo, DeletedAt } from 'sequelize-typescript';
+import { Table, Model, Column, CreatedAt, UpdatedAt, HasOne, DataType, BelongsToMany, ForeignKey, BelongsTo, DeletedAt } from 'sequelize-typescript';
 import { Optional } from 'sequelize';
 import { Application } from '../position/applications';
 import { Opening } from '../position/openings';
 import { Employee } from './employees';
 import { Candidate } from './candidates';
 import { Entity } from '../ticketLog/entities';
+import { Client } from '../client/clients';
+import { ClientPersonRelation } from '../client/client_person_relations';
 
 interface PersonAttributes {
   id: number;
@@ -79,6 +81,9 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
 
     @HasOne(() => Entity)
     entity?: Entity;
+
+    @BelongsToMany(() => Client, () => ClientPersonRelation)
+    clients?: Client[];
 
     @CreatedAt
     @Column

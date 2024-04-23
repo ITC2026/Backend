@@ -5,6 +5,8 @@ import { Employee } from "../models/person/employees";
 import { ExpirationDateOpening } from "../models/position/expiration_date_openings";
 import { Position } from "../models/position/positions";
 import { Entity } from "../models/ticketLog/entities";
+import { Project } from "../models/project/projects";
+import { Client } from "../models/client/clients";
 
 export const createOpening: RequestHandler = async (
   req: Request,
@@ -182,10 +184,83 @@ export const updateOpening: RequestHandler = async (
   res: Response
 ) => {
   const id = req.params.id;
+  const {person_id} = req.body;
 
   Opening.findByPk(id)
-  .then((data: unknown | null) => {
+  .then((data: Opening | null) => {
     if(data){
+
+      if(person_id){    // If a person is added to the opening
+        Person.findByPk(person_id)
+        .then((person: Person | null) => {
+
+          if(person){     //Check the person exists
+
+            Position.findByPk(data.position_id)
+            .then((position:Position | null) =>{
+
+              if(position){   // Check for position
+
+                Project.findByPk(position.project_id)
+                .then((project:Project | null) => {
+
+                  if(project){    // Check for project
+
+                    Client.findByPk(project.client_id)
+                    .then((client: Client | null) => {
+
+                      if(client){   // Check for client
+                        client.$add("people", person);  // Create client_person relation
+
+                      } else{
+                        return res.status(404).json({
+                          status: 'error',
+                          message: 'Client not found',
+                          payload: null
+                        });
+                      }
+                    })
+                    .catch((error:Error) => {
+
+                    })
+
+                  } else{
+                    return res.status(404).json({
+                      status: 'error',
+                      message: 'Project not found',
+                      payload: null
+                    });
+                  }
+                })
+                .catch((error:Error) => {
+              
+                })
+
+              } else{
+                return res.status(404).json({
+                  status: 'error',
+                  message: 'Position not found',
+                  payload: null
+                });
+              }
+            })
+            .catch((error:Error) => {
+
+            })
+
+          } else{
+            return res.status(404).json({
+              status: 'error',
+              message: 'Person not found',
+              payload: null
+            });
+          }
+        })
+        .catch((error:Error) => {
+
+        });
+      }
+
       Opening.update(req.body, { where: { id } })
         .then((isUpdated) => {
           return res.status(200).json({

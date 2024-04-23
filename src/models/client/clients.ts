@@ -13,8 +13,8 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Project } from "../project/projects";
-import { Employee } from "../person/employees";
-import { ClientEmployeeRelation } from "./client_employee_relations";
+import { Person } from "../person/people";
+import { ClientPersonRelation } from "./client_person_relations";
 import { Entity } from "../ticketLog/entities";
 
 interface ClientAttributes {
@@ -26,7 +26,7 @@ interface ClientAttributes {
   high_growth: boolean;
   division: string;
   projects: Project[];
-  employees: Employee[];
+  people: Person[];
 }
 
 interface ClientCreationAttributes extends Optional<ClientAttributes, "id"> {}
@@ -79,6 +79,6 @@ export class Client extends Model<ClientAttributes, ClientCreationAttributes> {
   @HasMany(() => Project)
   projects!: Project[];
 
-  @BelongsToMany(() => Employee, () => ClientEmployeeRelation)
-  employees?: Employee[];
+  @BelongsToMany(() => Person, () => ClientPersonRelation)
+  people?: Person[];
 }
