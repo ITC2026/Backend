@@ -7,6 +7,7 @@ import { Opening } from "../models/position/openings";
 import { Position } from "../models/position/positions";
 import { Project } from "../models/project/projects";
 import { Client } from "../models/client/clients";
+import { createEmployee } from "./employeesController";
 
 const TECH_STACK = [
   "Java",
@@ -114,7 +115,7 @@ export const getPersonById: RequestHandler = async (
     .catch((err) => {
       return res.status(500).json({
         status: "error",
-        message: "Something happened retrieving the product. " + err.message,
+        message: "Something happened retrieving the person. " + err.message,
         payload: null,
       });
     });
@@ -226,15 +227,25 @@ export const createPerson: RequestHandler = async (
     return data;
   })
     .then((data: Person) => {
-      Candidate.create({
+      Candidate.create({  // create a candidate
         expected_salary,
         person_id: data.id,
-      });
-      return res.status(201).json({
-        status: "success",
-        message: "Person successfully created.",
-        payload: data,
-      });
+      })
+
+      .then(() => {
+        if(status === "Bench" || status === "Billing"){   // When creating a person directly in Bench or Billing, create an employee
+          req.body.person_id = data.id;
+          createEmployee(req,res, () => {});
+
+        } else{
+          return res.status(201).json({
+            status: "success",
+            message: "Person successfully created.",
+            payload: data,
+          });
+        }
+      })
+      
     })
     .catch((err) => {
       return res.status(500).json({
@@ -265,6 +276,14 @@ export const modifyPerson: RequestHandler = async (
 
       //If there was a status change
       if(status !== data.status){
+
+        if(data.status !== "Pipeline" && status === "Pipeline"){
+          return res.status(500).json({
+            status: "error",
+            message: "A movement to pipeline from bench or billing can not be done.",
+            payload: null
+          });
+        }
 
         //If an associated employee already exists
         Employee.findOne({where: {person_id: data.id}})

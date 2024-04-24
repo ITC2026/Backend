@@ -81,7 +81,7 @@ export const getEmployeeById: RequestHandler = async (
 
 export const createEmployee: RequestHandler = async (
   req: Request,
-  res: Response
+  res: Response,
 ) => {
   if (!req.body) {
     return res.status(400).json({
@@ -188,7 +188,7 @@ export const createEmployee: RequestHandler = async (
   });
 };
 
-export const updateEmployee = async (req: Request, res: Response) => {
+export const updateEmployee: RequestHandler = async (req: Request, res: Response) => {
   if (!req.body) {
     return res.status(400).json({
       status: "error",
@@ -254,7 +254,6 @@ export const updateEmployee = async (req: Request, res: Response) => {
     });
   }
 
-
   Person.findByPk(person_id)
   .then(async (person:Person | null) =>{
     if(person){
@@ -267,23 +266,25 @@ export const updateEmployee = async (req: Request, res: Response) => {
             message: "Employee not found",
             payload: null,
           });
+        } else{
+
+          employee.update(req.body)
+          .then(() =>{
+            return res.status(200).json({
+              status: "Success",
+              message: "Employee updated successfully",
+              payload: employee,
+            });
+          })
+          .catch ((err:Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Something happened updating the employee " + err,
+              payload: null,
+            });
+          });
         }
 
-        employee.update(req.body)
-        .then(() =>{
-          return res.status(200).json({
-            status: "Success",
-            message: "Employee updated successfully",
-            payload: employee,
-          });
-        })
-        .catch ((err:Error) => {
-          return res.status(500).json({
-            status: "Error",
-            message: "Something happened updating the employee " + err,
-            payload: null,
-          });
-        });
       }
       catch (err) {
         return res.status(500).json({
@@ -303,7 +304,7 @@ export const updateEmployee = async (req: Request, res: Response) => {
   .catch((error:Error) => {
     return res.status(500).json({
       status: "Error",
-      message: "Something happened creating an employee. " + error.message,
+      message: "Something happened updating an employee. " + error.message,
       payload: null,
     });
   });
