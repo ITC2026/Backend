@@ -45,6 +45,34 @@ const REGION = [
 ];
 const GENDER = ["Male", "Female", "Nonbinary", "Did Not Want to Say"];
 
+//Employee
+const JOBGRADE = ["C3", "C4", "C5", "C6"];
+const PROPOSEDACTION = ["Project Search",
+      "Using In Internal Project",
+      "Upskilling Crosstraining",
+      "Backup / Shadow other projects",
+      "Resource Pool",
+      "No action required",
+      "Others",
+      "Attrition"];
+const EMPLOYEESTATUS = ["On Hired", "Layoff", "Resigned"];
+const EMPLOYEEREASON = ["In Training",
+      "Induction / Orientation",
+      "Shadow Resources",
+      "Awaiting Client Confirmation Joining",
+      "Maternity Leave",
+      "Sabbatical / Other Leave",
+      "Previous Client Attrition",
+      "Previous Client HC Reduction",
+      "Transition Between Projects",
+      "No Available Projects",
+      "Internal Project",
+      "Moved to Billing",
+      "Performance Issues / PIP",
+      "Other",
+      "Intern"];
+
+
 export const getAllPeople: RequestHandler = async (
   req: Request,
   res: Response
@@ -213,6 +241,64 @@ export const createPerson: RequestHandler = async (
       message: `Invalid salary. ${expected_salary} is not a valid salary.`,
       payload: null,
     });
+  }
+
+  // Check employee info is valid to prevent creation of person if something is wrong
+  if(status === "Bench" || status === "Billing"){ 
+    const {
+      salary,
+      job_grade,
+      proposed_action,
+      employee_status,
+      employee_reason,
+    } = req.body;
+
+    //Validations
+    if (
+      !salary ||
+      !job_grade ||
+      !proposed_action ||
+      !employee_status ||
+      !employee_reason
+    ) {
+      return res.status(400).json({
+        status: "error",
+        message: "Required information missing",
+        payload: null,
+      });
+    }
+
+    if (!JOBGRADE.includes(job_grade)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid job grade provided",
+        payload: null,
+      });
+    }
+
+    if (!PROPOSEDACTION.includes(proposed_action)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid proposed action provided",
+        payload: null,
+      });
+    }
+
+    if (!EMPLOYEESTATUS.includes(employee_status)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid status provided",
+        payload: null,
+      });
+    }
+
+    if (!EMPLOYEEREASON.includes(employee_reason)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid reason provided",
+        payload: null,
+      });
+    }
   }
 
   Person.create(req.body)
