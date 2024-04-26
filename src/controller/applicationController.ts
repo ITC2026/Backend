@@ -29,6 +29,14 @@ export const createApplication: RequestHandler = async (
     });
   }
 
+  if(!["Accepted", "Rejected", "Schedule For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
+    return res.status(400).json({ 
+        status: 'error',
+        message: 'Invalid status provided',
+        payload: null
+    });
+  }
+
   //Make sure position exists
   Position.findByPk(position_id)
   .then((data: Position | null) => {
@@ -38,6 +46,55 @@ export const createApplication: RequestHandler = async (
         message: "Position not found",
         payload: null,
       });
+    } else{
+
+      //Make sure person exists
+      Person.findByPk(person_id)
+      
+      .then((data: Person | null) => {
+        if(!data){
+          return res.status(404).json({
+            status: "Error",
+            message: "Person not found",
+            payload: null,
+          });
+        } else{
+
+          Application.create({ ...req.body })
+          .then(async (data: Application) => {
+            const entityData = await Entity.create({
+              type: "Application",
+              isDeleted: false,
+              belongs_to_id: data.id,
+            });
+            entityData.application_id = data.id;
+            await entityData.save();
+            return data;
+          })
+          .then((data: Application) => {
+            return res.status(201).json({
+              status: "Success",
+              message: "Application created successfully",
+              payload: data,
+            });
+          })
+          .catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Application not created",
+              payload: error.message,
+            });
+          });
+        }
+      })
+      
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Application not created",
+          payload: error.message,
+        });
+      });
     }
   })
   .catch((error: Error) => {
@@ -47,62 +104,6 @@ export const createApplication: RequestHandler = async (
       payload: error.message,
     });
   });
-
-  //Make sure person exists
-  Person.findByPk(person_id)
-  
-  .then((data: Person | null) => {
-    if(!data){
-      return res.status(404).json({
-        status: "Error",
-        message: "Person not found",
-        payload: null,
-      });
-    }
-  })
-  
-  
-  .catch((error: Error) => {
-    return res.status(500).json({
-      status: "Error",
-      message: "Application not created",
-      payload: error.message,
-    });
-  });
-
-  if(!["Accepted", "Rejected", "Schedule For Interview", "Waiting on Client Response", "On Hold"].includes(application_status)) {
-    return res.status(400).json({ 
-        status: 'error',
-        message: 'Invalid status provided',
-        payload: null
-    });
-  }
-
-  Application.create({ ...req.body })
-  .then(async (data: Application) => {
-    const entityData = await Entity.create({
-      type: "Application",
-      isDeleted: false,
-      belongs_to_id: data.id,
-    });
-    entityData.application_id = data.id;
-    await entityData.save();
-    return data;
-  })
-    .then((data: Application) => {
-      return res.status(201).json({
-        status: "Success",
-        message: "Application created successfully",
-        payload: data,
-      });
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Application not created",
-        payload: error.message,
-      });
-    });
 };
 
 export const getAllApplications: RequestHandler = async (

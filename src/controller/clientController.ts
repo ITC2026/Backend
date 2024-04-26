@@ -2,6 +2,7 @@ import { RequestHandler, Request, Response } from "express";
 import { Client } from "../models/client/clients";
 import { Project } from "../models/project/projects";
 import { Entity } from "../models/ticketLog/entities";
+import { Person } from "../models/person/people";
 import validator from "validator";
 
 const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
@@ -9,9 +10,15 @@ const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
 // Retrieve all Clients from the database.
 export const getAllClients: RequestHandler = (req: Request, res: Response) => {
   Client.findAll({
-    include: {
-      model: Project,
-    },
+    include: [
+      {
+      model: Project
+      },
+      {
+      model: Person,
+      through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
+    ],
   })
     .then((data: Client[]) => {
       return res.status(200).json({
@@ -32,9 +39,15 @@ export const getAllClients: RequestHandler = (req: Request, res: Response) => {
 // Find a single Client with an id
 export const getClientById: RequestHandler = (req: Request, res: Response) => {
   Client.findByPk(req.params.id, {
-    include: {
-      model: Project,
-    },
+    include: [
+      {
+      model: Project
+      },
+      {
+      model: Person,
+      through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
+    ],
   })
     .then((data: Client | null) => {
       if (data) {
@@ -86,7 +99,7 @@ export const createClient: RequestHandler = (req: Request, res: Response) => {
     !logo_url ||
     !client_name ||
     !client_desc ||
-    !high_growth ||
+    typeof high_growth !== "boolean" ||
     !division
   ) {
     return res.status(400).json({
@@ -170,7 +183,7 @@ export const modifyClient: RequestHandler = async (
     });
   }
 
-  // Save Client in the database
+  // Maake sure Client exists in the database
   Client.findByPk(req.params.id).then((data: Client | null) => {
     if (data) {
       // Update the client
@@ -204,6 +217,13 @@ export const modifyClient: RequestHandler = async (
         payload: null,
       });
     }
+  })
+  .catch((error:Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Something happened creating the client. " + error.message,
+      payload: null,
+   });
   });
 };
 

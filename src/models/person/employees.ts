@@ -11,8 +11,6 @@ import {
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Person } from "./people";
-import { Client } from "../client/clients";
-import { ClientEmployeeRelation } from "../client/client_employee_relations";
 
 interface EmployeeAttributes {
   id: number;
@@ -102,8 +100,5 @@ export class Employee extends Model<
 
   @BelongsTo(() => Person)
   person!: Person;
-
-  @BelongsToMany(() => Client, () => ClientEmployeeRelation)
-  clients?: Client[];
 
 }

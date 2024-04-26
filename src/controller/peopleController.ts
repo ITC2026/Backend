@@ -3,6 +3,11 @@ import { Person } from "../models/person/people";
 import { Candidate } from "../models/person/candidates";
 import { Employee } from "../models/person/employees";
 import { Entity } from "../models/ticketLog/entities";
+import { Opening } from "../models/position/openings";
+import { Position } from "../models/position/positions";
+import { Project } from "../models/project/projects";
+import { Client } from "../models/client/clients";
+import { createEmployee } from "./employeesController";
 
 const TECH_STACK = [
   "Java",
@@ -40,6 +45,34 @@ const REGION = [
 ];
 const GENDER = ["Male", "Female", "Nonbinary", "Did Not Want to Say"];
 
+//Employee
+const JOBGRADE = ["C3", "C4", "C5", "C6"];
+const PROPOSEDACTION = ["Project Search",
+      "Using In Internal Project",
+      "Upskilling Crosstraining",
+      "Backup / Shadow other projects",
+      "Resource Pool",
+      "No action required",
+      "Others",
+      "Attrition"];
+const EMPLOYEESTATUS = ["On Hired", "Layoff", "Resigned"];
+const EMPLOYEEREASON = ["In Training",
+      "Induction / Orientation",
+      "Shadow Resources",
+      "Awaiting Client Confirmation Joining",
+      "Maternity Leave",
+      "Sabbatical / Other Leave",
+      "Previous Client Attrition",
+      "Previous Client HC Reduction",
+      "Transition Between Projects",
+      "No Available Projects",
+      "Internal Project",
+      "Moved to Billing",
+      "Performance Issues / PIP",
+      "Other",
+      "Intern"];
+
+
 export const getAllPeople: RequestHandler = async (
   req: Request,
   res: Response
@@ -52,6 +85,11 @@ export const getAllPeople: RequestHandler = async (
       {
         model: Employee,
       },
+      {
+        model: Client,
+        attributes: ["id", "client_name"],
+        through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
     ],
   })
     .then((data: Person[]) => {
@@ -89,6 +127,10 @@ export const getPersonById: RequestHandler = async (
       {
         model: Employee,
       },
+      {
+        model: Client,
+        through: { attributes: [] }, // Exclude the join table attributes from the result
+      }
     ],
   })
     .then((data: Person | null) => {
@@ -101,7 +143,7 @@ export const getPersonById: RequestHandler = async (
     .catch((err) => {
       return res.status(500).json({
         status: "error",
-        message: "Something happened retrieving the product. " + err.message,
+        message: "Something happened retrieving the person. " + err.message,
         payload: null,
       });
     });
@@ -201,6 +243,64 @@ export const createPerson: RequestHandler = async (
     });
   }
 
+  // Check employee info is valid to prevent creation of person if something is wrong
+  if(status === "Bench" || status === "Billing"){ 
+    const {
+      salary,
+      job_grade,
+      proposed_action,
+      employee_status,
+      employee_reason,
+    } = req.body;
+
+    //Validations
+    if (
+      !salary ||
+      !job_grade ||
+      !proposed_action ||
+      !employee_status ||
+      !employee_reason
+    ) {
+      return res.status(400).json({
+        status: "error",
+        message: "Required information missing",
+        payload: null,
+      });
+    }
+
+    if (!JOBGRADE.includes(job_grade)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid job grade provided",
+        payload: null,
+      });
+    }
+
+    if (!PROPOSEDACTION.includes(proposed_action)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid proposed action provided",
+        payload: null,
+      });
+    }
+
+    if (!EMPLOYEESTATUS.includes(employee_status)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid status provided",
+        payload: null,
+      });
+    }
+
+    if (!EMPLOYEEREASON.includes(employee_reason)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Invalid reason provided",
+        payload: null,
+      });
+    }
+  }
+
   Person.create(req.body)
   .then(async (data: Person) => {
     const entityData = await Entity.create({
@@ -213,15 +313,25 @@ export const createPerson: RequestHandler = async (
     return data;
   })
     .then((data: Person) => {
-      Candidate.create({
+      Candidate.create({  // create a candidate
         expected_salary,
         person_id: data.id,
-      });
-      return res.status(201).json({
-        status: "success",
-        message: "Person successfully created.",
-        payload: data,
-      });
+      })
+
+      .then(() => {
+        if(status === "Bench" || status === "Billing"){   // When creating a person directly in Bench or Billing, create an employee
+          req.body.person_id = data.id;
+          createEmployee(req,res, () => {});
+
+        } else{
+          return res.status(201).json({
+            status: "success",
+            message: "Person successfully created.",
+            payload: data,
+          });
+        }
+      })
+      
     })
     .catch((err) => {
       return res.status(500).json({
@@ -252,6 +362,14 @@ export const modifyPerson: RequestHandler = async (
 
       //If there was a status change
       if(status !== data.status){
+
+        if(data.status !== "Pipeline" && status === "Pipeline"){
+          return res.status(500).json({
+            status: "error",
+            message: "A movement to pipeline from bench or billing can not be done.",
+            payload: null
+          });
+        }
 
         //If an associated employee already exists
         Employee.findOne({where: {person_id: data.id}})
@@ -378,3 +496,163 @@ export const deletePerson: RequestHandler = async (
     });
   });
 };
+
+//Additional functions
+export const getPositionByPerson: RequestHandler = (req:Request, res:Response) => {
+  const id_person = req.params.id;
+
+  Person.findByPk(id_person)
+  .then((person:Person | null) => {
+    if(person){
+
+      Opening.findOne({ where: {person_id: id_person}})
+      .then((opening:Opening |null) => {
+        if(opening){
+
+          Position.findOne({where: {id:opening.position_id}})
+          .then((position:Position | null) =>{
+            if(position){
+              return res.status(200).json({
+                status: "Success",
+                message: "Position retrieved successfully",
+                payload: position,
+              });
+            }
+            else{
+              return res.status(404).json({
+                status: "Error",
+                message: "Position not found",
+                payload: null,
+              });
+            }
+          })
+          .catch((err: Error) => {
+            return res.status(500).json({
+              status: "error",
+              message: "Something happened finding the position. " + err.message,
+              payload: null,
+            });
+          });
+
+        } else{
+          return res.status(404).json({
+            status: "Error",
+            message: "An opening filled by this person was not found",
+            payload: null,
+          });
+        }
+      })
+      .catch((err:Error) => {
+        return res.status(500).json({
+          status: "error",
+          message: "Something happened finding the opening. " + err.message,
+          payload: null,
+        });
+      });
+
+    } else{
+      return res.status(404).json({
+        status: "Error",
+        message: "Person not found",
+        payload: null,
+      });
+    }
+  })
+  .catch((err:Error) => {
+    return res.status(500).json({
+      status: "error",
+      message: "Something happened finding the person. " + err.message,
+      payload: null,
+    });
+  })
+}
+
+export const getProjectByPerson: RequestHandler = (req: Request, res:Response) => {
+  const id_person = req.params.id;
+
+  Person.findByPk(id_person)
+  .then((person:Person | null) => {
+    if(person){
+
+      Opening.findOne({ where: {person_id: id_person}})
+      .then((opening:Opening |null) => {
+        if(opening){
+
+          Position.findOne({where: {id:opening.position_id}})
+          .then((position:Position | null) =>{
+            if(position){
+              
+              Project.findOne({where: {id: position.project_id}})
+              .then((project: Project | null) => {
+                if(project){
+                  return res.status(200).json({
+                    status: "Success",
+                    message: "Project retrieved successfully",
+                    payload: project,
+                  });
+                } else{
+                  return res.status(404).json({
+                    status: "Error",
+                    message: "Project not found",
+                    payload: null,
+                  });
+                }
+              })
+              .catch((err: Error) => {
+                return res.status(500).json({
+                  status: "error",
+                  message: "Something happened finding the project. " + err.message,
+                  payload: null,
+                });
+              });
+
+            }
+            else{
+              return res.status(404).json({
+                status: "Error",
+                message: "Position not found",
+                payload: null,
+              });
+            }
+          })
+          .catch((err: Error) => {
+            return res.status(500).json({
+              status: "error",
+              message: "Something happened finding the position. " + err.message,
+              payload: null,
+            });
+          });
+
+        } else{
+          return res.status(404).json({
+            status: "Error",
+            message: "An opening filled by this person was not found",
+            payload: null,
+          });
+        }
+      })
+      .catch((err:Error) => {
+        return res.status(500).json({
+          status: "error",
+          message: "Something happened finding the opening. " + err.message,
+          payload: null,
+        });
+      });
+
+    } else{
+      return res.status(404).json({
+        status: "Error",
+        message: "Person not found",
+        payload: null,
+      });
+    }
+  })
+  .catch((err:Error) => {
+    return res.status(500).json({
+      status: "error",
+      message: "Something happened finding the person. " + err.message,
+      payload: null,
+    });
+  })
+
+}

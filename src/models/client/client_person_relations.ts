@@ -7,24 +7,24 @@ import {
     ForeignKey,
   } from "sequelize-typescript";
   import { Client } from "./clients";
-  import { Employee } from "../person/employees";
+  import { Person } from "../person/people";
 
-  interface ClientEmployeeRelationAttributes {
+  interface ClientPersonRelationAttributes {
     client_id: number;
-    employee_id: number;
+    person_id: number;
   }
 
   @Table({
-    tableName: "ClientEmployeeRelations",
+    tableName: "ClientPersonRelations",
   })
-  export class ClientEmployeeRelation extends Model<ClientEmployeeRelationAttributes> {
+  export class ClientPersonRelation extends Model<ClientPersonRelationAttributes> {
     @ForeignKey(() => Client)
     @Column
     client_id!: number;
 
-    @ForeignKey(() => Employee)
+    @ForeignKey(() => Person)
     @Column
-    employee_id!: number;
+    person_id!: number;
   
     @CreatedAt
     @Column

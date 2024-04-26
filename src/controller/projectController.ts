@@ -48,23 +48,7 @@ export const createProject: RequestHandler = async (
     });
   }
 
-  Client.findByPk(client_id)
-  .then((data: Client | null) => {
-    if(!data){
-      return res.status(404).json({
-        status: "Error",
-        message: "Client not found",
-        payload: null,
-      });
-    }
-  })
-  .catch((error: Error) => {
-    return res.status(500).json({
-      status: "Error",
-      message: "Project not created",
-      payload: error.message,
-    });
-  });
+  
 
   if (!GENERAL_STATUS.includes(general_status)) {
     return res.status(400).json({
@@ -100,60 +84,79 @@ export const createProject: RequestHandler = async (
     }
   }
 
-  try {
-    const project = await Project.create({ ...req.body })
-
-    .then(async (data: Project) => {
-      const entityData = await Entity.create({
-        type: "Project",
-        isDeleted: false,
-        belongs_to_id: data.id,
+  Client.findByPk(client_id)
+  .then(async (data: Client | null) => {
+    if(!data){
+      return res.status(404).json({
+        status: "Error",
+        message: "Client not found",
+        payload: null,
       });
-      entityData.project_id = data.id;
-      await entityData.save();
-      return data;
-    })
-
-
-    if (has_expiration_date) {
-      await ExpirationDateProject.create({
-        project_id: project.id,
-        expiration_date,
-      }).catch((error: Error) => {
+    } else{
+      try {
+        const project = await Project.create({ ...req.body })
+    
+        .then(async (data: Project) => {
+          const entityData = await Entity.create({
+            type: "Project",
+            isDeleted: false,
+            belongs_to_id: data.id,
+          });
+          entityData.project_id = data.id;
+          await entityData.save();
+          return data;
+        })
+    
+    
+        if (has_expiration_date) {
+          await ExpirationDateProject.create({
+            project_id: project.id,
+            expiration_date,
+          }).catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "There was an error creating the expiration date",
+              payload: error.message,
+            });
+          });
+        }
+    
+        if (general_status == "Closed") {
+          await ClosedProject.create({
+            project_id: project.id,
+            closed_status,
+            closed_reason,
+          }).catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "There was an error creating the closed project",
+              payload: error.message,
+            });
+          });
+        }
+    
+        return res.status(201).json({
+          status: "Success",
+          message: "Project created successfully",
+          payload: project,
+        });
+      } catch (error: unknown) {
         return res.status(500).json({
           status: "Error",
-          message: "There was an error creating the expiration date",
-          payload: error.message,
+          message: "Project not created",
+          payload: (error as Error).message,
         });
-      });
+      }
     }
-
-    if (general_status == "Closed") {
-      await ClosedProject.create({
-        project_id: project.id,
-        closed_status,
-        closed_reason,
-      }).catch((error: Error) => {
-        return res.status(500).json({
-          status: "Error",
-          message: "There was an error creating the closed project",
-          payload: error.message,
-        });
-      });
-    }
-
-    return res.status(201).json({
-      status: "Success",
-      message: "Project created successfully",
-      payload: project,
-    });
-  } catch (error: unknown) {
+  })
+  .catch((error: Error) => {
     return res.status(500).json({
       status: "Error",
       message: "Project not created",
-      payload: (error as Error).message,
+      payload: error.message,
     });
-  }
+  });
+
 };
 
 export const getProjects: RequestHandler = async (
@@ -161,9 +164,14 @@ export const getProjects: RequestHandler = async (
   res: Response
 ) => {
   Project.findAll({
-    include: {
-      model: Position,
-    },
+    include: [
+      {
+        model: Position,
+      },
+      {
+        model: ExpirationDateProject
+      }
+    ],
   })
     .then((data: Project[] | null) => {
       return res.status(200).json({
@@ -223,24 +231,6 @@ export const updateProject: RequestHandler = async (
     });
   }
 
-  Client.findByPk(client_id)
-  .then((data: Client | null) => {
-    if(!data){
-      return res.status(404).json({
-        status: "Error",
-        message: "Client not found",
-        payload: null,
-      });
-    }
-  })
-  .catch((error: Error) => {
-    return res.status(500).json({
-      status: "Error",
-      message: "Project not created",
-      payload: error.message,
-    });
-  });
-
   if (!GENERAL_STATUS.includes(general_status)) {
     return res.status(400).json({
       status: "error",
@@ -275,91 +265,110 @@ export const updateProject: RequestHandler = async (
     }
   }
 
-  //check project exists
-  Project.findByPk(id)
-    .then((data: Project | null) => {
-      if (data) {
-        if (data.general_status === "Closed") {
-          return res.status(400).json({
+  Client.findByPk(client_id)
+  .then((data: Client | null) => {
+    if(!data){
+      return res.status(404).json({
+        status: "Error",
+        message: "Client not found",
+        payload: null,
+      });
+    } else{
+      
+      //check project exists
+      Project.findByPk(id)
+      .then((data: Project | null) => {
+        if (data) {
+          if (data.general_status === "Closed") {
+            return res.status(400).json({
+              status: "error",
+              message: "Project status is 'Cancelled' and cannot be updated",
+              payload: null,
+            });
+          }
+
+          if (has_expiration_date) {
+            ExpirationDateProject.findOne({
+              where: {
+                project_id: id,
+              },
+            }).then((prevExpDate: ExpirationDateProject | null) => {
+              if (prevExpDate) {
+                prevExpDate
+                  .update({ expiration_date }) //if there is a previous expiration date update it
+                  .then((isUpdatedExpiration) => {
+                    if (!isUpdatedExpiration) {
+                      return res.status(500).json({
+                        status: "Success",
+                        message:
+                          "Something happened updating the project (Expiration Date)",
+                        payload: null,
+                      });
+                    }
+                  });
+              } else {
+                ExpirationDateProject.create({
+                  //if there isn't one create it
+                  project_id: Number(id),
+                  expiration_date,
+                });
+              }
+            });
+          } else {
+            ExpirationDateProject.destroy({
+              //if has_expiration_date is false destroy associated expiration date if any
+              where: {
+                project_id: Number(id),
+              },
+            });
+          }
+
+          Project.update({ ...req.body }, { where: { id } })
+            .then((isUpdated) => {
+              if (isUpdated) {
+                return res.status(200).json({
+                  status: "Success",
+                  message: "Project updated successfully",
+                  payload: { ...req.body },
+                });
+              }
+              return res.status(500).json({
+                status: "Success",
+                message: "Something happened updating the project",
+                payload: null,
+              });
+            })
+            .catch((error: Error) => {
+              return res.status(500).json({
+                status: "Error",
+                message: `Project not updated: ${error.message}`,
+                payload: null,
+              });
+            });
+        } else {
+          return res.status(404).json({
             status: "error",
-            message: "Project status is 'Cancelled' and cannot be updated",
+            message: "Project not found",
             payload: null,
           });
         }
-
-        if (has_expiration_date) {
-          ExpirationDateProject.findOne({
-            where: {
-              project_id: id,
-            },
-          }).then((prevExpDate: ExpirationDateProject | null) => {
-            if (prevExpDate) {
-              prevExpDate
-                .update({ expiration_date }) //if there is a previous expiration date update it
-                .then((isUpdatedExpiration) => {
-                  if (!isUpdatedExpiration) {
-                    return res.status(500).json({
-                      status: "Success",
-                      message:
-                        "Something happened updating the project (Expiration Date)",
-                      payload: null,
-                    });
-                  }
-                });
-            } else {
-              ExpirationDateProject.create({
-                //if there isn't one create it
-                project_id: Number(id),
-                expiration_date,
-              });
-            }
-          });
-        } else {
-          ExpirationDateProject.destroy({
-            //if has_expiration_date is false destroy associated expiration date if any
-            where: {
-              project_id: Number(id),
-            },
-          });
-        }
-
-        Project.update({ ...req.body }, { where: { id } })
-          .then((isUpdated) => {
-            if (isUpdated) {
-              return res.status(200).json({
-                status: "Success",
-                message: "Project updated successfully",
-                payload: { ...req.body },
-              });
-            }
-            return res.status(500).json({
-              status: "Success",
-              message: "Something happened updating the project",
-              payload: null,
-            });
-          })
-          .catch((error: Error) => {
-            return res.status(500).json({
-              status: "Error",
-              message: `Project not updated: ${error.message}`,
-              payload: null,
-            });
-          });
-      } else {
-        return res.status(404).json({
-          status: "error",
-          message: "Project not found",
-          payload: null,
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Error updating Project",
+          payload: error.message,
         });
-      }
-    })
-    .catch((error: Error) => {
-      return res.status(500).json({
-        status: "Error",
-        message: "Error updating Project",
-        payload: error.message,
       });
+    }
+  })
+  .catch((error: Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Project not created",
+      payload: error.message,
     });
+  });
 };
 
 export const deleteProject: RequestHandler = async (
@@ -420,9 +429,14 @@ export const getProjectById: RequestHandler = async (
 ) => {
   const id = req.params.id;
   Project.findByPk(id, {
-    include: {
-      model: Position,
-    },
+    include: [
+      {
+        model: Position,
+      },
+      {
+        model: ExpirationDateProject
+      }
+    ],
   })
     .then((data: Project | null) => {
       if (data) {
