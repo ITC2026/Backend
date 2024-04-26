@@ -164,9 +164,14 @@ export const getProjects: RequestHandler = async (
   res: Response
 ) => {
   Project.findAll({
-    include: {
-      model: Position,
-    },
+    include: [
+      {
+        model: Position,
+      },
+      {
+        model: ExpirationDateProject
+      }
+    ],
   })
     .then((data: Project[] | null) => {
       return res.status(200).json({
@@ -424,9 +429,14 @@ export const getProjectById: RequestHandler = async (
 ) => {
   const id = req.params.id;
   Project.findByPk(id, {
-    include: {
-      model: Position,
-    },
+    include: [
+      {
+        model: Position,
+      },
+      {
+        model: ExpirationDateProject
+      }
+    ],
   })
     .then((data: Project | null) => {
       if (data) {
