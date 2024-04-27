@@ -161,8 +161,7 @@ export const createPerson: RequestHandler = async (
     });
   }
   const {
-    first_name,
-    last_name,
+    name,
     phone,
     email,
     title,
@@ -176,8 +175,7 @@ export const createPerson: RequestHandler = async (
 
 
   if (
-    !first_name ||
-    !last_name ||
+    !name ||
     !phone ||
     !email ||
     !title ||

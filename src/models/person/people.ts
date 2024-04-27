@@ -10,8 +10,7 @@ import { ClientPersonRelation } from '../client/client_person_relations';
 
 interface PersonAttributes {
   id: number;
-  first_name: string;
-  last_name: string;
+  name: string,
   profile_picture: string;
   gender: string;
   phone: string;
@@ -35,10 +34,7 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
     profile_picture?: string;
 
     @Column
-    first_name!: string;
-
-    @Column
-    last_name!: string;
+    name!: string;
 
     @Column(DataType.ENUM("Male", "Female", "Nonbinary", "Did Not Want to Say"))
     gender!: string;
