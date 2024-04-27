@@ -51,7 +51,7 @@ export const createPosition: RequestHandler = async (
   if(!["Java", "React", "Python", "Automation", "Golang", "Javascript", ".NET", "Angular", "Appian", "PowerApps", "Manual Tester", "Kotlin", "UX", "iOS"].includes(tech_stack)) {
     return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid division provided',
+        message: 'Invalid Tech Stack provided',
         payload: null
     });
   }
@@ -59,7 +59,7 @@ export const createPosition: RequestHandler = async (
   if(!["New Head Count", "Back-fill Replacement"].includes(posting_type)) {
     return res.status(400).json({ 
         status: 'error',
-        message: 'Invalid division provided',
+        message: 'Invalid Posting Type provided',
         payload: null
     });
   }
