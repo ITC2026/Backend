@@ -5,6 +5,8 @@ import { Project } from "../models/project/projects";
 import { Application } from "../models/position/applications";
 import { CommentPosition } from "../models/position/comments_positions";
 import { Entity } from "../models/ticketLog/entities";
+import { deleteOpeningCascade } from "./openingController";
+import { deleteApplicationCascade } from "./applicationController";
 
 
 export const createPosition: RequestHandler = async (
@@ -415,14 +417,202 @@ export const deletePosition: RequestHandler = async (
                 .then((entity: Entity | null) =>{
                     if(entity){
                         entity.update({isDeleted: true})
+
+                        .then((isUpdated) => {
+                          if(isUpdated){
+
+                            Opening.findAll({where: {position_id: id}})   // Delete associated openings
+                            .then((openings: Opening[] | null) => {
+                              if(openings){
+
+                                for(const opening of openings){
+                                  req.body.id = opening.id;
+                                  deleteOpeningCascade(req, res, () => {} )
+                                }
+
+                                Application.findAll({where: {position_id: id}})   // Delete associated applications
+                                .then((applications: Application[] | null) => {
+                                  if(applications){
+
+                                    for(const application of applications){
+                                      req.body.id = application.id;
+                                      deleteApplicationCascade(req, res, () => {} )
+                                    }
+
+                                    return res.status(200).json({
+                                      status: "Success",
+                                      message: "Job Position deleted successfully",
+                                      payload: null,
+                                    });
+
+                                  } else{
+                                    return res.status(200).json({
+                                      status: "Success",
+                                      message: "Job Position deleted successfully",
+                                      payload: null,
+                                    });
+                                  }
+                                })
+                                .catch((error: Error) => {
+                                  return res.status(500).json({
+                                    status: "Error",
+                                    message: "Error deleting Job Position",
+                                    payload: error.message,
+                                  });
+                                });
+
+                              } else{
+                                return res.status(200).json({
+                                  status: "Success",
+                                  message: "Job Position deleted successfully",
+                                  payload: null,
+                                });
+                              } 
+                            })
+                            .catch((error: Error) => {
+                              return res.status(500).json({
+                                status: "Error",
+                                message: "Error deleting Job Position",
+                                payload: error.message,
+                              });
+                            });
+
+                          } else{
+                            return res.status(500).json({
+                              status: "Error",
+                              message: "Job Position not deleted",
+                              payload: null,
+                            });
+                          }
+                        })
+                        .catch((error: Error) => {
+                          return res.status(500).json({
+                            status: "Error",
+                            message: "Error deleting Job Position",
+                            payload: error.message,
+                          });
+                        });
                     }
                 })
 
-              return res.status(200).json({
-                status: "Success",
-                message: "Job Position deleted successfully",
-                payload: { ...req.body },
+            } else{
+              return res.status(500).json({
+                status: "Error",
+                message: "Job Position not deleted",
+                payload: null,
               });
+            }
+          })
+          .catch((error: Error) => {
+            return res.status(500).json({
+              status: "Error",
+              message: "Error deleting Job Position",
+              payload: error.message,
+            });
+          });
+      } else {
+          return res.status(404).json({
+            status: 'error',
+            message: 'Job Position not found',
+            payload: null
+        });
+      }
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Error deleting Job Position",
+        payload: error.message,
+      });
+    });
+};
+
+export const deletePositionCascade: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.body.id;
+
+  Position.findByPk(id)
+  .then((data: Position | null) => {
+      if (data) {
+
+        Position.destroy({ where: { id } })
+          .then((isDeleted) => {
+            if (isDeleted) {
+              Entity.findOne( {
+                where: {
+                    belongs_to_id: id,
+                    type: "Position"
+                }} )
+                .then((entity: Entity | null) =>{
+                    if(entity){
+                        entity.update({isDeleted: true})
+
+                        .then((isUpdated) => {
+                          if(isUpdated){
+
+                            Opening.findAll({where: {position_id: id}})   // Delete associated openings
+                            .then((openings: Opening[] | null) => {
+                              if(openings){
+
+                                for(const opening of openings){
+                                  req.body.id = opening.id;
+                                  deleteOpeningCascade(req, res, () => {} )
+                                }
+
+                                Application.findAll({where: {position_id: id}})   // Delete associated applications
+                                .then((applications: Application[] | null) => {
+                                  if(applications){
+
+                                    for(const application of applications){
+                                      req.body.id = application.id;
+                                      deleteApplicationCascade(req, res, () => {} )
+                                    }
+
+                                    return;
+
+                                  } else{
+                                    return;
+                                  }
+                                })
+                                .catch((error: Error) => {
+                                  return res.status(500).json({
+                                    status: "Error",
+                                    message: "Error deleting Job Position",
+                                    payload: error.message,
+                                  });
+                                });
+
+                              } else{
+                                return;
+                              } 
+                            })
+                            .catch((error: Error) => {
+                              return res.status(500).json({
+                                status: "Error",
+                                message: "Error deleting Job Position",
+                                payload: error.message,
+                              });
+                            });
+
+                          } else{
+                            return res.status(500).json({
+                              status: "Error",
+                              message: "Job Position not deleted",
+                              payload: null,
+                            });
+                          }
+                        })
+                        .catch((error: Error) => {
+                          return res.status(500).json({
+                            status: "Error",
+                            message: "Error deleting Job Position",
+                            payload: error.message,
+                          });
+                        });
+                    }
+                })
 
             } else{
               return res.status(500).json({

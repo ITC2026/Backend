@@ -4,6 +4,7 @@ import { Project } from "../models/project/projects";
 import { Entity } from "../models/ticketLog/entities";
 import { Person } from "../models/person/people";
 import validator from "validator";
+import { deleteProjectCascade } from "./projectController";
 
 const DIVISION = ["MEXICO", "BRAZIL", "CSA", "USA"];
 
@@ -235,7 +236,8 @@ export const deleteClient: RequestHandler = async (
   Client.findByPk(req.body.id).then((data: Client | null) => {
     if (data) {
       // Delete the client
-      Client.destroy({ where: { id: req.body.id } }).then((isDeleted) => {
+      Client.destroy({ where: { id: req.body.id } })
+      .then((isDeleted) => {
         if (isDeleted) {
           Entity.findOne( {
             where: {
@@ -244,15 +246,59 @@ export const deleteClient: RequestHandler = async (
             }} )
             .then((entity: Entity | null) =>{
                 if(entity){
-                    entity.update({isDeleted: true})
+                  entity.update({isDeleted: true})
+
+                  .then((isUpdated) => {
+                    if(isUpdated){
+
+                      Project.findAll({where: {client_id:req.body.id}})
+                      .then((projects: Project[] | null) => {
+                        if(projects){
+
+                          for(const project of projects){
+                            req.body.id = project.id;
+                            deleteProjectCascade(req, res, () => {} )
+                          }
+
+                          return res.status(200).json({
+                            status: "success",
+                            message: "Client deleted successfully",
+                            payload: null,
+                          });
+
+                        } else{
+                          return res.status(200).json({
+                            status: "success",
+                            message: "Client deleted successfully",
+                            payload: null,
+                          });
+                        }
+                      })
+                      .catch((error:Error) => {
+                        return res.status(500).json({
+                          status: "error",
+                          message: "There was an error deleting the Client." + error.message,
+                          payload: null,
+                        });
+                      });
+                    } else{
+                      return res.status(500).json({
+                        status: "error",
+                        message: "There was an error deleting the Client.",
+                        payload: null,
+                      });
+                    }
+                  })
+                  .catch((error:Error) =>{
+                    return res.status(500).json({
+                      status: "error",
+                      message: "There was an error deleting the Client." + error.message,
+                      payload: null,
+                    });
+                  });
                 }
             })
-
-          return res.status(200).json({
-            status: "success",
-            message: "Client deleted successfully",
-            payload: null,
-          });
+            
         } else {
           return res.status(500).json({
             status: "error",

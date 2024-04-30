@@ -5,6 +5,7 @@ import { ExpirationDateProject } from "../models/project/expiration_date_project
 import { ClosedProject } from "../models/project/closed_project";
 import { Client } from "../models/client/clients";
 import { Entity } from "../models/ticketLog/entities";
+import { deletePositionCascade } from "./positionController";
 
 
 const GENERAL_STATUS = ["In Preparation", "Active", "Closed"];
@@ -391,20 +392,154 @@ export const deleteProject: RequestHandler = async (
               .then((entity: Entity | null) =>{
                   if(entity){
                       entity.update({isDeleted: true})
+
+                      .then((isUpdated) => {
+                        if(isUpdated){
+
+                          Position.findAll({where: {project_id:id}})
+                          .then((positions: Position[] | null) => {
+                            if(positions){
+
+                              for(const position of positions){
+                                req.body.id = position.id;
+                                deletePositionCascade(req, res, () => {} )
+                              }
+
+                              return res.status(200).json({
+                                status: "Success",
+                                message: "Project deleted successfully",
+                                payload: null,
+                              });
+
+                            } else{
+                              return res.status(200).json({
+                                status: "Success",
+                                message: "Project deleted successfully",
+                                payload: null,
+                              });
+                            }
+                          })
+                          .catch((error: Error) => {
+                            return res.status(500).json({
+                              status: "Error",
+                              message: "Error deleting Project",
+                              payload: error.message,
+                            });
+                          });
+
+                        } else{
+                          return res.status(500).json({
+                            status: "Error",
+                            message: "Error deleting Project",
+                            payload: null,
+                          });
+                        }
+                      })
+                      .catch((error: Error) => {
+                        return res.status(500).json({
+                          status: "Error",
+                          message: "Error deleting Project",
+                          payload: error.message,
+                        });
+                      });
                   }
               })
-
-            return res.status(200).json({
-              status: "Success",
-              message: "Project deleted successfully",
-              payload: { ...req.body },
+          } else{
+            return res.status(500).json({
+              status: "Error",
+              message: "Project not deleted",
+              payload: null,
             });
           }
-          return res.status(500).json({
-            status: "Error",
-            message: "Project not deleted",
-            payload: null,
-          });
+        });
+      } else {
+        return res.status(404).json({
+          status: "error",
+          message: "Project not found",
+          payload: null,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      return res.status(500).json({
+        status: "Error",
+        message: "Error deleting Project",
+        payload: error.message,
+      });
+    });
+};
+
+export const deleteProjectCascade: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.body;
+
+  //Make sure the project exists
+  Project.findByPk(id)
+    .then((data: Project | null) => {
+      if (data) {
+        Project.destroy({ where: { id } }).then((isDeleted) => {
+          if (isDeleted) {
+            Entity.findOne( {
+              where: {
+                  belongs_to_id: id,
+                  type: "Project"
+              }} )
+              .then((entity: Entity | null) =>{
+                  if(entity){
+                      entity.update({isDeleted: true})
+
+                      .then((isUpdated) => {
+                        if(isUpdated){
+
+                          Position.findAll({where: {project_id:id}})
+                          .then((positions: Position[] | null) => {
+                            if(positions){
+
+                              for(const position of positions){
+                                req.body.id = position.id;
+                                deletePositionCascade(req, res, () => {} )
+                              }
+
+                              return;
+
+                            } else{
+                              return;
+                            }
+                          })
+                          .catch((error: Error) => {
+                            return res.status(500).json({
+                              status: "Error",
+                              message: "Error deleting Project",
+                              payload: error.message,
+                            });
+                          });
+
+                        } else{
+                          return res.status(500).json({
+                            status: "Error",
+                            message: "Error deleting Project",
+                            payload: null,
+                          });
+                        }
+                      })
+                      .catch((error: Error) => {
+                        return res.status(500).json({
+                          status: "Error",
+                          message: "Error deleting Project",
+                          payload: error.message,
+                        });
+                      });
+                  }
+              })
+          } else{
+            return res.status(500).json({
+              status: "Error",
+              message: "Project not deleted",
+              payload: null,
+            });
+          }
         });
       } else {
         return res.status(404).json({

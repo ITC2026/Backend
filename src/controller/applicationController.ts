@@ -284,3 +284,52 @@ export const getApplicationById: RequestHandler = async (
       });
     });
 };
+
+export const deleteApplicationCascade: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.body;
+
+  Application.findByPk(id)
+    .then((data: Application | null) => {
+        if(data){
+            Application.destroy({ where: { id } })
+                .then((isDeleted) => {
+                    if (isDeleted) {
+                        Entity.findOne( {
+                          where: {
+                              belongs_to_id: id,
+                              type: "Application"
+                          }} )
+                          .then((entity: Entity | null) =>{
+                              if(entity){
+                                  entity.update({isDeleted: true})
+                              }
+                          })
+
+                        return
+                    }
+                    return res.status(500).json({
+                        status: "Error",
+                        message: "Application not deleted",
+                        payload: null,
+                    });
+                })
+                .catch((error: Error) => {
+                    return res.status(500).json({
+                        status: "Error",
+                        message: "Error deleting application",
+                        payload: error.message,
+                    });
+                });
+        }
+    })
+    .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Opening not deleted",
+          payload: error.message,
+        });
+    });
+};

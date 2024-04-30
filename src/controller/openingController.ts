@@ -371,3 +371,54 @@ export const deleteOpening: RequestHandler = async (
     });
   });
 };
+
+export const deleteOpeningCascade: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.body.id;
+
+  Opening.findByPk(id)
+  .then((data: unknown | null) => {
+    if(data){
+      Opening.destroy({ where: { id } })
+      .then((isDeleted) => {
+        if(isDeleted){
+          Entity.findOne( {
+            where: {
+                belongs_to_id: id,
+                type: "Opening"
+            }} )
+            .then((entity: Entity | null) =>{
+                if(entity){
+                    entity.update({isDeleted: true})
+                }
+            })
+
+          return
+        }
+      })
+      .catch((error: Error) => {
+        return res.status(500).json({
+          status: "Error",
+          message: "Opening not deleted",
+          payload: error.message,
+        });
+      });
+      
+    } else{
+      return res.status(404).json({
+        status: "Error",
+        message: "Opening not found",
+        payload: null,
+      });
+    }
+  })
+  .catch((error: Error) => {
+    return res.status(500).json({
+      status: "Error",
+      message: "Opening not deleted",
+      payload: error.message,
+    });
+  });
+};
