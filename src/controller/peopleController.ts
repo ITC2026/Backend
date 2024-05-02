@@ -314,6 +314,8 @@ export const createPerson: RequestHandler = async (
       Candidate.create({  // create a candidate
         expected_salary,
         person_id: data.id,
+        created_at: new Date,
+        updated_at: new Date
       })
 
       .then(() => {

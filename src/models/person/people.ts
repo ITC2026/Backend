@@ -22,6 +22,8 @@ interface PersonAttributes {
   status: string;
   movement_reason: string;
   clients: Client[];
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface PersonCreationAttributes extends Optional<PersonAttributes, 'id'>{}

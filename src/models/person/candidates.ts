@@ -14,6 +14,8 @@ interface CandidateAttributes {
   id: number;
   expected_salary: number;
   person_id: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface CandidateCreationAttributes

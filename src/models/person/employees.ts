@@ -22,6 +22,8 @@ interface EmployeeAttributes {
   contract_start_date: Date;
   last_movement_at: Date;
   person_id: number;
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface EmployeeCreationAttributes
