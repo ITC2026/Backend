@@ -360,15 +360,78 @@ export const modifyPerson: RequestHandler = async (
   .then((data: Person | null) => {
     if (data) {
 
-      //If there was a status change
-      if(status !== data.status){
+      const status_change = status !== data.status;
+      const movement_from_pipeline = data.status === "Pipeline" && status !== "Pipeline";
 
+      //If there was a status change
+      if(status_change){
+
+        //Trying to change from bench or billing to pipeline
         if(data.status !== "Pipeline" && status === "Pipeline"){
           return res.status(500).json({
             status: "error",
             message: "A movement to pipeline from bench or billing can not be done.",
             payload: null
           });
+        }
+
+        //Changing from pipeline to bench or billing make data validations
+        if(movement_from_pipeline){
+          const {
+            salary,
+            job_grade,
+            proposed_action,
+            employee_status,
+            employee_reason,
+          } = req.body;
+      
+          //Validations
+          if (
+            !salary ||
+            !job_grade ||
+            !proposed_action ||
+            !employee_status ||
+            !employee_reason
+          ) {
+            return res.status(400).json({
+              status: "error",
+              message: "Required information missing",
+              payload: null,
+            });
+          }
+      
+          if (!JOBGRADE.includes(job_grade)) {
+            return res.status(400).json({
+              status: "error",
+              message: "Invalid job grade provided",
+              payload: null,
+            });
+          }
+      
+          if (!PROPOSEDACTION.includes(proposed_action)) {
+            return res.status(400).json({
+              status: "error",
+              message: "Invalid proposed action provided",
+              payload: null,
+            });
+          }
+      
+          if (!EMPLOYEESTATUS.includes(employee_status)) {
+            return res.status(400).json({
+              status: "error",
+              message: "Invalid status provided",
+              payload: null,
+            });
+          }
+      
+          if (!EMPLOYEEREASON.includes(employee_reason)) {
+            return res.status(400).json({
+              status: "error",
+              message: "Invalid reason provided",
+              payload: null,
+            });
+          }
+
         }
 
         //If an associated employee already exists
@@ -401,11 +464,19 @@ export const modifyPerson: RequestHandler = async (
       Person.update({ ...req.body }, { where: { id: req.params.id } })
         .then((isUpdated) => {
           if (isUpdated) {
-            return res.status(200).json({
-              status: "success",
-              message: "Person successfully updated.",
-              payload: data,
-            });
+            
+            //Create employee if moved from pipeline to bench or billing
+            if(movement_from_pipeline){
+              req.body.person_id = data.id;
+              createEmployee(req,res, () => {});
+            } else{
+              return res.status(200).json({
+                status: "success",
+                message: "Person successfully updated.",
+                payload: data,
+              });
+            }
+            
           } else{
             return res.status(500).json({
               status: "error",
