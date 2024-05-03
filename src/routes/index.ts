@@ -13,6 +13,7 @@ import peopleRouter from "./peopleRoutes";
 import candidateRouter from "./candidateRoutes";
 import expirationDateProjectRouter from "./expirationDateProjectRoutes";
 import expirationDateOpeningRouter from "./expirationDateOpeningRoutes";
+import clientPersonRelationRouter from "./clientPersonRelationRoutes"
 
 const apiRouter: Router = Router();
 
@@ -30,6 +31,7 @@ apiRouter.use("/people", peopleRouter);
 apiRouter.use("/candidates", candidateRouter);
 apiRouter.use("/expirationdateprojects", expirationDateProjectRouter)
 apiRouter.use("/expirationdateopenings", expirationDateOpeningRouter)
+apiRouter.use("/clientpersonrelations/", clientPersonRelationRouter)
 apiRouter.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });
